@@ -51,3 +51,5 @@ add_subdirectory(bluetooth)
 add_subdirectory(cansimplugin)
 add_subdirectory(cangenplugin)
 add_subdirectory(chrony)
+
+add_subdirectory(ethernet)

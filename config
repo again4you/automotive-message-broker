@@ -1,0 +1,19 @@
+{
+"sources" :
+	[
+		{
+			"name" : "ExampleSourcePlugin",
+			"path":"/home/again4you/opensource/automotive-message-broker/build/plugins/examplesourceplugin.so",
+			"enabled" : true
+ 
+		}
+	],
+"sinks":
+	[
+		{
+			"name" : "DBusSink",
+			"path" : "/home/again4you/opensource/automotive-message-broker/build/plugins/dbus/dbussinkplugin.so",
+			"enabled" : true
+		}
+	]
+}

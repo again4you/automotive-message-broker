@@ -28,3 +28,4 @@ install (FILES ${amb_headers_install} DESTINATION ${INCLUDE_INSTALL_DIR}/amb COM
 install (TARGETS amb LIBRARY DESTINATION ${LIB_INSTALL_DIR})
 
 
+add_subdirectory(client)

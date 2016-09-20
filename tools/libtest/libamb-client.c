@@ -366,6 +366,48 @@ void test_set_property(const char *obj_name, const char *prop_name, int zone, GV
 	g_variant_unref(ret);
 }
 
+void test_get_property_all_with_zone_struct(const char *obj_name, int zone)
+{
+	GVariant *ret;
+	gchar *s;
+	GVariantIter *iter;
+	gchar *key;
+	GVariant *value;
+	
+	fprintf(stdout, "== %s ==\n", __func__);                                
+	ret = get_property_all_with_zone(obj_name, zone);
+	if (!ret) {
+		fprintf(stderr, "Fail to get_property_all_with_zone(): %s, %d\n", obj_name, zone);
+		return ;
+	}
+
+	s = g_variant_print(ret, TRUE);
+	printf("%s\n", s);
+
+	g_variant_get(ret, "(a{sv})", &iter);
+	while (g_variant_iter_loop(iter, "{sv}", &key, &value)) {
+		if (g_strcmp0(key, "Speed") == 0) {
+			// GVariantType *type;
+			// type = g_variant_get_type(value);
+
+			g_variant_get_uint32(value);
+#if 0
+			g_variant_get_int16(value);
+			g_variant_get_uint16(value);
+			g_variant_get_int32(value);
+			g_variant_get_uint32(value);
+			g_variant_get_int64(value);
+			g_variant_get_uint64(value);
+			g_variant_get_handle(value);
+			g_variant_get_string(value, NULL);
+#endif
+		}
+	}
+
+	g_free(s);
+	g_variant_iter_free(iter);
+	g_variant_unref(ret);
+}
 
 int main()
 {
@@ -373,6 +415,8 @@ int main()
 	
 	// test_get_property_all_with_zone("ClimateControl", 5);
 	
-	test_set_property("ClimateControl", "AirConditioning", 5, g_variant_new("b", TRUE));
+	// test_set_property("ClimateControl", "AirConditioning", 5, g_variant_new("b", TRUE));
+	
+	test_get_property_all_with_zone_struct("VehicleSpeed", 0);
 	return 0;
 }

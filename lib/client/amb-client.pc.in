@@ -1,11 +1,11 @@
 prefix=@CMAKE_INSTALL_PREFIX@
 exec_prefix=${prefix}
 libdir=@LIB_INSTALL_DIR@
-includedir=/usr/local/include/ambd-client
+includedir=/usr/local/include/amb-client
 
 Name: client library for ambd
 Description: client library for automotive message broker
 Version: @PROJECT_VERSION@
 Requires: gio-2.0 glib-2.0
-Libs: -L${libdir} -lambd-client
+Libs: -L${libdir} -lamb-client
 Cflags: -I${includedir}

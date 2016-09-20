@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <glib.h>
 #include <gio/gio.h>
+#include <errno.h>
 
 #include "libamb-client.h"
 
@@ -151,11 +152,66 @@ static GVariant *get_all(GDBusProxy *proxy, const char *name)
 	return ret;
 }
 
+static int set_prop(GDBusProxy *proxy, const char *name, const char *prop_name, GVariant *value)
+{
+	GError *err;
+	gchar *obj_name;
+	GVariant *ret;
 
+	obj_name = g_strdup_printf("org.automotive.%s", name);
+	if (!obj_name)
+		return -ENOMEM;
+
+	err = NULL;
+	ret = g_dbus_proxy_call_sync(proxy,
+				"Set",
+				g_variant_new("(ssv)", obj_name, prop_name, value),
+				G_DBUS_PROXY_FLAGS_NONE,
+				-1,
+				NULL,
+				&err);
+	if (!ret) {
+		fprintf(stderr, "Error(%s): %s\n", __func__, err->message);
+		g_clear_error(&err);
+		return -1;
+	}
+
+	g_variant_unref(ret);
+	return 0;
+}
 
 /******************************************************************************
  * higher APIs
  *****************************************************************************/
+int set_property(const char *obj_name, const char *prop_name, int zone, GVariant *value)
+{
+	int ret;
+	GDBusProxy *proxy;
+	GDBusProxy *objproxy;
+
+	proxy = get_manager();
+	if (!proxy)
+		return -1;
+
+	objproxy = find_objects_with_zone(proxy, obj_name, zone);
+	if (!objproxy) {
+		g_object_unref(proxy);
+		return -1;
+	}
+
+	ret = set_prop(objproxy, obj_name, prop_name, value);
+	if (ret != 0) {
+		g_object_unref(objproxy);
+		g_object_unref(proxy);
+		return ret;
+	}
+
+	g_object_unref(objproxy);
+	g_object_unref(proxy);
+
+	return 0;
+}
+
 GVariant *get_property_all_with_zone(const char *obj_name, int zone)
 {
 	GDBusProxy *proxy;

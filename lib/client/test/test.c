@@ -6,7 +6,7 @@ void test_get_object_list()
 	GList *objlist;
 	GList *item;
 
-	fprintf(stdout, "== %s ==\n", __func__);
+	fprintf(stdout, "\n== %s ==\n", __func__);
 
 	objlist = get_object_list();
 
@@ -31,7 +31,7 @@ void test_get_property_all(const char *obj_name)
 	GList *retlist;
 	GList *item;
 
-	fprintf(stdout, "== %s ==\n", __func__);
+	fprintf(stdout, "\n== %s ==\n", __func__);
 	retlist = get_property_all(obj_name);
 
 	fprintf(stdout, "  - count: %u\n", g_list_length(retlist));
@@ -49,6 +49,25 @@ void test_get_property_all(const char *obj_name)
 	}
 }
 
+void test_get_property_all_with_zone(const char *obj_name, int zone)
+{
+	GVariant *ret;
+	gchar *s;
+
+	fprintf(stdout, "\n== %s ==\n", __func__);
+	ret = get_property_all_with_zone(obj_name, zone);
+	if (!ret) {
+		fprintf(stderr, "Fail to get_property_all_with_zone(): %s, %d\n", obj_name, zone);
+		return ;
+	}
+
+	s = g_variant_print(ret, TRUE);
+	printf("%s\n", s);
+
+	g_free(s);
+	g_variant_unref(ret);
+}
+
 int main()
 {
 	test_get_object_list();
@@ -56,8 +75,7 @@ int main()
 	test_get_property_all("ClimateControl");
 	test_get_property_all("VehicleSpeed");
 
+	test_get_property_all_with_zone("ClimateControl", 5);
+
 	return 0;
 }
-
-
-

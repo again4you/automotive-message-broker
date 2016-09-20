@@ -57,6 +57,35 @@ static GDBusProxy *get_proxy_from_obj(const char *objpath)
 	return proxy;
 }
 
+static GDBusProxy *find_objects_with_zone(GDBusProxy *proxy, const char *obj_name, int zone)
+{
+	GError *err;
+	GVariant *ret;
+	GDBusProxy *objproxy;
+	gchar *obj;
+
+	err = NULL;
+	ret = g_dbus_proxy_call_sync(proxy,
+				"FindObjectForZone",
+				g_variant_new("(si)", obj_name, zone),
+				G_DBUS_PROXY_FLAGS_NONE,
+				-1,
+				NULL,
+				&err);
+	if (!ret) {
+		fprintf(stderr, "Error(%s): %s\n", __func__, err->message);
+		g_clear_error(&err);
+		return NULL;
+	}
+
+	g_variant_get(ret, "(o)", &obj);
+	objproxy = get_proxy_from_obj(obj);
+
+	g_variant_unref(ret);
+
+	return objproxy;
+}
+
 static GList *find_objects(GDBusProxy *proxy, const char *obj_name)
 {
 	GError *err;
@@ -127,6 +156,29 @@ static GVariant *get_all(GDBusProxy *proxy, const char *name)
 /******************************************************************************
  * higher APIs
  *****************************************************************************/
+GVariant *get_property_all_with_zone(const char *obj_name, int zone)
+{
+	GDBusProxy *proxy;
+	GDBusProxy *objproxy;
+	GVariant *ret;
+
+	proxy = get_manager();
+	if (!proxy)
+		return NULL;
+
+	objproxy = find_objects_with_zone(proxy, obj_name, zone);
+	if (!objproxy) {
+		g_object_unref(proxy);
+		return NULL;
+	}
+
+	ret = get_all(objproxy, obj_name);
+
+	g_object_unref(objproxy);
+	g_object_unref(proxy);
+
+	return ret;
+}
 
 GList *get_property_all(const char *obj_name)
 {

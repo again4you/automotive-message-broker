@@ -340,7 +340,6 @@ void test_get_property_all_with_zone(const char *obj_name, int zone)
 	g_free(s);
 	g_variant_unref(ret);
 }
-
 void test_set_property(const char *obj_name, const char *prop_name, int zone, GVariant *value)
 {
 	GVariant *ret;
@@ -366,6 +365,109 @@ void test_set_property(const char *obj_name, const char *prop_name, int zone, GV
 	g_variant_unref(ret);
 }
 
+void check_type(GVariant *value)
+{
+	const GVariantType *type;
+	type = g_variant_get_type(value);
+
+	if (g_variant_type_equal(type, G_VARIANT_TYPE_BOOLEAN)) {
+		fprintf(stdout, "G_VARIANT_TYPE_BOOLEAN type\n");
+		return ;
+	} else if (g_variant_type_equal(type, G_VARIANT_TYPE_BYTE)) {
+		fprintf(stdout, "G_VARIANT_TYPE_BYTE type\n");
+		return ;
+	} else if (g_variant_type_equal(type, G_VARIANT_TYPE_INT16)) {
+		fprintf(stdout, "G_VARIANT_TYPE_INT16 type\n");
+		return ;
+	} else if (g_variant_type_equal(type, G_VARIANT_TYPE_UINT16)) {
+		fprintf(stdout, "G_VARIANT_TYPE_UINT16 type\n");
+		return ;
+	} else if (g_variant_type_equal(type, G_VARIANT_TYPE_INT32)) {
+		fprintf(stdout, "G_VARIANT_TYPE_INT32 type\n");
+		return ;
+	} else if (g_variant_type_equal(type, G_VARIANT_TYPE_UINT32)) {
+		fprintf(stdout, "G_VARIANT_TYPE_UINT32 type\n");
+		return ;
+	} else if (g_variant_type_equal(type, G_VARIANT_TYPE_INT64)) {
+		fprintf(stdout, "G_VARIANT_TYPE_INT64 type\n");
+		return ;
+	} else if (g_variant_type_equal(type, G_VARIANT_TYPE_UINT64)) {
+		fprintf(stdout, "G_VARIANT_TYPE_UINT64 type\n");
+		return ;
+	} else if (g_variant_type_equal(type, G_VARIANT_TYPE_DOUBLE)) {
+		fprintf(stdout, "G_VARIANT_TYPE_DOUBLE type\n");
+		return ;
+	} else if (g_variant_type_equal(type, G_VARIANT_TYPE_STRING)) {
+		fprintf(stdout, "G_VARIANT_TYPE_STRING type\n");
+		return ;
+	} else if (g_variant_type_equal(type, G_VARIANT_TYPE_OBJECT_PATH)) {
+		fprintf(stdout, "G_VARIANT_TYPE_OBJECT_PATH type\n");
+		return ;
+	} else if (g_variant_type_equal(type, G_VARIANT_TYPE_SIGNATURE)) {
+		fprintf(stdout, "G_VARIANT_TYPE_SIGNATURE type\n");
+		return ;
+	} else if (g_variant_type_is_variant(type)) {
+		fprintf(stdout, "GVariant type\n");
+		return ;
+	} else {
+		return ;
+	}
+}
+
+struct VehicleSpeed {
+	guint16 Speed;
+
+};
+
+
+guint16 get_guint16(GVariant *value)
+{
+	guint16 ret;
+	GVariant *tmp;
+
+	g_variant_get(value, "v", &tmp);
+	g_variant_get(tmp, "q", &ret);
+
+	g_variant_unref(tmp);
+	return ret;
+}
+
+gint32 get_gint32(GVariant *value)
+{
+	gint32 ret;
+	GVariant *tmp;
+
+	g_variant_get(value, "v", &tmp);
+	g_variant_get(tmp, "i", &ret);
+
+	g_variant_unref(tmp);
+	return ret;
+}
+
+guint32 get_guint32(GVariant *value)
+{
+	guint32 ret;
+	GVariant *tmp;
+
+	g_variant_get(value, "v", &tmp);
+	g_variant_get(tmp, "u", &ret);
+
+	g_variant_unref(tmp);
+	return ret;
+}
+
+gdouble get_gdouble(GVariant * value)
+{
+	gdouble ret;
+	GVariant * tmp;
+
+	g_variant_get(value, "v", &tmp);
+	g_variant_get(tmp, "d", &ret);
+
+	g_variant_unref(tmp);
+	return ret;
+}
+
 void test_get_property_all_with_zone_struct(const char *obj_name, int zone)
 {
 	GVariant *ret;
@@ -386,21 +488,32 @@ void test_get_property_all_with_zone_struct(const char *obj_name, int zone)
 
 	g_variant_get(ret, "(a{sv})", &iter);
 	while (g_variant_iter_loop(iter, "{sv}", &key, &value)) {
-		if (g_strcmp0(key, "Speed") == 0) {
-			// GVariantType *type;
-			// type = g_variant_get_type(value);
-
-			g_variant_get_uint32(value);
-#if 0
-			g_variant_get_int16(value);
-			g_variant_get_uint16(value);
-			g_variant_get_int32(value);
-			g_variant_get_uint32(value);
-			g_variant_get_int64(value);
-			g_variant_get_uint64(value);
-			g_variant_get_handle(value);
-			g_variant_get_string(value, NULL);
-#endif
+		if (!g_strcmp0(key, "Speed")) {
+			guint16 v;
+			v = get_guint16(value);
+			printf("Speed: %u\n", v);
+		} else if (!g_strcmp0(key, "Zone")) {
+			gint32 v;
+			v = get_gint32(value);
+			printf("Zone: %d\n", v);
+		} else if (!g_strcmp0(key, "SpeedUpdateFrequency")) {
+			gint32 v;
+			v = get_gint32(value);
+			printf("SpeedUpdateFrequency: %d\n", v);
+		} else if (!g_strcmp0(key, "SpeedValueQuality")) {
+			// lib/valuequality.h
+			gint32 v;
+			v = get_gint32(value);
+			printf("SpeedValueQuality: %d\n", v);
+		} else if (!g_strcmp0(key, "SpeedSequence")) {
+			// plugins/common/abstractdbusinterface.cpp
+			gint32 v;
+			v = get_gint32(value);
+			printf("SpeedSeqneuce: %d\n", v);
+		} else if (!g_strcmp0(key, "Time")) {
+			gdouble v;
+			v = get_gdouble(value);
+			printf("SpeedValueQuality: %f\n", v);
 		}
 	}
 

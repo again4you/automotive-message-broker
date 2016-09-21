@@ -6,10 +6,15 @@ void test_get_object_list()
 {
         GList *objlist;
         GList *item;
+	int ret;
 
         fprintf(stdout, "\n== %s ==\n", __func__);
 
-        objlist = get_object_list();
+        ret = get_object_list(&objlist);
+	if (ret < 0) {
+        	printf("Fail to get_object_list()\n");
+		return ;
+	}
 
         fprintf(stdout, "  - count: %u\n", g_list_length(objlist));
         for (item = objlist; item != NULL; item = item->next) {
@@ -31,9 +36,14 @@ void test_get_property_all(const char *obj_name)
 {
         GList *retlist;
         GList *item;
+	int ret;
 
         fprintf(stdout, "\n== %s ==\n", __func__);
-        retlist = get_property_all(obj_name);
+        ret = get_property_all(&retlist, obj_name);
+	if (ret < 0) {
+        	printf("Fail to get_property_all()\n");
+		return ;
+	}
 
         fprintf(stdout, "  - count: %u\n", g_list_length(retlist));
         for (item = retlist; item != NULL; item = item->next) {
@@ -53,11 +63,12 @@ void test_get_property_all(const char *obj_name)
 void test_get_property_all_with_zone(const char *obj_name, int zone)
 {
         GVariant *ret;
+	int r;
         gchar *s;
 
         fprintf(stdout, "\n== %s ==\n", __func__);
-        ret = get_property_all_with_zone(obj_name, zone);
-        if (!ret) {
+        r = get_property_all_with_zone(&ret, obj_name, zone);
+        if (r < 0) {
                 fprintf(stderr, "Fail to get_property_all_with_zone(): %s, %d\n", obj_name, zone);
                 return ;
         }
@@ -73,6 +84,7 @@ void test_set_property(const char *obj_name, const char *prop_name, int zone, GV
 {
         GVariant *ret;
         gchar *s;
+	int r;
 
         fprintf(stdout, "== %s ==\n", __func__);
 
@@ -81,8 +93,8 @@ void test_set_property(const char *obj_name, const char *prop_name, int zone, GV
                 return ;
         }
 
-        ret = get_property_all_with_zone(obj_name, zone);
-        if (!ret) {
+        r = get_property_all_with_zone(&ret, obj_name, zone);
+        if (r < 0) {
                 fprintf(stderr, "Fail to get_property_all_with_zone(): %s, %d\n", obj_name, zone);
                 return ;
         }

@@ -36,7 +36,7 @@ extern "C" {
  * @param[in] object name 
  * @return GList pointer that contains GVariant data 
  */
-GList *get_property_all(const char *obj_name);
+int get_property_all(GList **proplist, const char *obj_name);
 
 /**
  * Get all properties from a specific object name & zone number
@@ -44,7 +44,8 @@ GList *get_property_all(const char *obj_name);
  * @param[in] object name
  * @param[in] zone number
  */
-GVariant *get_property_all_with_zone(const char *obj_name, int zone);
+// GVariant *get_property_all_with_zone(const char *obj_name, int zone);
+int get_property_all_with_zone(GVariant **proplist, const char *obj_name, int zone);
 
 /**
  * Set a property value for a specific object name, property name & zone number
@@ -64,7 +65,7 @@ int set_property(const char *obj_name, const char *prop_name, int zone, GVariant
  * Get all object names that supported by Vehicle 
  * 
  */
-GList *get_object_list();
+int get_object_list(GList **objlist);
 
 #ifdef __cplusplus
 }

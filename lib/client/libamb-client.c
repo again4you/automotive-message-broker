@@ -23,6 +23,11 @@
 
 #include "libamb-client.h"
 
+#ifndef EXPORT
+#  define EXPORT __attribute__((visibility("default")))
+#endif
+
+
 #define AMB_BUS_NAME        "org.automotive.message.broker"
 #define AMB_INTERFACE_NAME  "org.automotive.Manager"
 #define DBUS_INTERFACE_NAME "org.freedesktop.DBus.Properties"
@@ -202,7 +207,7 @@ static int set_prop(GDBusProxy *proxy, const char *name, const char *prop_name, 
  * higher APIs
  *****************************************************************************/
 
-int set_property(const char *obj_name, const char *prop_name, int zone, GVariant *value)
+EXPORT int set_property(const char *obj_name, const char *prop_name, int zone, GVariant *value)
 {
 	int ret;
 	GDBusProxy *proxy;
@@ -231,67 +236,66 @@ int set_property(const char *obj_name, const char *prop_name, int zone, GVariant
 	return 0;
 }
 
-GVariant *get_property_all_with_zone(const char *obj_name, int zone)
+EXPORT int get_property_all_with_zone(GVariant **proplist, const char *obj_name, int zone)
 {
 	GDBusProxy *proxy;
 	GDBusProxy *objproxy;
-	GVariant *ret;
+	// GVariant *ret;
 
 	proxy = get_manager();
 	if (!proxy)
-		return NULL;
+		return -1;
 
 	objproxy = find_objects_with_zone(proxy, obj_name, zone);
 	if (!objproxy) {
 		g_object_unref(proxy);
-		return NULL;
+		return -1;
 	}
 
-	ret = get_all(objproxy, obj_name);
+	*proplist = get_all(objproxy, obj_name);
 
 	g_object_unref(objproxy);
 	g_object_unref(proxy);
 
-	return ret;
+	return 0;
 }
- GList *get_property_all(const char *obj_name)
+
+EXPORT int get_property_all(GList **proplist, const char *obj_name)
 {
 	GDBusProxy *proxy;
 	GVariant *ret;
 	GList *obj;
 	GList *objlist;
-	GList *retlist;
+	// GList *retlist;
 
 	proxy = get_manager();
 	if (!proxy)
-		return NULL;
+		return -1;
 
 	objlist = find_objects(proxy, obj_name);
 	if (!objlist)
-		return NULL;
+		return -1;
 
-	retlist = NULL;
+	*proplist = NULL;
 	for (obj = objlist; obj != NULL; obj = obj->next) {
 		ret = get_all(obj->data, obj_name);
-		retlist = g_list_append(retlist, ret);
+		*proplist = g_list_append(*proplist, ret);
 	}
 
-	return retlist;
+	return 0;
 }
 
-GList *get_object_list()
+EXPORT int get_object_list(GList **objlist)
 {
 	GDBusProxy *proxy;
 	GError *err;
 	GVariant *ret;
 	GVariantIter *iter;
-	GList *objlist;
 	gchar *objname;
-
 
 	proxy = get_manager();
 	if (!proxy)
-		return NULL;
+		return -1;
 
 	err = NULL;
 	ret = g_dbus_proxy_call_sync(proxy,
@@ -305,18 +309,18 @@ GList *get_object_list()
 	if (!ret) {
 		fprintf(stderr, "Error(%s): %s\n", __func__, err->message);
 		g_clear_error(&err);
-		return NULL;
+		return -1;
 	}
 
-	objlist = NULL;
+	*objlist = NULL;
 	g_variant_get(ret, "(as)", &iter);
 	while (g_variant_iter_loop(iter, "s", &objname)) {
-		objlist = g_list_append(objlist, g_strdup(objname));
+		*objlist = g_list_append(*objlist, g_strdup(objname));
 	}
 
 	g_variant_iter_free(iter);
 	g_variant_unref(ret);
 	g_object_unref(proxy);
 
-	return objlist;
+	return 0;
 }

@@ -1,0 +1,7 @@
+{
+	"name" : "SamsungCAN",
+	"path" : "@PLUGIN_INSTALL_PATH@/samsungcan_plugin.so",
+	"frequency" : "10",
+	"enabled" : true,
+	"interface" : "@DEFAULT_CAN_INTERFACE@"
+}

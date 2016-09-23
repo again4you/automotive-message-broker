@@ -1,0 +1,21 @@
+{
+"sources" :
+	[
+		{
+			"name" : "SamsungCAN",
+			"path": "/home/again4you/opensource/automotive-message-broker/build/plugins/samsungcan_plugin/samsungcan_plugin.so",
+			"frequency" : "10",
+			"enabled" : true,
+			"interface" : "vcan0"
+ 
+		}
+	],
+"sinks":
+	[
+		{
+			"name" : "DBusSink",
+			"path" : "/home/again4you/opensource/automotive-message-broker/build/plugins/dbus/dbussinkplugin.so",
+			"enabled" : true
+		}
+	]
+}

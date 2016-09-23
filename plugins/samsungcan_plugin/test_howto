@@ -1,0 +1,4 @@
+cmake .. -DCMAKE_BUILD_TYPE=DEBUG
+
+cansend vcan0 102#01.00.00.00.00.00.00.00
+candump vcan0

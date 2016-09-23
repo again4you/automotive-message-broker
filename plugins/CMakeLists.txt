@@ -53,3 +53,4 @@ add_subdirectory(cangenplugin)
 add_subdirectory(chrony)
 
 add_subdirectory(ethernet)
+add_subdirectory(samsungcan_plugin)

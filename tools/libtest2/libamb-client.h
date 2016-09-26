@@ -36,7 +36,7 @@ extern "C" {
  * @param[in] object name 
  * @return GList pointer that contains GVariant data 
  */
-int get_property_all(GList **proplist, const char *obj_name);
+int amb_get_property_all(GList **proplist, const char *obj_name);
 
 /**
  * Get all properties from a specific object name & zone number
@@ -45,7 +45,7 @@ int get_property_all(GList **proplist, const char *obj_name);
  * @param[in] zone number
  */
 // GVariant *get_property_all_with_zone(const char *obj_name, int zone);
-int get_property_all_with_zone(GVariant **proplist, const char *obj_name, int zone);
+int amb_get_property_all_with_zone(GVariant **proplist, const char *obj_name, int zone);
 
 
 /**
@@ -56,7 +56,7 @@ int get_property_all_with_zone(GVariant **proplist, const char *obj_name, int zo
  * @param[in] zone number to be set
  * @param[in] value to be set
  */
-int set_property(const char *obj_name, const char *prop_name, int zone, GVariant *value);
+int amb_set_property(const char *obj_name, const char *prop_name, int zone, GVariant *value);
 
 /**
  * Release allocated memory space from get_property_all() function
@@ -64,7 +64,7 @@ int set_property(const char *obj_name, const char *prop_name, int zone, GVariant
  * @param[in] GList pointer from get_property_all() function
  * @return
  */
-void release_property_all(GList *proplist);
+void amb_release_property_all(GList *proplist);
 
 /**
  * Release allocated memory space from release_property_all_with_zone()
@@ -72,7 +72,7 @@ void release_property_all(GList *proplist);
  *
  *
  */
-void release_property_all_with_zone(GVariant *proplist);
+void amb_release_property_all_with_zone(GVariant *proplist);
 
 /**
  * Release allocated memory space from get_object_list() function
@@ -81,7 +81,7 @@ void release_property_all_with_zone(GVariant *proplist);
  *
  *
  */
-void release_object_list(GList *objlist);
+void amb_release_object_list(GList *objlist);
 
 /**
  * higher APIs
@@ -91,7 +91,7 @@ void release_object_list(GList *objlist);
  * Get all object names that supported by Vehicle 
  * 
  */
-int get_object_list(GList **objlist);
+int amb_get_object_list(GList **objlist);
 
 
 #ifdef __cplusplus

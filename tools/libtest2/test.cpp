@@ -10,7 +10,7 @@ void test_get_object_list()
 
         fprintf(stdout, "\n== %s ==\n", __func__);
 
-        ret = get_object_list(&objlist);
+        ret = amb_get_object_list(&objlist);
 	if (ret < 0) {
         	printf("Fail to get_object_list()\n");
 		return ;
@@ -23,7 +23,7 @@ void test_get_object_list()
         }
         printf("\n");
 
-	release_object_list(objlist);
+	amb_release_object_list(objlist);
 }
 
 void test_get_property_all(const char *obj_name)
@@ -33,7 +33,7 @@ void test_get_property_all(const char *obj_name)
 	int ret;
 
         fprintf(stdout, "\n== %s ==\n", __func__);
-        ret = get_property_all(&retlist, obj_name);
+        ret = amb_get_property_all(&retlist, obj_name);
 	if (ret < 0) {
         	printf("Fail to get_property_all()\n");
 		return ;
@@ -47,7 +47,7 @@ void test_get_property_all(const char *obj_name)
                 g_free(s);
         }
 
-	release_property_all(retlist);
+	amb_release_property_all(retlist);
 }
 
 void test_get_property_all_with_zone(const char *obj_name, int zone)
@@ -57,7 +57,7 @@ void test_get_property_all_with_zone(const char *obj_name, int zone)
         gchar *s;
 
         fprintf(stdout, "\n== %s ==\n", __func__);
-        r = get_property_all_with_zone(&ret, obj_name, zone);
+        r = amb_get_property_all_with_zone(&ret, obj_name, zone);
         if (r < 0) {
                 fprintf(stderr, "Fail to get_property_all_with_zone(): %s, %d\n", obj_name, zone);
                 return ;
@@ -68,7 +68,7 @@ void test_get_property_all_with_zone(const char *obj_name, int zone)
 
         g_free(s);
 
-	release_property_all_with_zone(ret);
+	amb_release_property_all_with_zone(ret);
 }
 
 void test_set_property(const char *obj_name, const char *prop_name, int zone, GVariant *value)
@@ -79,12 +79,12 @@ void test_set_property(const char *obj_name, const char *prop_name, int zone, GV
 
         fprintf(stdout, "== %s ==\n", __func__);
 
-        if (set_property(obj_name, prop_name, zone, value) != 0) {
+        if (amb_set_property(obj_name, prop_name, zone, value) != 0) {
                 fprintf(stderr, "Fail to set_property()\nn");
                 return ;
         }
 
-        r = get_property_all_with_zone(&ret, obj_name, zone);
+        r = amb_get_property_all_with_zone(&ret, obj_name, zone);
         if (r < 0) {
                 fprintf(stderr, "Fail to get_property_all_with_zone(): %s, %d\n", obj_name, zone);
                 return ;
@@ -94,7 +94,7 @@ void test_set_property(const char *obj_name, const char *prop_name, int zone, GV
         printf("%s\n", s);
 
         g_free(s);
-        g_variant_unref(ret);
+	amb_release_property_all_with_zone(ret);
 }
 
 int main()
@@ -108,15 +108,5 @@ int main()
 
         test_set_property("ClimateControl", "AirConditioning", 5, g_variant_new("b", TRUE));
 
-#if 0
-        test_get_property_all_with_zone("ClimateControl", 5);
-        test_set_property("ClimateControl", "AirConditioning", 5, g_variant_new("b", TRUE));
-        test_get_property_all("ClimateControl");
-        test_get_property_all("VehicleSpeed");
-
-        test_get_property_all_with_zone("ClimateControl", 5);
-
-        test_set_property("ClimateControl", "AirConditioning", 5, g_variant_new("b", TRUE));
-#endif
 	return 0;
 }

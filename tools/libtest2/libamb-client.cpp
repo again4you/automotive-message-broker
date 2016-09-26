@@ -209,7 +209,7 @@ static int set_prop(GDBusProxy *proxy, const char *name, const char *prop_name, 
 /******************************************************************************
  * higher APIs
  *****************************************************************************/
-EXPORT int set_property(const char *obj_name, const char *prop_name, int zone, GVariant *value)
+EXPORT int amb_set_property(const char *obj_name, const char *prop_name, int zone, GVariant *value)
 {
 	int ret;
 	GDBusProxy *proxy;
@@ -238,7 +238,7 @@ EXPORT int set_property(const char *obj_name, const char *prop_name, int zone, G
 	return 0;
 }
 
-EXPORT int get_property_all_with_zone(GVariant **proplist, const char *obj_name, int zone)
+EXPORT int amb_get_property_all_with_zone(GVariant **proplist, const char *obj_name, int zone)
 {
 	GDBusProxy *proxy;
 	GDBusProxy *objproxy;
@@ -261,7 +261,7 @@ EXPORT int get_property_all_with_zone(GVariant **proplist, const char *obj_name,
 	return 0;
 }
 
-EXPORT int get_property_all(GList **proplist, const char *obj_name)
+EXPORT int amb_get_property_all(GList **proplist, const char *obj_name)
 {
 	GDBusProxy *proxy;
 	GVariant *ret;
@@ -286,7 +286,7 @@ EXPORT int get_property_all(GList **proplist, const char *obj_name)
 	return 0;
 }
 
-EXPORT int get_object_list(GList **objlist)
+EXPORT int amb_get_object_list(GList **objlist)
 {
 	GDBusProxy *proxy;
 	GError *err;
@@ -326,17 +326,17 @@ EXPORT int get_object_list(GList **objlist)
 	return 0;
 }
 
-EXPORT void release_property_all_with_zone(GVariant *proplist)
+EXPORT void amb_release_property_all_with_zone(GVariant *proplist)
 {
 	g_variant_unref(proplist);
 }
 
-EXPORT void release_object_list(GList *objlist)
+EXPORT void amb_release_object_list(GList *objlist)
 {
 	g_list_free_full(objlist, g_free);
 }
 
-EXPORT void release_property_all(GList *proplist)
+EXPORT void amb_release_property_all(GList *proplist)
 {
 	g_list_free_full(proplist, (GDestroyNotify)g_variant_unref);
 }

@@ -1,7 +1,7 @@
 prefix=@CMAKE_INSTALL_PREFIX@
 exec_prefix=${prefix}
 libdir=@LIB_INSTALL_DIR@
-includedir=@INCLUDE_INSTALL_DIR@/amb-client
+includedir=${prefix}/@INCLUDE_INSTALL_DIR@/amb-client
 
 Name: client library for ambd
 Description: client library for automotive message broker

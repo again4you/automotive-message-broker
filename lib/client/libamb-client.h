@@ -26,26 +26,28 @@ extern "C" {
 #include <glib.h>
 
 /**
- * primitive APIs 
+ * primitive APIs
  */
-
 
 /**
  * Get all properties from a specific object name
  *
- * @param[in] object name 
- * @return GList pointer that contains GVariant data 
+ * @param[out] GList pointer that contains GVariant data
+ * @param[in] object name
+ * @return 0 on success, -1 on error
  */
-int get_property_all(GList **proplist, const char *obj_name);
+int amb_get_property_all(GList **proplist, const char *obj_name);
 
 /**
  * Get all properties from a specific object name & zone number
  *
+ * @param[out] GVariant pointer that contains all properties
  * @param[in] object name
  * @param[in] zone number
+ * @return 0 on success, -1 on error
  */
-// GVariant *get_property_all_with_zone(const char *obj_name, int zone);
-int get_property_all_with_zone(GVariant **proplist, const char *obj_name, int zone);
+int amb_get_property_all_with_zone(GVariant **proplist, const char *obj_name, int zone);
+
 
 /**
  * Set a property value for a specific object name, property name & zone number
@@ -54,16 +56,44 @@ int get_property_all_with_zone(GVariant **proplist, const char *obj_name, int zo
  * @param[in] property name to be set
  * @param[in] zone number to be set
  * @param[in] value to be set
+ * @return 0 on success, -1 on error
  */
-int set_property(const char *obj_name, const char *prop_name, int zone, GVariant *value);
+int amb_set_property(const char *obj_name, const char *prop_name, int zone, GVariant *value);
+
+/**
+ * Release allocated memory space from get_property_all() function
+ *
+ * @param[in] GList pointer from get_property_all() function
+ * @return
+ */
+void amb_release_property_all(GList *proplist);
+
+/**
+ * Release allocated memory space from release_property_all_with_zone()
+ *
+ *
+ *
+ */
+void amb_release_property_all_with_zone(GVariant *proplist);
+
+/**
+ * Release allocated memory space from get_object_list() function
+ *
+ *
+ *
+ *
+ */
+void amb_release_object_list(GList *objlist);
 
 /**
  * higher APIs
  */
 
 /**
- * Get all object names that supported by Vehicle 
- * 
+ * Get all object names that supported by Vehicle
+ *
+ * @param[out] GList pointer that contains supported object
+ * @return 0 on success, -1 on error
  */
 int get_object_list(GList **objlist);
 

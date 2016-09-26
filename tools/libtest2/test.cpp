@@ -23,16 +23,7 @@ void test_get_object_list()
         }
         printf("\n");
 
-#if 0
-        // clean up
-        for (item = objlist; item != NULL; item = item->next) {
-                gchar *obj = static_cast<gchar*>(item->data);
-                objlist = g_list_remove(objlist, obj);
-                if (obj)
-                        g_free(obj);
-        }
-#endif
-	g_list_free_full(objlist, g_free);
+	release_object_list(objlist);
 }
 
 void test_get_property_all(const char *obj_name)
@@ -56,11 +47,7 @@ void test_get_property_all(const char *obj_name)
                 g_free(s);
         }
 
-        // clean up
-        for (item = retlist; item != NULL; item = item->next) {
-                GVariant *i = static_cast<GVariant*>(item->data);
-                g_variant_unref(i);
-        }
+	release_property_all(retlist);
 }
 
 void test_get_property_all_with_zone(const char *obj_name, int zone)
@@ -80,7 +67,8 @@ void test_get_property_all_with_zone(const char *obj_name, int zone)
         printf("%s\n", s);
 
         g_free(s);
-        g_variant_unref(ret);
+
+	release_property_all_with_zone(ret);
 }
 
 void test_set_property(const char *obj_name, const char *prop_name, int zone, GVariant *value)
@@ -113,7 +101,16 @@ int main()
 {
         test_get_object_list();
 
+	test_get_property_all("ClimateControl");
+        test_get_property_all("VehicleSpeed");
+
+        test_get_property_all_with_zone("ClimateControl", 5);
+
+        test_set_property("ClimateControl", "AirConditioning", 5, g_variant_new("b", TRUE));
+
 #if 0
+        test_get_property_all_with_zone("ClimateControl", 5);
+        test_set_property("ClimateControl", "AirConditioning", 5, g_variant_new("b", TRUE));
         test_get_property_all("ClimateControl");
         test_get_property_all("VehicleSpeed");
 
@@ -121,4 +118,5 @@ int main()
 
         test_set_property("ClimateControl", "AirConditioning", 5, g_variant_new("b", TRUE));
 #endif
+	return 0;
 }

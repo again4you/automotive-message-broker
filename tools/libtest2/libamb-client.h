@@ -47,6 +47,7 @@ int get_property_all(GList **proplist, const char *obj_name);
 // GVariant *get_property_all_with_zone(const char *obj_name, int zone);
 int get_property_all_with_zone(GVariant **proplist, const char *obj_name, int zone);
 
+
 /**
  * Set a property value for a specific object name, property name & zone number
  *
@@ -58,6 +59,31 @@ int get_property_all_with_zone(GVariant **proplist, const char *obj_name, int zo
 int set_property(const char *obj_name, const char *prop_name, int zone, GVariant *value);
 
 /**
+ * Release allocated memory space from get_property_all() function
+ *
+ * @param[in] GList pointer from get_property_all() function
+ * @return
+ */
+void release_property_all(GList *proplist);
+
+/**
+ * Release allocated memory space from release_property_all_with_zone()
+ *
+ *
+ *
+ */
+void release_property_all_with_zone(GVariant *proplist);
+
+/**
+ * Release allocated memory space from get_object_list() function
+ *
+ *
+ *
+ *
+ */
+void release_object_list(GList *objlist);
+
+/**
  * higher APIs
  */
 
@@ -66,6 +92,7 @@ int set_property(const char *obj_name, const char *prop_name, int zone, GVariant
  * 
  */
 int get_object_list(GList **objlist);
+
 
 #ifdef __cplusplus
 }

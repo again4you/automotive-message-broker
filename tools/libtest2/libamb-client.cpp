@@ -28,7 +28,6 @@
 #  define EXPORT __attribute__((visibility("default")))
 #endif
 
-
 #define AMB_BUS_NAME        "org.automotive.message.broker"
 #define AMB_INTERFACE_NAME  "org.automotive.Manager"
 #define DBUS_INTERFACE_NAME "org.freedesktop.DBus.Properties"
@@ -106,6 +105,7 @@ static GDBusProxy *find_objects_with_zone(GDBusProxy *proxy, const char *obj_nam
 	g_variant_get(ret, "(o)", &obj);
 	objproxy = get_proxy_from_obj(obj);
 
+	g_free(obj);
 	g_variant_unref(ret);
 
 	return objproxy;
@@ -117,7 +117,7 @@ static GList *find_objects(GDBusProxy *proxy, const char *obj_name)
 	GVariant *ret;
 	GVariantIter *iter;
 	GList *list = NULL;
-	const gchar *obj;
+	gchar *obj;
 
 	err = NULL;
 	ret = g_dbus_proxy_call_sync(proxy,
@@ -209,7 +209,6 @@ static int set_prop(GDBusProxy *proxy, const char *name, const char *prop_name, 
 /******************************************************************************
  * higher APIs
  *****************************************************************************/
-
 EXPORT int set_property(const char *obj_name, const char *prop_name, int zone, GVariant *value)
 {
 	int ret;
@@ -272,7 +271,6 @@ EXPORT int get_property_all(GList **proplist, const char *obj_name)
 	proxy = get_manager();
 	if (!proxy)
 		return -1;
-
 	objlist = find_objects(proxy, obj_name);
 	if (!objlist)
 		return -1;
@@ -282,6 +280,8 @@ EXPORT int get_property_all(GList **proplist, const char *obj_name)
 		ret = get_all(static_cast<GDBusProxy*>(obj->data), obj_name);
 		*proplist = g_list_append(*proplist, ret);
 	}
+
+	g_list_free_full(objlist, g_object_unref);
 
 	return 0;
 }
@@ -324,4 +324,19 @@ EXPORT int get_object_list(GList **objlist)
 	g_object_unref(proxy);
 
 	return 0;
+}
+
+EXPORT void release_property_all_with_zone(GVariant *proplist)
+{
+	g_variant_unref(proplist);
+}
+
+EXPORT void release_object_list(GList *objlist)
+{
+	g_list_free_full(objlist, g_free);
+}
+
+EXPORT void release_property_all(GList *proplist)
+{
+	g_list_free_full(proplist, (GDestroyNotify)g_variant_unref);
 }

@@ -9,3 +9,6 @@ all: $(TARGET)
 
 $(TARGET): % : %.c
 	$(CC) -o $@ $@.c $(PKG_CFG) $(CFLAGS)
+
+clean:
+	rm -rf ${TARGET}

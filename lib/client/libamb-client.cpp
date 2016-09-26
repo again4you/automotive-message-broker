@@ -196,11 +196,13 @@ static int set_prop(GDBusProxy *proxy, const char *name, const char *prop_name, 
 				&err);
 	if (!ret) {
 		DebugOut(DebugOut::Error) << __func__ << ": " << err->message;
+		g_free(obj_name);
 		g_clear_error(&err);
 		return -1;
 	}
 
 	g_variant_unref(ret);
+	g_free(obj_name);
 	return 0;
 }
 

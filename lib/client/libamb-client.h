@@ -61,29 +61,18 @@ int amb_get_property_all_with_zone(GVariant **proplist, const char *obj_name, in
 int amb_set_property(const char *obj_name, const char *prop_name, int zone, GVariant *value);
 
 /**
- * Release allocated memory space from get_property_all() function
+ * Release allocated memory space from amb_get_property_all() function
  *
- * @param[in] GList pointer from get_property_all() function
- * @return
+ * @param[in] GList pointer from amb_get_property_all() function
  */
 void amb_release_property_all(GList *proplist);
 
 /**
- * Release allocated memory space from release_property_all_with_zone()
+ * Release allocated memory space from amb_get_property_all_with_zone()
  *
- *
- *
+ * @param[in] GVariant pointer from amb_get_property_all_with_zone()
  */
 void amb_release_property_all_with_zone(GVariant *proplist);
-
-/**
- * Release allocated memory space from get_object_list() function
- *
- *
- *
- *
- */
-void amb_release_object_list(GList *objlist);
 
 /**
  * higher APIs
@@ -96,6 +85,13 @@ void amb_release_object_list(GList *objlist);
  * @return 0 on success, -1 on error
  */
 int amb_get_object_list(GList **objlist);
+
+/**
+ * Release allocated memory space from amb_get_object_list() function
+ *
+ * @param[in] GVariant pointer from amb_get_object_list() function
+ */
+void amb_release_object_list(GList *objlist);
 
 #ifdef __cplusplus
 }

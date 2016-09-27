@@ -35,6 +35,8 @@ extern "C" {
  * @param[out] GList pointer that contains GVariant data
  * @param[in] object name
  * @return 0 on success, -1 on error
+ *
+ * @see amb_release_property_all()
  */
 int amb_get_property_all(GList **proplist, const char *obj_name);
 
@@ -45,6 +47,8 @@ int amb_get_property_all(GList **proplist, const char *obj_name);
  * @param[in] object name
  * @param[in] zone number
  * @return 0 on success, -1 on error
+ *
+ * @see amb_release_property_all_with_zone()
  */
 int amb_get_property_all_with_zone(GVariant **proplist, const char *obj_name, int zone);
 
@@ -64,6 +68,8 @@ int amb_set_property(const char *obj_name, const char *prop_name, int zone, GVar
  * Release allocated memory space from amb_get_property_all() function
  *
  * @param[in] GList pointer from amb_get_property_all() function
+ *
+ * @see amb_get_property_all()
  */
 void amb_release_property_all(GList *proplist);
 
@@ -83,6 +89,8 @@ void amb_release_property_all_with_zone(GVariant *proplist);
  *
  * @param[out] GList pointer that contains supported object
  * @return 0 on success, -1 on error
+ *
+ * @see amb_release_object_list()
  */
 int amb_get_object_list(GList **objlist);
 
@@ -90,6 +98,8 @@ int amb_get_object_list(GList **objlist);
  * Release allocated memory space from amb_get_object_list() function
  *
  * @param[in] GVariant pointer from amb_get_object_list() function
+ *
+ * @see amb_get_object_list()
  */
 void amb_release_object_list(GList *objlist);
 

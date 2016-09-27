@@ -22,11 +22,17 @@
 #include <errno.h>
 
 #include "libamb-client.h"
-#include "debugout.h"
 
 #ifndef EXPORT
 #  define EXPORT __attribute__((visibility("default")))
 #endif
+
+#if defined DEBUG
+#  define DEBUGOUT(fmt, ...) do { fprintf(stderr, fmt, __VA_ARGS__); } while(0);
+#else
+#  define DEBUGOUT(fmt,...)
+#endif /* DEBUG */
+
 
 #define AMB_BUS_NAME        "org.automotive.message.broker"
 #define AMB_INTERFACE_NAME  "org.automotive.Manager"
@@ -40,6 +46,8 @@ static GDBusProxy *get_manager()
 	GError *err;
 	GDBusProxy *proxy;
 
+	DEBUGOUT("Enter %s()\n", __func__);
+
 	err = NULL;
 	proxy = g_dbus_proxy_new_for_bus_sync(G_BUS_TYPE_SYSTEM,
 			G_DBUS_PROXY_FLAGS_NONE,
@@ -50,7 +58,7 @@ static GDBusProxy *get_manager()
 			NULL,
 			&err);
 	if (!proxy) {
-		DebugOut(DebugOut::Error) << __func__ << ": " << err->message;
+		DEBUGOUT("%s: %s\n", __func__, err->message);
 		g_clear_error(&err);
 		return NULL;
 	}
@@ -72,7 +80,7 @@ static GDBusProxy *get_proxy_from_obj(const char *objpath)
 			NULL,
 			&err);
 	if (!proxy) {
-		DebugOut(DebugOut::Error) << __func__ << ": " << err->message;
+		DEBUGOUT("%s: %s\n", __func__, err->message);
 		g_clear_error(&err);
 		return NULL;
 	}
@@ -96,15 +104,14 @@ static GDBusProxy *find_objects_with_zone(GDBusProxy *proxy, const char *obj_nam
 				NULL,
 				&err);
 	if (!ret) {
-		DebugOut(DebugOut::Error) << __func__ << ": " << err->message;
+		DEBUGOUT("%s: %s\n", __func__, err->message);
 		g_clear_error(&err);
 		return NULL;
 	}
 
-	g_variant_get(ret, "(o)", &obj);
+	g_variant_get(ret, "(&o)", &obj);
 	objproxy = get_proxy_from_obj(obj);
 
-	g_free(obj);
 	g_variant_unref(ret);
 
 	return objproxy;
@@ -127,7 +134,7 @@ static GList *find_objects(GDBusProxy *proxy, const char *obj_name)
 			NULL,
 			&err);
 	if (!ret) {
-		DebugOut(DebugOut::Error) << __func__ << ": " << err->message;
+		DEBUGOUT("%s: %s\n", __func__, err->message);
 		g_clear_error(&err);
 		return NULL;
 	}
@@ -165,13 +172,13 @@ static GVariant *get_all(GDBusProxy *proxy, const char *name)
 			-1,
 			NULL,
 			&err);
+	g_free(obj_name);
 	if (!ret) {
-		DebugOut(DebugOut::Error) << __func__ << ": " << err->message;
+		DEBUGOUT("%s: %s\n", __func__, err->message);
 		g_clear_error(&err);
 		return NULL;
 	}
 
-	g_free(obj_name);
 	return ret;
 }
 
@@ -194,7 +201,7 @@ static int set_prop(GDBusProxy *proxy, const char *name, const char *prop_name, 
 				NULL,
 				&err);
 	if (!ret) {
-		DebugOut(DebugOut::Error) << __func__ << ": " << err->message;
+		DEBUGOUT("%s: %s\n", __func__, err->message);
 		g_free(obj_name);
 		g_clear_error(&err);
 		return -1;
@@ -272,12 +279,14 @@ EXPORT int amb_get_property_all(GList **proplist, const char *obj_name)
 		return -1;
 
 	objlist = find_objects(proxy, obj_name);
-	if (!objlist)
+	if (!objlist) {
+		g_object_unref(proxy);
 		return -1;
+	}
 
 	*proplist = NULL;
 	for (obj = objlist; obj != NULL; obj = obj->next) {
-		ret = get_all(static_cast<GDBusProxy*>(obj->data), obj_name);
+		ret = get_all(obj->data, obj_name);
 		*proplist = g_list_append(*proplist, ret);
 	}
 
@@ -308,8 +317,9 @@ EXPORT int amb_get_object_list(GList **objlist)
 			&err);
 
 	if (!ret) {
-		DebugOut(DebugOut::Error) << __func__ << ": " << err->message;
+		DEBUGOUT("%s: %s\n", __func__, err->message);
 		g_clear_error(&err);
+		g_object_unref(proxy);
 		return -1;
 	}
 

@@ -344,44 +344,62 @@ EXPORT void amb_release_property_all(GList *proplist)
 
 /**************************************************************************/
 
+static GHashTable *get_htable()
+{
+	static GHashTable *htable = NULL;
+	if (!htable) {
+		htable = g_hash_table_new(g_str_hash, g_str_equal);
+	}
+
+	return htable;
+}
+
 static void 
 on_signal_handler(GDBusProxy *proxy, 
 		gchar *sender_name,
 		gchar *signal_name,
 		GVariant *parameters,
-		gpointer user_data)
+		gpointer user_callback)
 {
-	gchar *s = g_variant_print(parameters, TRUE);
-	callback c = (callback)user_data;
+	gchar *obj_name;
+	GVariant *value;
+	AMB_SIGNAL_CALLBACK callback = (AMB_SIGNAL_CALLBACK)user_callback;
 
-	g_print("Sender: %s\n", sender_name);
-	g_print("Received Signal: %s\n%s\n", signal_name, s);
-
-	// TODO
-	// return signal_name is not PropertiesChanged
 	if (g_strcmp0("PropertiesChanged", signal_name)) {
 		fprintf(stderr, "Error: signal_name is %s\n", signal_name);
-		g_free(s);
 		return ;
 	}
-	
-	// return 
-	
-	// callback function call
-	if (c)
-		c("aaa", parameters);
 
-	g_free(s);
+	g_variant_get(parameters, "(s@a{sv}as)", &obj_name, &value, NULL);
+	if (callback)
+		callback(obj_name, value);
+
+
+	g_free(obj_name);
+	g_variant_unref(value);
+
 	return ;
 }
 
-EXPORT int amb_register_signal_handler(const gchar *objname,
-				callback c)
+struct signal_item{
+	guint id;
+	GObject *obj;
+};
+
+EXPORT int amb_register_signal_handler(gchar *objname,
+				AMB_SIGNAL_CALLBACK callback)
 {
 	GDBusProxy *proxy;
 	GList *objlist;
 	GList *obj;
 	guint id;	// have to save
+	GHashTable *htable;
+
+	htable = get_htable();
+	if (!htable) {
+		fprintf(stderr, "Error: htable is NULL\n");
+		return -1;
+	}
 
 	proxy = get_manager();
 	if (!proxy)
@@ -392,19 +410,85 @@ EXPORT int amb_register_signal_handler(const gchar *objname,
 		return -1;
 
 	for (obj = objlist; obj; obj = g_list_next(obj)) {
-		// id = g_signal_connect(obj->data, "g-signal", G_CALLBACK(on_signal_handler), c;
-		id = g_signal_connect(obj->data, "g-signal", G_CALLBACK(on_signal_handler), (gpointer)c);
+		id = g_signal_connect(obj->data, "g-signal", G_CALLBACK(on_signal_handler), (gpointer)callback);
+
+		struct signal_item *item = g_new0(struct signal_item, 1);
+		item->id = id;
+		item->obj = (GObject*)obj->data;
+
+		g_hash_table_insert(htable, 
+				g_strdup(g_dbus_proxy_get_object_path((GDBusProxy*)obj->data)),
+				item);
+
+		fprintf(stderr, "instance: %s ID: %u\n", 
+				g_dbus_proxy_get_object_path((GDBusProxy*)obj->data), id);
 	}
 
-	// clean up
-	// g_list_free_full(objlist, g_object_unref);
+	g_list_free(objlist);
 	g_object_unref(proxy);
 
 	return 0;
 }
 
-EXPORT int amb_unregister_signal_handler()
+EXPORT int amb_unregister_signal_handler(gchar *objname)
 {
+	GHashTable *htable;
+	GDBusProxy *proxy;
+	GList *objlist;
+	GList *obj;
+
+	// init
+	htable = get_htable();
+	if (!htable) {
+		fprintf(stderr, "Error: htable is NULL\n");
+		return -1;
+	}
+
+	proxy = get_manager();
+	if (!proxy)
+		return -1;
+
+	objlist = find_objects(proxy, objname);
+	if (!objlist) {
+		g_object_unref(proxy);
+		return -1;
+	}
+
+	for (obj = objlist; obj; obj = g_list_next(obj)) {
+		gpointer key;
+		struct signal_item *item;
+		gchar *objpath = (gchar*)g_dbus_proxy_get_object_path((GDBusProxy*)obj->data);
+
+		if (!g_hash_table_lookup_extended(htable, objpath, &key, (gpointer*)&item)) {
+			fprintf(stderr, "Error: fail to g_hash_table_lookup_extended()\n");
+			return -1;
+		}
+		
+		fprintf(stderr, "instance2: %s ID: %u\n", objpath, item->id);
+
+		g_signal_handler_disconnect(item->obj, item->id);
+		if (!g_hash_table_remove(htable, objpath)) {
+			fprintf(stderr, "Error: fail to g_hash_table_remove()\n");
+			return -1;
+		}
+
+		// cleanup
+		g_object_unref(item->obj);
+		g_free(key);
+		g_free(item);
+	
+	}
+	g_list_free_full(objlist, g_object_unref);
+	g_hash_table_destroy(htable);
+	g_object_unref(proxy);
+
 	return 0;
 }
+
+
+
+
+
+
+
 /**************************************************************************/

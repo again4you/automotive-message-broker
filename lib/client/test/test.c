@@ -97,6 +97,52 @@ void test_set_property(const char *obj_name, const char *prop_name, int zone, GV
 	amb_release_property_all_with_zone(ret);
 }
 
+static void signal_handler(const gchar *objname, GVariant *data)
+{
+	gchar *s;
+
+	if (!data)
+		return ;
+
+	s = g_variant_print(data, TRUE);
+	g_print("== signal_handler: %s\n", objname);
+	g_print("%s\n", s);
+
+	g_free(s);
+}
+
+static gboolean timer_callback(gpointer d)
+{
+	int rc;
+	gchar *objname = (gchar *)d;
+
+	rc = amb_unregister_property_changed_handler(objname);
+	if (rc != 0) {
+                fprintf(stderr, "Fail to amb_unregister_property_changed_handler(): %s\n", objname);
+	}
+
+	return FALSE;
+}
+
+void test_signal_listen(gchar *objname)
+{
+	GMainLoop *loop;
+	int rc;
+
+	rc = amb_register_property_changed_handler(objname, (AMB_PROPERTY_CHANGED_CALLBACK)signal_handler);
+	if (rc != 0) {
+                fprintf(stderr, "Fail to amb_register_property_changed_handler(): %s\n", objname);
+                return ;
+	}
+
+	g_timeout_add_seconds(10, timer_callback, objname);
+
+	loop = g_main_loop_new(NULL, FALSE);
+	g_main_loop_run(loop);
+
+	g_main_loop_unref(loop);
+}
+
 int main()
 {
 	test_get_object_list();
@@ -107,6 +153,8 @@ int main()
 	test_get_property_all_with_zone("ClimateControl", 5);
 
 	test_set_property("ClimateControl", "AirConditioning", 5, g_variant_new("b", TRUE));
+
+	test_signal_listen("VehicleSpeed");
 
 	return 0;
 }

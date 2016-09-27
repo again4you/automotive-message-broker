@@ -26,6 +26,17 @@ extern "C" {
 #include <glib.h>
 
 /**
+ * Property status changed callback function. This function is invocked
+ * when the properties of registered object are changed.
+ *
+ * @param[in] registered object name
+ * @param[in] changed status
+ *
+ * @see amb_unregister_property_changed_handler(), amb_unregister_property_changed_handler()
+ */
+typedef void (*AMB_PROPERTY_CHANGED_CALLBACK)(const gchar *objname, GVariant *data);
+
+/**
  * primitive APIs
  */
 
@@ -51,7 +62,6 @@ int amb_get_property_all(GList **proplist, const char *obj_name);
  * @see amb_release_property_all_with_zone()
  */
 int amb_get_property_all_with_zone(GVariant **proplist, const char *obj_name, int zone);
-
 
 /**
  * Set a property value for a specific object name, property name & zone number
@@ -79,6 +89,25 @@ void amb_release_property_all(GList *proplist);
  * @param[in] GVariant pointer from amb_get_property_all_with_zone()
  */
 void amb_release_property_all_with_zone(GVariant *proplist);
+
+/**
+ * Register property changed handler.
+ *
+ * @param[in] Object name to be monitored
+ * @param[in] Callback function when the properties of monitored object
+ * are changed.
+ *
+ * @see amb_unregister_property_changed_handler(), AMB_PROPERTY_CHANGED_CALLBACK */
+int amb_register_property_changed_handler(gchar *objname, AMB_PROPERTY_CHANGED_CALLBACK callback);
+
+/**
+ * Unregister property changed handler.
+ *
+ * @param[in] Object name to be monitored
+ *
+ * @see amb_register_property_changed_handler(), AMB_PROPERTY_CHANGED_CALLBACK
+ */
+int amb_unregister_property_changed_handler(gchar *objname);
 
 /**
  * higher APIs

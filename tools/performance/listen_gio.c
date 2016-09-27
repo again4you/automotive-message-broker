@@ -153,6 +153,9 @@ static void on_signal(GDBusProxy *proxy, const gchar *sender_name, const gchar *
 		if (!strcmp(key, "Time")) {
 			double f = g_variant_get_double(value);
 			printf("%lf = %lf - %lf\n", cur_ms - f, cur_ms, f);
+		} else if (!strcmp(key, "Zone")) {
+			gint32 v = g_variant_get_int32(value);
+			printf("Zone: %d\n", v);
 		}
 	}
 	g_variant_iter_free(iter);

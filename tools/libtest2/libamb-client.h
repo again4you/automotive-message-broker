@@ -93,6 +93,12 @@ void amb_release_object_list(GList *objlist);
  */
 int amb_get_object_list(GList **objlist);
 
+typedef void (*callback)(gchar *objname, GVariant *data);
+
+int amb_register_signal_handler(const gchar *objname, callback c);
+int amb_unregister_signal_handler();
+
+
 
 #ifdef __cplusplus
 }

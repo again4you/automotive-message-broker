@@ -340,3 +340,71 @@ EXPORT void amb_release_property_all(GList *proplist)
 {
 	g_list_free_full(proplist, (GDestroyNotify)g_variant_unref);
 }
+
+
+/**************************************************************************/
+
+static void 
+on_signal_handler(GDBusProxy *proxy, 
+		gchar *sender_name,
+		gchar *signal_name,
+		GVariant *parameters,
+		gpointer user_data)
+{
+	gchar *s = g_variant_print(parameters, TRUE);
+	callback c = (callback)user_data;
+
+	g_print("Sender: %s\n", sender_name);
+	g_print("Received Signal: %s\n%s\n", signal_name, s);
+
+	// TODO
+	// return signal_name is not PropertiesChanged
+	if (g_strcmp0("PropertiesChanged", signal_name)) {
+		fprintf(stderr, "Error: signal_name is %s\n", signal_name);
+		g_free(s);
+		return ;
+	}
+	
+	// return 
+	
+	// callback function call
+	if (c)
+		c("aaa", parameters);
+
+	g_free(s);
+	return ;
+}
+
+EXPORT int amb_register_signal_handler(const gchar *objname,
+				callback c)
+{
+	GDBusProxy *proxy;
+	GList *objlist;
+	GList *obj;
+	guint id;	// have to save
+
+	proxy = get_manager();
+	if (!proxy)
+		return -1;
+
+	objlist = find_objects(proxy, objname);
+	if (!objlist)
+		return -1;
+
+	for (obj = objlist; obj; obj = g_list_next(obj)) {
+		// id = g_signal_connect(obj->data, "g-signal", G_CALLBACK(on_signal_handler), c;
+		id = g_signal_connect(obj->data, "g-signal", G_CALLBACK(on_signal_handler), (gpointer)c);
+	}
+
+	// clean up
+	// g_list_free_full(objlist, g_object_unref);
+	g_object_unref(proxy);
+
+	return 0;
+}
+
+EXPORT int amb_unregister_signal_handler()
+{
+	return 0;
+}
+/**************************************************************************/

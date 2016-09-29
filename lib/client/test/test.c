@@ -116,7 +116,7 @@ static gboolean timer_callback(gpointer d)
 	int rc;
 	gchar *objname = (gchar *)d;
 
-	rc = amb_unregister_property_changed_handler(objname);
+	rc = amb_unregister_property_changed_handler(objname, 0);
 	if (rc != 0) {
                 fprintf(stderr, "Fail to amb_unregister_property_changed_handler(): %s\n", objname);
 	}
@@ -124,12 +124,12 @@ static gboolean timer_callback(gpointer d)
 	return FALSE;
 }
 
-void test_signal_listen(gchar *objname)
+void test_signal_listen(gchar *objname, ZoneType zone)
 {
 	GMainLoop *loop;
 	int rc;
 
-	rc = amb_register_property_changed_handler(objname, (AMB_PROPERTY_CHANGED_CALLBACK)signal_handler);
+	rc = amb_register_property_changed_handler(objname, zone, (AMB_PROPERTY_CHANGED_CALLBACK)signal_handler);
 	if (rc != 0) {
                 fprintf(stderr, "Fail to amb_register_property_changed_handler(): %s\n", objname);
                 return ;
@@ -154,7 +154,7 @@ int main()
 
 	test_set_property("ClimateControl", "AirConditioning", 5, g_variant_new("b", TRUE));
 
-	test_signal_listen("VehicleSpeed");
+	test_signal_listen("VehicleSpeed", 0);
 
 	return 0;
 }

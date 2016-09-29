@@ -26,6 +26,24 @@ extern "C" {
 #include <glib.h>
 
 /**
+ * Zone information in Vehicle
+ */
+enum Zone {
+	None = 0,
+	Front = 1,
+	Middle = 1 << 1,
+	Right = 1 << 2,
+	Left = 1 << 3,
+	Rear = 1 << 4,
+	Center = 1 << 5,
+	LeftSide = 1 << 6,
+	RightSide = 1 << 7,
+	FrontSide = 1 << 8,
+	BackSide = 1 << 9
+};
+typedef int ZoneType;
+
+/**
  * Property status changed callback function. This function is invocked
  * when the properties of registered object are changed.
  *
@@ -45,7 +63,7 @@ typedef void (*AMB_PROPERTY_CHANGED_CALLBACK)(const gchar *objname, GVariant *da
  *
  * @param[out] GList pointer that contains GVariant data
  * @param[in] object name
- * @return 0 on success, -1 on error
+ * @return 0 on success, negative errno value on error
  *
  * @see amb_release_property_all()
  */
@@ -57,11 +75,11 @@ int amb_get_property_all(GList **proplist, const char *obj_name);
  * @param[out] GVariant pointer that contains all properties
  * @param[in] object name
  * @param[in] zone number
- * @return 0 on success, -1 on error
+ * @return 0 on success, negative errno value on error
  *
  * @see amb_release_property_all_with_zone()
  */
-int amb_get_property_all_with_zone(GVariant **proplist, const char *obj_name, int zone);
+int amb_get_property_all_with_zone(GVariant **proplist, const char *obj_name, ZoneType zone);
 
 /**
  * Set a property value for a specific object name, property name & zone number
@@ -70,9 +88,9 @@ int amb_get_property_all_with_zone(GVariant **proplist, const char *obj_name, in
  * @param[in] property name to be set
  * @param[in] zone number to be set
  * @param[in] value to be set
- * @return 0 on success, -1 on error
+ * @return 0 on success, negative errno value on error
  */
-int amb_set_property(const char *obj_name, const char *prop_name, int zone, GVariant *value);
+int amb_set_property(const char *obj_name, const char *prop_name, ZoneType zone, GVariant *value);
 
 /**
  * Release allocated memory space from amb_get_property_all() function
@@ -94,20 +112,26 @@ void amb_release_property_all_with_zone(GVariant *proplist);
  * Register property changed handler.
  *
  * @param[in] Object name to be monitored
+ * @param[in] zone number to be set
  * @param[in] Callback function when the properties of monitored object
  * are changed.
+ * @return 0 on success, negative errno value on error
  *
  * @see amb_unregister_property_changed_handler(), AMB_PROPERTY_CHANGED_CALLBACK */
-int amb_register_property_changed_handler(gchar *objname, AMB_PROPERTY_CHANGED_CALLBACK callback);
+int amb_register_property_changed_handler(gchar *objname,
+					ZoneType zone,
+					AMB_PROPERTY_CHANGED_CALLBACK callback);
 
 /**
  * Unregister property changed handler.
  *
  * @param[in] Object name to be monitored
+ * @param[in] zone number to be set
+ * @return 0 on success, negative errno value on error
  *
  * @see amb_register_property_changed_handler(), AMB_PROPERTY_CHANGED_CALLBACK
  */
-int amb_unregister_property_changed_handler(gchar *objname);
+int amb_unregister_property_changed_handler(gchar *objname, ZoneType zone);
 
 /**
  * higher APIs
@@ -117,7 +141,7 @@ int amb_unregister_property_changed_handler(gchar *objname);
  * Get all object names that supported by Vehicle
  *
  * @param[out] GList pointer that contains supported object
- * @return 0 on success, -1 on error
+ * @return 0 on success, negative errno value on error
  *
  * @see amb_release_object_list()
  */

@@ -40,7 +40,7 @@
 
 struct signal_item {
 	guint id;
-	GObject *obj;
+	GDBusProxy *obj;
 };
 
 /******************************************************************************
@@ -48,24 +48,23 @@ struct signal_item {
  *****************************************************************************/
 static GDBusProxy *get_manager()
 {
-	GError *err;
-	GDBusProxy *proxy;
+	static GDBusProxy *proxy = NULL;
 
-	DEBUGOUT("Enter %s()\n", __func__);
-
-	err = NULL;
-	proxy = g_dbus_proxy_new_for_bus_sync(G_BUS_TYPE_SYSTEM,
-			G_DBUS_PROXY_FLAGS_NONE,
-			NULL,
-			AMB_BUS_NAME,
-			"/",
-			AMB_INTERFACE_NAME,
-			NULL,
-			&err);
-	if (!proxy) {
-		DEBUGOUT("%s: %s\n", __func__, err->message);
-		g_clear_error(&err);
-		return NULL;
+	if(!proxy) {
+		GError *err = NULL;
+		proxy = g_dbus_proxy_new_for_bus_sync(G_BUS_TYPE_SYSTEM,
+				G_DBUS_PROXY_FLAGS_NONE,
+				NULL,
+				AMB_BUS_NAME,
+				"/",
+				AMB_INTERFACE_NAME,
+				NULL,
+				&err);
+		if (!proxy) {
+			DEBUGOUT("%s: %s\n", __func__, err->message);
+			g_clear_error(&err);
+			return NULL;
+		}
 	}
 	return proxy;
 }
@@ -93,7 +92,7 @@ static GDBusProxy *get_proxy_from_obj(const char *objpath)
 	return proxy;
 }
 
-static GDBusProxy *find_objects_with_zone(GDBusProxy *proxy, const char *obj_name, int zone)
+static GDBusProxy *find_objects_with_zone(GDBusProxy *proxy, const char *obj_name, ZoneType zone)
 {
 	GError *err;
 	GVariant *ret;
@@ -145,7 +144,7 @@ static GList *find_objects(GDBusProxy *proxy, const char *obj_name)
 	}
 
 	g_variant_get(ret, "(ao)", &iter);
-	while (g_variant_iter_loop(iter, "o", &obj)) {
+	while (g_variant_iter_loop(iter, "&o", &obj)) {
 		GDBusProxy *objproxy;
 
 		objproxy = get_proxy_from_obj(obj);
@@ -209,7 +208,7 @@ static int set_prop(GDBusProxy *proxy, const char *name, const char *prop_name, 
 		DEBUGOUT("%s: %s\n", __func__, err->message);
 		g_free(obj_name);
 		g_clear_error(&err);
-		return -1;
+		return -EINVAL;
 	}
 
 	g_variant_unref(ret);
@@ -251,11 +250,10 @@ static void on_signal_handler(GDBusProxy *proxy,
 	return ;
 }
 
-
 /******************************************************************************
  * higher APIs
  *****************************************************************************/
-EXPORT int amb_set_property(const char *obj_name, const char *prop_name, int zone, GVariant *value)
+EXPORT int amb_set_property(const char *obj_name, const char *prop_name, ZoneType zone, GVariant *value)
 {
 	int ret;
 	GDBusProxy *proxy;
@@ -263,46 +261,41 @@ EXPORT int amb_set_property(const char *obj_name, const char *prop_name, int zon
 
 	proxy = get_manager();
 	if (!proxy)
-		return -1;
+		return -ENETUNREACH;
 
 	objproxy = find_objects_with_zone(proxy, obj_name, zone);
 	if (!objproxy) {
-		g_object_unref(proxy);
-		return -1;
+		return -EINVAL;
 	}
 
 	ret = set_prop(objproxy, obj_name, prop_name, value);
 	if (ret != 0) {
 		g_object_unref(objproxy);
-		g_object_unref(proxy);
 		return ret;
 	}
 
 	g_object_unref(objproxy);
-	g_object_unref(proxy);
 
 	return 0;
 }
 
-EXPORT int amb_get_property_all_with_zone(GVariant **proplist, const char *obj_name, int zone)
+EXPORT int amb_get_property_all_with_zone(GVariant **proplist, const char *obj_name, ZoneType zone)
 {
 	GDBusProxy *proxy;
 	GDBusProxy *objproxy;
 
 	proxy = get_manager();
 	if (!proxy)
-		return -1;
+		return -ENETUNREACH;
 
 	objproxy = find_objects_with_zone(proxy, obj_name, zone);
 	if (!objproxy) {
-		g_object_unref(proxy);
-		return -1;
+		return -EINVAL;
 	}
 
 	*proplist = get_all(objproxy, obj_name);
 
 	g_object_unref(objproxy);
-	g_object_unref(proxy);
 
 	return 0;
 }
@@ -316,12 +309,11 @@ EXPORT int amb_get_property_all(GList **proplist, const char *obj_name)
 
 	proxy = get_manager();
 	if (!proxy)
-		return -1;
+		return -ENETUNREACH;
 
 	objlist = find_objects(proxy, obj_name);
 	if (!objlist) {
-		g_object_unref(proxy);
-		return -1;
+		return -EINVAL;
 	}
 
 	*proplist = NULL;
@@ -330,7 +322,7 @@ EXPORT int amb_get_property_all(GList **proplist, const char *obj_name)
 		*proplist = g_list_append(*proplist, ret);
 	}
 
-	g_list_free_full(objlist, g_object_unref);
+	amb_release_property_all(objlist);
 
 	return 0;
 }
@@ -345,7 +337,7 @@ EXPORT int amb_get_object_list(GList **objlist)
 
 	proxy = get_manager();
 	if (!proxy)
-		return -1;
+		return -ENETUNREACH;
 
 	err = NULL;
 	ret = g_dbus_proxy_call_sync(proxy,
@@ -359,19 +351,17 @@ EXPORT int amb_get_object_list(GList **objlist)
 	if (!ret) {
 		DEBUGOUT("%s: %s\n", __func__, err->message);
 		g_clear_error(&err);
-		g_object_unref(proxy);
-		return -1;
+		return -ENETUNREACH;
 	}
 
 	*objlist = NULL;
 	g_variant_get(ret, "(as)", &iter);
-	while (g_variant_iter_loop(iter, "s", &objname)) {
+	while (g_variant_iter_loop(iter, "&s", &objname)) {
 		*objlist = g_list_append(*objlist, g_strdup(objname));
 	}
 
 	g_variant_iter_free(iter);
 	g_variant_unref(ret);
-	g_object_unref(proxy);
 
 	return 0;
 }
@@ -392,101 +382,95 @@ EXPORT void amb_release_property_all(GList *proplist)
 }
 
 EXPORT int amb_register_property_changed_handler(gchar *objname,
+				ZoneType zone,
 				AMB_PROPERTY_CHANGED_CALLBACK callback)
 {
 	GDBusProxy *proxy;
-	GList *objlist;
-	GList *obj;
+	GDBusProxy *objproxy;
+	guint id;
+	struct signal_item *item;
 	GHashTable *htable;
 
 	htable = get_htable();
 	if (!htable) {
 		DEBUGOUT("Error: get_htable() returns NULL\n");
-		return -1;
+		return -ENOMEM;
 	}
 
 	proxy = get_manager();
 	if (!proxy)
-		return -1;
+		return -ENETUNREACH;
 
-	objlist = find_objects(proxy, objname);
-	if (!objlist) {
-		g_object_unref(proxy);
-		return -1;
+	objproxy = find_objects_with_zone(proxy, objname, zone);
+	if (!objproxy) {
+		DEBUGOUT("Error: find_objects_with_zone() Object Name: %s, ZoneType: %d\n",
+				objname, zone);
+		return -EINVAL;
 	}
 
-	for (obj = objlist; obj; obj = g_list_next(obj)) {
-		guint id;
-		struct signal_item *item;
-
-		id = g_signal_connect(obj->data, "g-signal", G_CALLBACK(on_signal_handler), (gpointer)callback);
-		item = g_new0(struct signal_item, 1);
-		item->id = id;
-		item->obj = (GObject*)obj->data;
-
-		g_hash_table_insert(htable,
-				g_strdup(g_dbus_proxy_get_object_path((GDBusProxy*)obj->data)),
-				item);
-
-		DEBUGOUT("instance: %s ID: %u\n",
-				g_dbus_proxy_get_object_path((GDBusProxy*)obj->data), id);
+	item = g_new0(struct signal_item, 1);
+	if (!item) {
+		DEBUGOUT("Error: fail to g_new0()\n");
+		g_object_unref(objproxy);
+		return -ENOMEM;
 	}
 
-	g_list_free(objlist);
-	g_object_unref(proxy);
+	id = g_signal_connect(objproxy, "g-signal", G_CALLBACK(on_signal_handler), (gpointer)callback);
+	item->id = id;
+	item->obj = objproxy;
+
+	g_hash_table_insert(htable,
+			g_strdup(g_dbus_proxy_get_object_path(objproxy)),
+			item);
+
+	DEBUGOUT("instance: %s ID: %u\n", g_dbus_proxy_get_object_path(objproxy), id);
 
 	return 0;
 }
 
-EXPORT int amb_unregister_property_changed_handler(gchar *objname)
+EXPORT int amb_unregister_property_changed_handler(gchar *objname, ZoneType zone)
 {
 	GHashTable *htable;
 	GDBusProxy *proxy;
-	GList *objlist;
-	GList *obj;
+	GDBusProxy *objproxy;
+	gpointer key;
+	struct signal_item *item;
+	gchar *objpath;
 
 	htable = get_htable();
 	if (!htable) {
 		DEBUGOUT("Error: get_htable() returns NULL\n");
-		return -1;
+		return -ENOMEM;
 	}
 
 	proxy = get_manager();
 	if (!proxy)
-		return -1;
+		return -ENETUNREACH;
 
-	objlist = find_objects(proxy, objname);
-	if (!objlist) {
-		g_object_unref(proxy);
-		return -1;
+	objproxy = find_objects_with_zone(proxy, objname, zone);
+	if (!objproxy) {
+		DEBUGOUT("Error: find_objects_with_zone() Object Name: %s, ZoneType: %d\n",
+				objname, zone);
+		return -EINVAL;
 	}
 
-	for (obj = objlist; obj; obj = g_list_next(obj)) {
-		gpointer key;
-		struct signal_item *item;
-		gchar *objpath = (gchar*)g_dbus_proxy_get_object_path((GDBusProxy*)obj->data);
+	objpath = (gchar*)g_dbus_proxy_get_object_path(objproxy);
 
-		if (!g_hash_table_lookup_extended(htable, objpath, &key, (gpointer*)&item)) {
-			DEBUGOUT("Error: fail to find the object :%s\n", objpath);
-			continue;
-		}
-
-		DEBUGOUT("instance: %s ID: %u\n", objpath, item->id);
-
-		g_signal_handler_disconnect(item->obj, item->id);
-		if (!g_hash_table_remove(htable, objpath)) {
-			DEBUGOUT("Error: fail to g_hash_table_remove()\n");
-		}
-
-		// cleanup
-		g_object_unref(item->obj);
-		g_free(key);
-		g_free(item);
-
+	if (!g_hash_table_lookup_extended(htable, objpath, &key, (gpointer*)&item)) {
+		DEBUGOUT("Error: fail to find the object :%s\n", objpath);
+		g_object_unref(objproxy);
+		return -EINVAL;
 	}
-	g_list_free_full(objlist, g_object_unref);
-	g_hash_table_destroy(htable);
-	g_object_unref(proxy);
+
+	DEBUGOUT("instance: %s ID: %u\n", objpath, item->id);
+
+	g_signal_handler_disconnect(item->obj, item->id);
+	if (!g_hash_table_remove(htable, objpath)) {
+		DEBUGOUT("Error: fail to g_hash_table_remove()\n");
+	}
+
+	g_free(key);
+	g_free(item);
 
 	return 0;
 }

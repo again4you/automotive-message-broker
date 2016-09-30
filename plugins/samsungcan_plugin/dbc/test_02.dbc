@@ -1,0 +1,256 @@
+VERSION ""
+
+
+NS_ : 
+	NS_DESC_
+	CM_
+	BA_DEF_
+	BA_
+	VAL_
+	CAT_DEF_
+	CAT_
+	FILTER
+	BA_DEF_DEF_
+	EV_DATA_
+	ENVVAR_DATA_
+	SGTYPE_
+	SGTYPE_VAL_
+	BA_DEF_SGTYPE_
+	BA_SGTYPE_
+	SIG_TYPE_REF_
+	VAL_TABLE_
+	SIG_GROUP_
+	SIG_VALTYPE_
+	SIGTYPE_VALTYPE_
+	BO_TX_BU_
+	BA_DEF_REL_
+	BA_REL_
+	BA_DEF_DEF_REL_
+	BU_SG_REL_
+	BU_EV_REL_
+	BU_BO_REL_
+	SG_MUL_VAL_
+
+BS_:
+
+BU_:
+
+
+BO_ 519 CAN07: 8 Vector__XXX
+ SG_ FR_KeyEvent24 : 24|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ FR_KeyEvent23 : 23|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ FR_KeyEvent22 : 22|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ FR_KeyEvent21 : 21|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ FR_KeyEvent20 : 20|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ FR_KeyEvent19 : 19|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ FR_KeyEvent18 : 18|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ FR_KeyEvent17 : 17|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ FR_KeyEvent16 : 16|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ FR_KeyEvent15 : 14|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ FR_KeyEvent14 : 13|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ FR_KeyEvent13 : 12|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ FR_KeyEvent12 : 11|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ FR_KeyEvent11 : 10|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ FR_KeyEvent10 : 9|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ FR_KeyEvent09 : 8|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ FR_KeyEvent08 : 7|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ FR_KeyEvent07 : 6|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ FR_KeyEvent06 : 5|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ FR_KeyEvent05 : 4|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ FR_KeyEvent04 : 3|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ FR_KeyEvent03 : 2|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ FR_KeyEvent02 : 1|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ FR_KeyEvent01 : 0|1@1+ (1,0) [0|1] "" Vector__XXX
+
+BO_ 518 CAN06: 8 Vector__XXX
+ SG_ LampDoorOpenTrunk : 45|8@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ LampDoorOpenBonnet : 44|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ LampDoorOpenR_R : 43|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ LampDoorOpenR_R : 42|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ LampDoorOpenF_R : 41|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ LampDoorOpenF_L : 40|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ LampAutomaticHold : 39|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ LampCruiseCntSet : 38|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ LampCruiseCnt : 37|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ LampHighBeam : 36|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ LampHighBeamAuto : 35|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ LampTailLight : 34|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ LampFrontFog : 33|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ LampHazardLight : 32|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ LampRearFogLights : 28|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ WarningImmobilizer : 27|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ StsTrunkOpen : 26|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ StsDoorOpen : 25|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ WarningABS : 24|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ SystemESCOff : 23|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ SystemESC : 22|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ LowWasher : 21|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ WarningTPM : 20|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ FuelLeveltooLow : 18|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ EmergencyFlasher : 17|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ CheckEnging : 16|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ WarningEBD : 6|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ WarningBrake : 5|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ CheckPowerSteering : 4|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ WarningLowOilLevel : 3|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ CheckCharging : 2|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ WarningAirbag : 1|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ WarningSafetybelts : 0|1@1+ (1,0) [0|1] "" Vector__XXX
+
+BO_ 261 CAN05: 8 Vector__XXX
+ SG_ AliveCounter : 56|8@1+ (1,0) [1|9] "" Vector__XXX
+
+BO_ 260 CAN04: 8 Vector__XXX
+ SG_ TPMS_RR : 24|8@1+ (1,0) [0|60] "psi" Vector__XXX
+ SG_ TPMS_RL : 16|8@1+ (1,0) [0|60] "psi" Vector__XXX
+ SG_ TPMS_FR : 8|8@1+ (1,0) [0|60] "psi" Vector__XXX
+ SG_ TPMS_FL : 0|8@1+ (1,0) [0|60] "psi" Vector__XXX
+
+BO_ 259 CAN03: 8 Vector__XXX
+ SG_ FuelGage : 56|8@1+ (1,0) [0|100] "%" Vector__XXX
+ SG_ WarterTemperature : 16|16@1+ (1,0) [0|16] "EA" Vector__XXX
+ SG_ EngineRPM : 0|16@1+ (1,0) [0|8000] "rpm" Vector__XXX
+
+BO_ 258 CAN02: 8 Vector__XXX
+ SG_ VehicleOdometer : 40|24@1+ (1,0) [0|999000] "km" Vector__XXX
+ SG_ VehicleSpeed : 0|16@1+ (1,0) [0|512] "km/h" Vector__XXX
+
+BO_ 257 CAN01: 8 Vector__XXX
+ SG_ DriveMode : 16|8@1+ (1,0) [0|255] "" Vector__XXX
+ SG_ GearboxPosition : 8|8@1+ (1,0) [0|8] "" Vector__XXX
+ SG_ GearboxPositionDisplay : 0|8@1+ (1,0) [0|15] "" Vector__XXX
+
+
+
+CM_ SG_ 519 FR_KeyEvent18 "15. Drive Mode";
+CM_ SG_ 519 FR_KeyEvent17 "14. CANCEL";
+CM_ SG_ 519 FR_KeyEvent16 "13. ?SET";
+CM_ SG_ 519 FR_KeyEvent15 "12. +RES";
+CM_ SG_ 519 FR_KeyEvent14 "11. CRUSE";
+CM_ SG_ 519 FR_KeyEvent13 "10. OK";
+CM_ SG_ 519 FR_KeyEvent12 "9. 메뉴 탐색(하)";
+CM_ SG_ 519 FR_KeyEvent11 "9. 메뉴 탐색(상)";
+CM_ SG_ 519 FR_KeyEvent10 "8. 메뉴";
+CM_ SG_ 519 FR_KeyEvent09 "7. 전화 종료";
+CM_ SG_ 519 FR_KeyEvent08 "6. 통화";
+CM_ SG_ 519 FR_KeyEvent07 "5. 미디어 탐색(하)";
+CM_ SG_ 519 FR_KeyEvent06 "5. 미디어 탐색(상)";
+CM_ SG_ 519 FR_KeyEvent05 "4.VOL-";
+CM_ SG_ 519 FR_KeyEvent04 "4.VOL+";
+CM_ SG_ 519 FR_KeyEvent03 "3.음소거(MUTE)";
+CM_ SG_ 519 FR_KeyEvent02 "2. MODE";
+CM_ SG_ 519 FR_KeyEvent01 "1. Voice Command";
+CM_ SG_ 518 LampDoorOpenTrunk "트렁크 열린경우, LAMP ON";
+CM_ SG_ 518 LampDoorOpenBonnet "보닛 열린경우, LAMP ON";
+CM_ SG_ 518 LampDoorOpenR_R "뒷자석, 왼쪽 열린경우, LAMP ON";
+CM_ SG_ 518 LampDoorOpenR_R "뒷자석, 왼쪽 열린경우, LAMP ON";
+CM_ SG_ 518 LampDoorOpenF_R "전방, 오른쪽 열경우, LAMP ON";
+CM_ SG_ 518 LampDoorOpenF_L "전방, 왼쪽 열린경우, LAMP ON";
+CM_ SG_ 518 LampAutomaticHold "버튼을 눌러 자동 정차 기능을 작동시키면 ‘흰색’ 표시등이 켜짐. 주행 중 브레이크 페달을 밟고 차량이 멈추면 자동 정차 기능이 작동되면서
+표시등이 흰색에서 ‘녹색’으로 바뀌며 다시 차량이 출발하면 녹색에서 흰색으로 바뀜. 기능 고장 시 계기판에 AUTO HOLD 등이 ‘황색’으로 켜짐.";
+CM_ SG_ 518 LampCruiseCntSet "크루즈 표시등이 켜진 상태에서 원하는 속도에 도달했을 때 「SET-」 스위치를 짧게 당겨 내리면 켜짐. 「CANCEL」 스위치를 누르거나 크루즈 컨트롤 기능이 해제될 경우 꺼짐.";
+CM_ SG_ 518 LampCruiseCnt "크루즈 컨트롤 「CRUISE」 스위치를 누르면 CRUISE 표시등이 켜져 크루즈 컨트롤을 사용할 수 있음을 나타내며, 스위치를 다시 한번 누르면 CRUISE 표시등이 꺼져 크루즈 컨트롤이 작동되지 않음을 나타냄.";
+CM_ SG_ 518 LampHighBeam "전조등이 켜진 상태에서 조명 스위치를 운전자방향으로 당기거나, 앞으로 밀었다가 놓으면 전조등(상향)이 켜지면서 표시등이 켜짐.
+※ [경고] 마주 오는 차량이 있을 경우 상대편 운전자의 시야를 방해하여 사고의 원인이 될 수 있으므로 상향등 사용 시 주의해야 함.";
+CM_ SG_ 518 LampHighBeamAuto "조명 스위치를 미등 위치에 두면 켜짐.
+조명 스위치가 「AUTO」 에 있으면 센서가 감지하는 외부 조건에 따라 미등 표시등은 켜지거나 꺼짐";
+CM_ SG_ 518 LampTailLight "조명 스위치를 미등 위치에 두면 켜짐.
+조명 스위치가 「AUTO」 에 있으면 센서가 감지하는 외부 조건에 따라 미등 표시등은 켜지거나 꺼짐";
+CM_ SG_ 518 LampFrontFog "안개등을 켜면 표시등이 켜지고, 안개등을 끄면 표시등도 꺼짐";
+CM_ SG_ 518 LampHazardLight "비상 경고등 버튼을 누르면 모든 방향 지시등이 깜빡임.
+방향 지시등과 비상 경고등이 깜빡이는 횟수가 이상하게 빠르거나 늦을 때는 전구의 단선이나 접지 불량일 수 있으므로 점검해야 함.";
+CM_ SG_ 518 LampRearFogLights "후면 안개등을 켜면 표시등이 켜지고, 후면 안개등을 끄면 표시등도 꺼짐.";
+CM_ SG_ 518 WarningImmobilizer "키 확인 표시등은 상황에 따라 켜지거나 꺼짐. ";
+CM_ SG_ 518 StsTrunkOpen "트렁크가 열려 있거나 완전히 닫혀 있지 않은 경우에 경고등이 켜지고 트렁크가 완전히 닫히면 꺼짐.";
+CM_ SG_ 518 StsDoorOpen "도어가 열려 있거나 완전히 닫혀 있지 않은 경우에 경고등이 켜지고 도어가 완전히 닫히면 꺼짐.";
+CM_ SG_ 518 WarningABS "시동을 「ON」 하면 약 3초간 켜졌다가 꺼짐. 3초 후에도 계속 경고등이 켜져 있으면 ABS장치에 이상이 있는 것이므로 서비스센터에서 점검과 정비를 받아야 함. (※ ABS : Anti-Lock Brake System)";
+CM_ SG_ 518 SystemESCOff "시동 「 ON」 상태에서 켜지고, ESC 장치에 이상이 없으면 약 3초 후 꺼짐. 계기판 사용자 설정에서 ESC를 해제시키면 표시등이 켜져 ESC 장치가 작동되지 않고 있음 을 알려줌";
+CM_ SG_ 518 SystemESC "시동 「 ON」 상태에서 표시등이 켜지고, ESC 장치에 이상이 없으면 약 3초 후 꺼짐. 운전 중 ESC가 작동할 때는 작동하는 동안 깜빡임.
+단, 작동 표시등이 꺼지지 않고 계속 켜지거나 주 행 중 켜질 경우 ESC 장치에 이상이 생긴 것이므로 서비스센터에서 점검을 받아야 함. ";
+CM_ SG_ 518 LowWasher "워셔 탱크내의 워셔액이 부족하면 표시되며, 워셔액을 즉시 보충해야 함";
+CM_ SG_ 518 WarningTPM "시동 「ON」 상태에서 약 3초간 경고 등이 켜집니다. 만약 경고등이 켜지지 않거나 일정시간(약1분) 깜빡인 후 켜지면 타이어 공기압 경보 시스템에 이상이 있는 것이므로 서비스센터에 정비를 의뢰해야 함. (타이어 공기압이 현저하게 낮아질 경우 저압 타이어 경고등이 켜짐)";
+CM_ SG_ 518 FuelLeveltooLow "연료의 잔류량이 적을 때 경고등이 켜지며, 경고등이 켜지면 바로 연료를 보충해야 함. 
+(연료가 완전히 소모된 상태로 운전하면 엔진 및 연료장치에 고장을 일으킬 수 있으므로, 경고등이 켜지면 즉시 연료를 보충해야 함)";
+CM_ SG_ 518 EmergencyFlasher "다음과 같은 시스템에 이상 발생 시, 통합 경고등이 점등되며, 세부 경고 내용은 클러스터 하단 영역에 함께 표시됨. 
+? 후측방 경보 시스템 ? 프리액티브 시트 벨트 ? 스마트 크루즈 컨트롤 ? 와셔액 부족 경고등 ? 전자 제어 서스펜션 ? 액티브 후드 시스템  ? 진동 핸들 시스템 ? 연료 부족 ? 타이어 공기압 감지 시스템 ? 긴급 제동 시스템 등";
+CM_ SG_ 518 CheckEnging "엔진의 정상적인 작동을 제어하는 엔진 전자제어 장치나 배기가스 제어에 관계되는 각종 센서에 이상이 있을 때, 또는 연료공급장치(연료탱크, 연료필터 연결부, 연료라인 등)의 누유, 증발가스 제어장치(캐니스터, 연결 호스류) 부분의 누수 발생시 켜지며, 주행 중에 켜지면 가능한 빨리 서비스센터에 정비를 의뢰해야함.";
+CM_ SG_ 518 WarningEBD "브레이크 경고등과 ABS 경고등이 동시에 켜진 경우, 제동력의 전·후륜 배분 기능(EBD)도 작동하지 않기 때문에 급제동을 할 때 차가 불안정할 수 있음. 경고등이 켜지면 고속 주행이나 급제동을 피하고 곧바로 서비스센터에서 점검과 정비를 받아야 함. ";
+CM_ SG_ 518 WarningBrake "주차 브레이크가 작동하거나 브레이크 액이 부족할 때 경고등이 켜짐.  주차 브레이크를 푼 상태에서 시동을 「ON」하면 경고등이 켜지며 브레이크에 이상이 없으면 시동 후 꺼짐. 엔진 시동 후 주차 브레이크를 푼 상태에서도 경고 등이 꺼지지 않으면 브레이크 액의 양을 점검한 후 부족하면 보충 해야하며, 보충 후에도 브레이크 경고 등이 계속 켜져 있을 경우에는 서비스센터에서 점검을 받아야 함. ";
+CM_ SG_ 518 CheckPowerSteering "시동을 「 ON」 으로 하거나 전동 파워 스티어링 (MDPS)이 고장일 경우 경고등이 켜짐. 
+주행 중 경고등이 켜질 경우 전동 파워 스티어링 시스템에 문제가 예상되므로 자사 직영 서비스센터에서 점검을 받아야 하며, 전동 파워 스티어링 경고등은 차량에 문제가 없더라도 시동 「 ON」 상태에서 약 3초간 점등되었다가 소등됨. (※ MDPS : Motor Driven Power Steering)";
+CM_ SG_ 518 WarningLowOilLevel "엔진 오일이 부족하면 유압이 낮아져서 경고등이 켜짐. 주행 중에 이 경고등이 켜지면 도로 옆으로 차를 안전하게 정차하고 엔진 오일양 을 점검한 후 부족하면 보충해야 함. 보충 후에도 경고등이 꺼지지 않으면 서비스센터에서 정비를 받아야 함.  (경고등이 켜진 상태에서 계속 주행하면 엔진 고장의 원인이 될 수 있음)";
+CM_ SG_ 518 CheckCharging "드라이브 벨트가 끊어졌을 때, 또는 충전 장치가 고장 났을 때 경고등이 켜짐. 경고등이 켜진 채로 주행하면 오버히트나 배터리 방전을 일으킬 수 있음. 경고등이 켜졌을 때는 배터리 충전상태를 확인하고 드라이브 벨트나 충전 계통을 점검해야 함. 점검한 후에도 경고등이 꺼지지 않을 경우에는 서비스센터에서 점검을 받아야 함.";
+CM_ SG_ 518 WarningAirbag "시동을 「ON」하면, 경고등이 약 6초간 켜진 후 에어백 및 프리텐셔너 시트벨트 장치에 이상이 없으면 꺼짐. 만약, 시동을 「ON」한 후 6초간 경고등이 켜지지 않거나, 6초 후에도 경고등이 꺼지지 않거나 주행 중에 경고등이 켜지면 에어백 및 프리텐셔너 시트벨트 장치에 이상이 있는 것이므로 서비스센터에 정비를 의뢰해야 함.";
+CM_ SG_ 518 WarningSafetybelts "운전석의 안전벨트를 착용하지 않은 상태에서 시동 「ON」시, 경고등이 점등되어 안전벨트를 착용하지 않았음을 알려주며, 시속이 9 km/h 가 넘어가면 경고등이 점멸하며, 20 km/h 이상 시에는 경고등이 점멸되고 경고음이 울리면서 안전벨트를 착용하지 않았음을 알려줌.";
+CM_ SG_ 261 AliveCounter "제어기가 정상 동작인지를 확인
+1~9까지 홀수 반복";
+CM_ SG_ 260 TPMS_RR "TPMS 공기압 체크, 후방 오른쪽";
+CM_ SG_ 260 TPMS_RL "TPMS 공기압 체크, 후방 왼쪽";
+CM_ SG_ 260 TPMS_FR "TPMS 공기압 체크, 전방 오른쪽";
+CM_ SG_ 260 TPMS_FL "TPMS 공기압 체크, 전방 왼쪽";
+CM_ SG_ 259 FuelGage "연료 %";
+CM_ SG_ 259 WarterTemperature "차량 냉각수의 온도
+
+차량 냉각수는 총 16단계로 나누어져 있으며
+각 그룹은 다시 4단계로 나누어져 있고 Center는 8단계 이다.
+15, 16단계는 붉은색 경고이며 동시에 동작한다. (즉 15단계면 16단계까지 다 켜짐)
+
+Accuracy =1
+Range high = 16
+Range low = 0
+Conversion = (D)
+Unit = EA
+Signal Age = 10ms
+Startup/Default = 0";
+CM_ SG_ 259 EngineRPM "차량의 현재 RPM을 표시한다.
+
+Accuracy =1
+Range high = 8,000
+Range low = 0
+Conversion = (D)
+Unit = rpm
+Signal Age = 10ms
+Startup/Default = 0";
+CM_ SG_ 258 VehicleOdometer "주행 거리 측정 값
+
+Accuracy =1
+Range high = 999,000
+Range low = 0
+Conversion = (D)
+Unit = Km
+Signal Age = 100ms
+Startup/Default = 0";
+CM_ SG_ 258 VehicleSpeed "차량의 현재 속도를 표시한다
+
+Accuracy =1
+Range high = 512
+Range low = 0
+Conversion = (D)
+Unit = Km/h
+Signal Age = 100ms
+Startup/Default = 0";
+CM_ SG_ 257 DriveMode "드라이브 모드
+
+Normal = 1010(10)
+ECO = 1100(12)
+SPORT = 1101(13)
+
+Invalid=1111(15)
+Reserved = others";
+CM_ SG_ 257 GearboxPosition "기어박스의 변속 기어 단계 표기
+
+0001(1단) ~ 1000(8단)
+Reserved = others";
+CM_ SG_ 257 GearboxPositionDisplay "차량이 자동 변속기 모드에 있을 때 4가지 상태를 표시한다. 
+P, R, N, D
+
+Parking=1010(10)
+Reverse=1101(13)
+Neutral=1100(12)
+Drive=1011(11)
+
+Invalid=1111(15)
+Reserved = others";
+BA_DEF_  "BusType" STRING ;
+BA_DEF_DEF_  "BusType" "CAN";
+

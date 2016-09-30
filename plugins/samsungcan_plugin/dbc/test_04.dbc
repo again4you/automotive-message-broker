@@ -1,0 +1,43 @@
+VERSION "HIPBNYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY/4/%%%/4/'%**4YYY///"
+
+
+NS_ : 
+	NS_DESC_
+	CM_
+	BA_DEF_
+	BA_
+	VAL_
+	CAT_DEF_
+	CAT_
+	FILTER
+	BA_DEF_DEF_
+	EV_DATA_
+	ENVVAR_DATA_
+	SGTYPE_
+	SGTYPE_VAL_
+	BA_DEF_SGTYPE_
+	BA_SGTYPE_
+	SIG_TYPE_REF_
+	VAL_TABLE_
+	SIG_GROUP_
+	SIG_VALTYPE_
+	SIGTYPE_VALTYPE_
+
+BS_:
+
+BU_:
+
+
+BO_ 258 CAN02: 8 Vector__XXX
+ SG_ VehicleOdometer : 40|24@1+ (1,0) [0|999000] "km" Vector__XXX
+ SG_ VehicleSpeed : 0|16@1+ (1,0) [0|512] "km/h" Vector__XXX
+
+BO_ 257 CAN01: 8 Vector__XXX
+ SG_ DriveMode : 16|8@1+ (1,0) [0|255] "" Vector__XXX
+ SG_ GearboxPosition : 8|8@1+ (1,0) [0|8] "" Vector__XXX
+ SG_ GearboxPositionDisplay : 0|8@1+ (1,0) [0|15] "" Vector__XXX
+
+
+BA_DEF_  "BusType" STRING ;
+BA_DEF_DEF_  "BusType" "CAN";
+VAL_ 257 DriveMode 10 "Normal" 12 "ECO" 13 "SPORT" ;

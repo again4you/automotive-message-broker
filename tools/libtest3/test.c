@@ -159,11 +159,66 @@ void test_VehicleOdometer_00()
 	free_result(retOdometer);
 }
 
+void test_GearboxPositionDisplay_00()
+{
+	struct GearboxPositionDisplay_t *ret;
+	get_GearboxPositionDisplay_with_zone(&ret, 0);
+
+	fprintf(stderr, " == VehicleOdometer ==\n");
+	fprintf(stderr, "    Time: %f\n", ret->Time);
+	fprintf(stderr, "    Zone: %d\n", ret->Zone);
+	fprintf(stderr, "    ValueSequence: %d\n", ret->ValueSequence);
+	fprintf(stderr, "    Value: ");
+	switch(ret->Value) {
+	case PARKING:
+		fprintf(stderr, "PARKING\n");
+		break;
+	case DRIVE:
+		fprintf(stderr, "DRIVE\n");
+		break;
+	case NEUTRAL:
+		fprintf(stderr, "NEUTRAL\n");
+		break;
+	case REVERSE:
+		fprintf(stderr, "REVERSE\n");
+		break;
+	default:
+		fprintf(stderr, "%u (Error)\n", ret->Value);
+		break;
+	}
+
+	// free_VehicleOdometer(retOdometer);
+	free_result(ret);
+}
+
+void test_VehicleSpeed_00()
+{
+	struct VehicleSpeed_t *ret;
+	get_VehicleSpeed_with_zone(&ret, 0);
+
+	fprintf(stderr, " == VehicleOdometer ==\n");
+	fprintf(stderr, "    Time: %f\n", ret->Time);
+	fprintf(stderr, "    Zone: %d\n", ret->Zone);
+	fprintf(stderr, "    Value: %u\n", ret->Value);
+	fprintf(stderr, "    ValueSequence: %d\n", ret->ValueSequence);
+
+	// free_VehicleOdometer(retOdometer);
+	free_result(ret);
+}
+
 
 int main()
 {
-	test_VehicleOdometer_00();
+	test_get_property_all_with_zone("GearboxPositionDisplay", 0);
+
+	enum GearboxPositionDisplay pos = PARKING;
+	printf("%d\n", pos);
+
+	test_VehicleSpeed_00();
+	
 #if 0
+	test_GearboxPositionDisplay_00();
+	test_VehicleOdometer_00();
 	test_get_object_list();
 
 	test_get_property_all("VehicleSpeed");

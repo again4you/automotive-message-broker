@@ -208,7 +208,25 @@ void test_VehicleSpeed_00()
 }
 #endif
 
-void test_sansumgcan_test_VehicleOdometer()
+void test_samsungcan_VehicleSpeed()
+{
+	struct VehicleSpeedType *p;
+	int ret = amb_get_VehicleSpeed_with_zone(&p, 0);
+	if (ret != 0) {
+		fprintf(stderr, "Fail to %s\n", __func__);
+		amb_free_result(p);
+		return ;
+	}
+	fprintf(stderr, "Zone: %d\n", p->Zone);
+	fprintf(stderr, "Value: %d\n", p->Value);
+	fprintf(stderr, "ValueSequence: %d\n", p->ValueSequence);
+	fprintf(stderr, "Time: %f\n", p->Time);
+
+	amb_free_result(p);
+	return ;
+}
+
+void test_samsungcan_VehicleOdometer()
 {
 	struct VehicleOdometerType *p;
 	int ret = amb_get_VehicleOdometer_with_zone(&p, 0);
@@ -229,7 +247,11 @@ void test_sansumgcan_test_VehicleOdometer()
 
 int main()
 {
-	test_sansumgcan_test_VehicleOdometer();
+#if 0
+	test_samsungcan_VehicleOdometer();
+#endif
+
+	test_samsungcan_VehicleSpeed();
 #if 0
 	struct VehicleOdometerType *p;
 	int ret = get_VehicleOdometer_with_zone(&p, 0);

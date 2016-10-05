@@ -53,7 +53,7 @@ void amb_free_result(void *retdata);
 				retdata->ValueSequence = get_gint32(value); \
 			} else if (!g_strcmp0(key, "Time")) { \
 				retdata->Time = get_gdouble(value); \
-			} else if (!g_strcmp0(key, "Value")) { \
+			} else if (!g_strcmp0(key, "Value") || !g_strcmp0(key, alias_name )) { \
 				retdata->Value = get_ ## value_type(value); \
 			} \
 		} \

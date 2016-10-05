@@ -206,17 +206,35 @@ void test_VehicleSpeed_00()
 	free_result(ret);
 }
 
+CAN_OBJECT(VehicleOdometer, guint32, NULL);
 
 int main()
 {
+#if 0
+	test_get_property_all_with_zone("VehicleOdometer", 0);
+#endif
+
+#if 0
+	test_GearboxPositionDisplay_00();
 	test_get_property_all_with_zone("GearboxPositionDisplay", 0);
 
 	enum GearboxPositionDisplay pos = PARKING;
 	printf("%d\n", pos);
+#endif
 
-	test_VehicleSpeed_00();
-	
+#if 1
+	// CAN_OBJECT(VehicleOdometer2, guint32, NULL);
+	struct VehicleOdometerType *p;
+	int ret = get_VehicleOdometer_with_zone(&p, 0);
+	fprintf(stderr, "Zone: %d\n", p->Zone);
+	fprintf(stderr, "Value: %d\n", p->Value);
+	fprintf(stderr, "ValueSequence: %d\n", p->ValueSequence);
+	fprintf(stderr, "Time: %f\n", p->Time);
+#endif
+
+
 #if 0
+	test_VehicleSpeed_00();
 	test_GearboxPositionDisplay_00();
 	test_VehicleOdometer_00();
 	test_get_object_list();

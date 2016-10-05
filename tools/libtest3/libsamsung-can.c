@@ -62,6 +62,8 @@ gdouble get_gdouble(GVariant * value)
 	g_variant_get(value, "v", &tmp);
 	g_variant_get(tmp, "d", &ret);
 
+	fprintf(stderr, "%s: %f\n", __func__, ret);
+
 	g_variant_unref(tmp);
 	return ret;
 }
@@ -69,6 +71,7 @@ gdouble get_gdouble(GVariant * value)
 
 /************************************************************************/
 
+#if 0
 int get_VehicleOdometer_with_zone(struct VehicleOdometer_t **vo, int zone)
 {
 	GVariant *variant;
@@ -116,6 +119,7 @@ int get_VehicleOdometer_with_zone(struct VehicleOdometer_t **vo, int zone)
 
 	return 0;
 }
+#endif
 
 int get_GearboxPositionDisplay_with_zone(struct GearboxPositionDisplay_t **vo, int zone)
 {
@@ -225,5 +229,15 @@ void free_result(void *retdata)
 }
 
 
+gdouble get_gdouble2(GVariant * value)
+{
+	gdouble ret;
+	GVariant * tmp;
 
+	g_variant_get(value, "v", &tmp);
+	g_variant_get(tmp, "d", &ret);
+
+	g_variant_unref(tmp);
+	return ret;
+}
 

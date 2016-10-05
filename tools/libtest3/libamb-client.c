@@ -290,6 +290,7 @@ EXPORT int amb_get_property_all_with_zone(GVariant **proplist, const char *obj_n
 
 	objproxy = find_objects_with_zone(proxy, obj_name, zone);
 	if (!objproxy) {
+		fprintf(stderr, "%s: obj_name: %s, zone: %d\n", __func__, obj_name, zone);
 		return -EINVAL;
 	}
 

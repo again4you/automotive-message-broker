@@ -145,21 +145,6 @@ void test_signal_listen(gchar *objname, ZoneType zone)
 }
 
 #if 0
-void test_VehicleOdometer_00()
-{
-	struct VehicleOdometer_t *retOdometer;
-	get_VehicleOdometer_with_zone(&retOdometer, 0);
-
-	fprintf(stderr, " == VehicleOdometer ==\n");
-	fprintf(stderr, "    Time: %f\n", retOdometer->Time);
-	fprintf(stderr, "    Zone: %d\n", retOdometer->Zone);
-	fprintf(stderr, "    Value: %u\n", retOdometer->Value);
-	fprintf(stderr, "    ValueSequence: %d\n", retOdometer->ValueSequence);
-
-	// free_VehicleOdometer(retOdometer);
-	free_result(retOdometer);
-}
-
 void test_GearboxPositionDisplay_00()
 {
 	struct GearboxPositionDisplay_t *ret;
@@ -191,22 +176,44 @@ void test_GearboxPositionDisplay_00()
 	// free_VehicleOdometer(retOdometer);
 	free_result(ret);
 }
-
-void test_VehicleSpeed_00()
-{
-	struct VehicleSpeed_t *ret;
-	get_VehicleSpeed_with_zone(&ret, 0);
-
-	fprintf(stderr, " == VehicleOdometer ==\n");
-	fprintf(stderr, "    Time: %f\n", ret->Time);
-	fprintf(stderr, "    Zone: %d\n", ret->Zone);
-	fprintf(stderr, "    Value: %u\n", ret->Value);
-	fprintf(stderr, "    ValueSequence: %d\n", ret->ValueSequence);
-
-	// free_VehicleOdometer(retOdometer);
-	free_result(ret);
-}
 #endif
+
+void test_samsungcan_GearboxPosition()
+{
+	struct GearboxPositionDisplayType *p;
+	int ret = amb_get_GearboxPositionDisplay_with_zone(&p, 0);
+	if (ret != 0) {
+		fprintf(stderr, "Fail to %s\n", __func__);
+		amb_free_result(p);
+		return ;
+	}
+
+	fprintf(stderr, " == GearboxPosition ==\n");
+	fprintf(stderr, "    Time: %f\n", p->Time);
+	fprintf(stderr, "    Zone: %d\n", p->Zone);
+	fprintf(stderr, "    ValueSequence: %d\n", p->ValueSequence);
+	fprintf(stderr, "    Value: ");
+	switch(p->Value) {
+	case PARKING:
+		fprintf(stderr, "PARKING\n");
+		break;
+	case DRIVE:
+		fprintf(stderr, "DRIVE\n");
+		break;
+	case NEUTRAL:
+		fprintf(stderr, "NEUTRAL\n");
+		break;
+	case REVERSE:
+		fprintf(stderr, "REVERSE\n");
+		break;
+	default:
+		fprintf(stderr, "%u (Error)\n", p->Value);
+		break;
+	}
+
+	amb_free_result(p);
+	return ;
+}
 
 void test_samsungcan_VehicleSpeed()
 {
@@ -247,20 +254,12 @@ void test_samsungcan_VehicleOdometer()
 
 int main()
 {
+	test_samsungcan_GearboxPosition();
 #if 0
 	test_samsungcan_VehicleOdometer();
 #endif
 
 	test_samsungcan_VehicleSpeed();
-#if 0
-	struct VehicleOdometerType *p;
-	int ret = get_VehicleOdometer_with_zone(&p, 0);
-	fprintf(stderr, "Zone: %d\n", p->Zone);
-	fprintf(stderr, "Value: %d\n", p->Value);
-	fprintf(stderr, "ValueSequence: %d\n", p->ValueSequence);
-	fprintf(stderr, "Time: %f\n", p->Time);
-#endif
-
 #if 0
 	test_get_property_all_with_zone("VehicleOdometer", 0);
 #endif

@@ -49,11 +49,11 @@ void amb_free_result(void *retdata);
 		while(g_variant_iter_loop(iter, "{sv}", &key, &value)) { \
 			if (!g_strcmp0(key, "Zone")) { \
 				retdata->Zone = get_gint32(value); \
-			} else if (!g_strcmp0(key, "ValueSequence")) { \
+			} else if (!g_strcmp0(key, "ValueSequence") || !g_strcmp0(key, #alias_name "Sequence")) { \
 				retdata->ValueSequence = get_gint32(value); \
 			} else if (!g_strcmp0(key, "Time")) { \
 				retdata->Time = get_gdouble(value); \
-			} else if (!g_strcmp0(key, "Value") || !g_strcmp0(key, alias_name )) { \
+			} else if (!g_strcmp0(key, "Value") || !g_strcmp0(key, #alias_name)) { \
 				retdata->Value = get_ ## value_type(value); \
 			} \
 		} \

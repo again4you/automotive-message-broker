@@ -15,8 +15,8 @@ enum GearboxPositionDisplay{
 };
 
 CAN_OBJECT(VehicleOdometer, guint32, NULL);
-CAN_OBJECT(VehicleSpeed, guint16, "Speed");
-// CAN_OBJECT(VehicleSpeed, guint16, Speed);
+CAN_OBJECT(VehicleSpeed, guint16, Speed);
+CAN_OBJECT(GearboxPositionDisplay, guchar, NULL);
 
 #ifdef __cplusplus
 }

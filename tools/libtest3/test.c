@@ -144,6 +144,7 @@ void test_signal_listen(gchar *objname, ZoneType zone)
 	g_main_loop_unref(loop);
 }
 
+#if 0
 void test_VehicleOdometer_00()
 {
 	struct VehicleOdometer_t *retOdometer;
@@ -205,11 +206,39 @@ void test_VehicleSpeed_00()
 	// free_VehicleOdometer(retOdometer);
 	free_result(ret);
 }
+#endif
 
-CAN_OBJECT(VehicleOdometer, guint32, NULL);
+void test_sansumgcan_test_VehicleOdometer()
+{
+	struct VehicleOdometerType *p;
+	int ret = amb_get_VehicleOdometer_with_zone(&p, 0);
+	if (ret != 0) {
+		fprintf(stderr, "Fail to %s\n", __func__);
+		amb_free_result(p);
+		return ;
+	}
+	fprintf(stderr, "Zone: %d\n", p->Zone);
+	fprintf(stderr, "Value: %d\n", p->Value);
+	fprintf(stderr, "ValueSequence: %d\n", p->ValueSequence);
+	fprintf(stderr, "Time: %f\n", p->Time);
+
+	amb_free_result(p);
+	return ;
+}
+
 
 int main()
 {
+	test_sansumgcan_test_VehicleOdometer();
+#if 0
+	struct VehicleOdometerType *p;
+	int ret = get_VehicleOdometer_with_zone(&p, 0);
+	fprintf(stderr, "Zone: %d\n", p->Zone);
+	fprintf(stderr, "Value: %d\n", p->Value);
+	fprintf(stderr, "ValueSequence: %d\n", p->ValueSequence);
+	fprintf(stderr, "Time: %f\n", p->Time);
+#endif
+
 #if 0
 	test_get_property_all_with_zone("VehicleOdometer", 0);
 #endif
@@ -222,7 +251,7 @@ int main()
 	printf("%d\n", pos);
 #endif
 
-#if 1
+#if 0
 	// CAN_OBJECT(VehicleOdometer2, guint32, NULL);
 	struct VehicleOdometerType *p;
 	int ret = get_VehicleOdometer_with_zone(&p, 0);

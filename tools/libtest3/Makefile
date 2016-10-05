@@ -3,6 +3,6 @@ CFLAGS=-Wall -g -I../../lib -I.
 
 TARGET=test
 all:
-	gcc -o $(TARGET) libamb-client.c test.c libsamsung-can.c $(PKG_GIO) $(CFLAGS) -lamb
+	gcc -o $(TARGET) libamb-client.c test.c libamb-util.c $(PKG_GIO) $(CFLAGS) -lamb
 clean:
 	rm -f $(TARGET)

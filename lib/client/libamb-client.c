@@ -21,18 +21,8 @@
 #include <gio/gio.h>
 #include <errno.h>
 
+#include "libamb-common.h"
 #include "libamb-client.h"
-
-#ifndef EXPORT
-#  define EXPORT __attribute__((visibility("default")))
-#endif
-
-#if defined DEBUG
-#  define DEBUGOUT(fmt, ...) do { fprintf(stderr, fmt, __VA_ARGS__); } while(0);
-#else
-#  define DEBUGOUT(fmt,...)
-#endif /* DEBUG */
-
 
 #define AMB_BUS_NAME        "org.automotive.message.broker"
 #define AMB_INTERFACE_NAME  "org.automotive.Manager"

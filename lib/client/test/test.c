@@ -1,6 +1,7 @@
 #include <stdio.h>
 
 #include <libamb-client.h>
+#include <libsamsung-can.h>
 
 void test_get_object_list()
 {
@@ -143,10 +144,90 @@ void test_signal_listen(gchar *objname, ZoneType zone)
 	g_main_loop_unref(loop);
 }
 
+void test_samsungcan_GearboxPosition()
+{
+	struct GearboxPositionDisplayType *p;
+	int ret = amb_get_GearboxPositionDisplay_with_zone(&p, None);
+	if (ret != 0) {
+		fprintf(stderr, "Fail to %s\n", __func__);
+		amb_free_result(p);
+		return ;
+	}
+
+	fprintf(stderr, " == GearboxPosition ==\n");
+	fprintf(stderr, "    Time: %f\n", p->Time);
+	fprintf(stderr, "    Zone: %d\n", p->Zone);
+	fprintf(stderr, "    ValueSequence: %d\n", p->ValueSequence);
+	fprintf(stderr, "    Value: ");
+	switch(p->Value) {
+	case PARKING:
+		fprintf(stderr, "PARKING\n");
+		break;
+	case DRIVE:
+		fprintf(stderr, "DRIVE\n");
+		break;
+	case NEUTRAL:
+		fprintf(stderr, "NEUTRAL\n");
+		break;
+	case REVERSE:
+		fprintf(stderr, "REVERSE\n");
+		break;
+	default:
+		fprintf(stderr, "%u (Error)\n", p->Value);
+		break;
+	}
+
+	amb_free_result(p);
+	return ;
+}
+
+void test_samsungcan_VehicleSpeed()
+{
+	struct VehicleSpeedType *p;
+	int ret = amb_get_VehicleSpeed_with_zone(&p, None);
+	if (ret != 0) {
+		fprintf(stderr, "Fail to %s\n", __func__);
+		amb_free_result(p);
+		return ;
+	}
+	fprintf(stderr, " == VehicleSpeed ==\n");
+	fprintf(stderr, "    Zone: %d\n", p->Zone);
+	fprintf(stderr, "    Value: %d\n", p->Value);
+	fprintf(stderr, "    ValueSequence: %d\n", p->ValueSequence);
+	fprintf(stderr, "    Time: %f\n", p->Time);
+
+	amb_free_result(p);
+	return ;
+}
+
+void test_samsungcan_VehicleOdometer()
+{
+	struct VehicleOdometerType *p;
+	int ret = amb_get_VehicleOdometer_with_zone(&p, None);
+	if (ret != 0) {
+		fprintf(stderr, "Fail to %s\n", __func__);
+		amb_free_result(p);
+		return ;
+	}
+	fprintf(stderr, " == VehicleOdometer ==\n");
+	fprintf(stderr, "    Zone: %d\n", p->Zone);
+	fprintf(stderr, "    Value: %d\n", p->Value);
+	fprintf(stderr, "    ValueSequence: %d\n", p->ValueSequence);
+	fprintf(stderr, "    Time: %f\n", p->Time);
+
+	amb_free_result(p);
+	return ;
+}
+
 int main()
 {
 	test_get_object_list();
 
+	test_samsungcan_VehicleOdometer();
+	test_samsungcan_VehicleSpeed();
+	test_samsungcan_GearboxPosition();
+
+#ifdef EXAMPLE_PLUGIN
 	test_get_property_all("ClimateControl");
 	test_get_property_all("VehicleSpeed");
 
@@ -155,6 +236,9 @@ int main()
 	test_set_property("ClimateControl", "AirConditioning", 5, g_variant_new("b", TRUE));
 
 	test_signal_listen("VehicleSpeed", 0);
+
+	test_samsungcan_GearboxPosition();
+#endif
 
 	return 0;
 }

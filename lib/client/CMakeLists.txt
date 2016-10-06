@@ -1,4 +1,4 @@
-set (client_src libamb-client.c libamb-util.c)
+set (client_src libamb-client.c)
 set (client_headers libamb-client.h libamb-util.h libsamsung-can.h libamb-common.h)
 
 add_library(amb-client SHARED ${client_src})

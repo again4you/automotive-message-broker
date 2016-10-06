@@ -31,13 +31,25 @@ extern "C" {
 #include "libamb-common.h"
 #include "libamb-client.h"
 
-guchar get_guchar(GVariant *value);
-guint16 get_guint16(GVariant *value);
-gint32 get_gint32(GVariant *value);
-guint32 get_guint32(GVariant *value);
-gdouble get_gdouble(GVariant * value);
-void amb_free_result(void *retdata);
+#define g_variant_get_guchar g_variant_get_byte
+#define g_variant_get_gint16 g_variant_get_int16
+#define g_variant_get_guint16 g_variant_get_uint16
+#define g_variant_get_gint32 g_variant_get_int32
+#define g_variant_get_guint32 g_variant_get_uint32
+#define g_variant_get_gint64 g_variant_get_int64
+#define g_variant_get_guint64 g_variant_get_uint64
+#define g_variant_get_gdouble g_variant_get_double
 
+/**
+ * Generate Custom CAN Object data structure and its related utility function.
+ *
+ * @param[in] CAN Object name
+ * @param[in] data type for CAN object
+ * @param[in] Alias name that is used in AMB. If it is NULL, then this value
+ * is ignored.
+ *
+ * @see amb_release_data()
+ */
 #define CAN_OBJECT(obj_name, value_type, alias_name) \
 	struct obj_name ## Type { \
 		gint32	Zone; \
@@ -51,6 +63,7 @@ void amb_free_result(void *retdata);
 		GVariantIter *iter; \
 		gchar *key; \
 		GVariant *value; \
+		GVariant *tmp; \
 		int ret; \
 		struct obj_name ## Type *retdata = NULL; \
 		\
@@ -66,19 +79,51 @@ void amb_free_result(void *retdata);
 		g_variant_get(variant, "(a{sv})", &iter); \
 		while(g_variant_iter_loop(iter, "{sv}", &key, &value)) { \
 			if (!g_strcmp0(key, "Zone")) { \
-				retdata->Zone = get_gint32(value); \
+				g_variant_get(value, "v", &tmp); \
+				retdata->Zone = g_variant_get_int32(tmp); \
+				g_variant_unref(tmp); \
 			} else if (!g_strcmp0(key, "ValueSequence") || !g_strcmp0(key, #alias_name "Sequence")) { \
-				retdata->ValueSequence = get_gint32(value); \
+				g_variant_get(value, "v", &tmp); \
+				retdata->ValueSequence = g_variant_get_int32(tmp); \
+				g_variant_unref(tmp); \
 			} else if (!g_strcmp0(key, "Time")) { \
-				retdata->Time = get_gdouble(value); \
+				g_variant_get(value, "v", &tmp); \
+				retdata->Time = g_variant_get_double(tmp); \
+				g_variant_unref(tmp); \
 			} else if (!g_strcmp0(key, "Value") || !g_strcmp0(key, #alias_name)) { \
-				retdata->Value = get_ ## value_type(value); \
+				g_variant_get(value, "v", &tmp); \
+				retdata->Value = g_variant_get_ ## value_type(tmp); \
+				g_variant_unref(tmp); \
 			} \
 		} \
 		\
 		g_variant_iter_free(iter); \
 		amb_release_property_all_with_zone(variant); \
 		*retobj = retdata; \
+		return 0; \
+	} \
+	\
+	int amb_convert_ ## obj_name ## Type (gpointer data, struct obj_name ## Type *retdata) \
+	{ \
+		GVariantIter *iter; \
+		gchar *key; \
+		GVariant *value; \
+		GVariant *gdata; \
+		\
+		gdata = (GVariant *)data; \
+		g_variant_get(gdata, "a{sv}", &iter); \
+		while(g_variant_iter_loop(iter, "{sv}", &key, &value)) { \
+			if (!g_strcmp0(key, "Zone")) { \
+				g_variant_get(value, "i", &retdata->Zone); \
+			} else if (!g_strcmp0(key, "ValueSequence") || !g_strcmp0(key, #alias_name "Sequence")) { \
+				g_variant_get(value, "i", &retdata->ValueSequence); \
+			} else if (!g_strcmp0(key, "Time")) { \
+				g_variant_get(value, "d", &retdata->Time); \
+			} else if (!g_strcmp0(key, "Value") || !g_strcmp0(key, #alias_name)) { \
+				retdata->Value = g_variant_get_ ## value_type(value); \
+			} \
+		} \
+		g_variant_iter_free(iter); \
 		return 0; \
 	}
 

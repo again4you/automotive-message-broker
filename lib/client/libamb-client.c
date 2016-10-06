@@ -464,3 +464,8 @@ EXPORT int amb_unregister_property_changed_handler(gchar *objname, ZoneType zone
 
 	return 0;
 }
+
+EXPORT void amb_release_data(void *retdata)
+{
+	g_free(retdata);
+}

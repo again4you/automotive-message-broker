@@ -52,7 +52,8 @@ typedef int ZoneType;
  *
  * @see amb_unregister_property_changed_handler(), amb_unregister_property_changed_handler()
  */
-typedef void (*AMB_PROPERTY_CHANGED_CALLBACK)(const gchar *objname, GVariant *data);
+typedef void (*AMB_PROPERTY_CHANGED_CALLBACK)(const gchar *objname, gpointer data);
+// typedef void (*AMB_PROPERTY_CHANGED_CALLBACK)(const gchar *objname, GVariant *data);
 
 /**
  * primitive APIs

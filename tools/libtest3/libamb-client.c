@@ -21,8 +21,18 @@
 #include <gio/gio.h>
 #include <errno.h>
 
-#include "libamb-common.h"
 #include "libamb-client.h"
+
+#ifndef EXPORT
+#  define EXPORT __attribute__((visibility("default")))
+#endif
+
+#if defined DEBUG
+#  define DEBUGOUT(fmt, ...) do { fprintf(stderr, fmt, __VA_ARGS__); } while(0);
+#else
+#  define DEBUGOUT(fmt,...)
+#endif /* DEBUG */
+
 
 #define AMB_BUS_NAME        "org.automotive.message.broker"
 #define AMB_INTERFACE_NAME  "org.automotive.Manager"
@@ -280,6 +290,7 @@ EXPORT int amb_get_property_all_with_zone(GVariant **proplist, const char *obj_n
 
 	objproxy = find_objects_with_zone(proxy, obj_name, zone);
 	if (!objproxy) {
+		fprintf(stderr, "%s: obj_name: %s, zone: %d\n", __func__, obj_name, zone);
 		return -EINVAL;
 	}
 
@@ -463,9 +474,4 @@ EXPORT int amb_unregister_property_changed_handler(gchar *objname, ZoneType zone
 	g_free(item);
 
 	return 0;
-}
-
-EXPORT void amb_release_data(void *retdata)
-{
-	g_free(retdata);
 }

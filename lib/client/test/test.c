@@ -189,7 +189,6 @@ static void test_samsungcan_GearboxPosition()
 	int ret = amb_get_GearboxPositionDisplay_with_zone(&p, None);
 	if (ret != 0) {
 		fprintf(stderr, "Fail to %s\n", __func__);
-		amb_release_data(p);
 		return ;
 	}
 
@@ -226,7 +225,6 @@ static void test_samsungcan_VehicleSpeed()
 	int ret = amb_get_VehicleSpeed_with_zone(&p, None);
 	if (ret != 0) {
 		fprintf(stderr, "Fail to %s\n", __func__);
-		amb_release_data(p);
 		return ;
 	}
 	fprintf(stderr, " == VehicleSpeed ==\n");
@@ -245,7 +243,6 @@ static void test_samsungcan_VehicleOdometer()
 	int ret = amb_get_VehicleOdometer_with_zone(&p, None);
 	if (ret != 0) {
 		fprintf(stderr, "Fail to %s\n", __func__);
-		amb_release_data(p);
 		return ;
 	}
 	fprintf(stderr, " == VehicleOdometer ==\n");

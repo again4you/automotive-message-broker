@@ -1,7 +1,7 @@
 #include <stdio.h>
 
 #include <libamb-client.h>
-#include <libsamsung-can.h>
+#include <libamb-objects.h>
 
 static void test_get_object_list()
 {

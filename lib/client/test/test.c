@@ -237,6 +237,112 @@ static void test_samsungcan_VehicleSpeed()
 	return ;
 }
 
+static void test_LampHazardLight()
+{
+	struct LampHazardLightType *p;
+	int ret = amb_get_LampHazardLight_with_zone(&p, None);
+	if (ret != 0) {
+		fprintf(stderr, "Fail to %s\n", __func__);
+		return ;
+	}
+	fprintf(stderr, " == LampHazardLight ==\n");
+	fprintf(stderr, "    Zone: %d\n", p->Zone);
+	fprintf(stderr, "    Value: %s\n", (p->Value) ? "Set" : "None");
+	fprintf(stderr, "    ValueSequence: %d\n", p->ValueSequence);
+	fprintf(stderr, "    Time: %f\n", p->Time);
+
+	amb_release_data(p);
+}
+
+static void LampHazardLight_handler(const gchar *objname, gpointer data)
+{
+	struct LampHazardLightType retdata;
+
+	if (!data)
+		return ;
+
+	amb_convert_LampHazardLightType(data, &retdata);
+
+	fprintf(stderr, " == LampHazardLight ==\n");
+	fprintf(stderr, "    Zone: %d\n", retdata.Zone);
+	fprintf(stderr, "    Value: %s\n", (retdata.Value) ? "Set" : "None");
+	fprintf(stderr, "    ValueSequence: %d\n", retdata.ValueSequence);
+	fprintf(stderr, "    Time: %f\n", retdata.Time);
+}
+
+static void test_LampHazardLight_listen()
+{
+	GMainLoop *loop;
+	int rc;
+
+	rc = amb_register_property_changed_handler("LampHazardLight", 0,
+			(AMB_PROPERTY_CHANGED_CALLBACK)LampHazardLight_handler);
+	if (rc != 0) {
+                fprintf(stderr, "Fail to amb_register_property_changed_handler(): %s\n", "LampHazardLight");
+                return ;
+	}
+
+	g_timeout_add_seconds(10, timer_callback, "LampHazardLight");
+
+	loop = g_main_loop_new(NULL, FALSE);
+	g_main_loop_run(loop);
+
+	g_main_loop_unref(loop);
+}
+
+static void test_WarningSafetybelts()
+{
+	struct WarningSafetybeltsType *p;
+	int ret = amb_get_WarningSafetybelts_with_zone(&p, None);
+	if (ret != 0) {
+		fprintf(stderr, "Fail to %s\n", __func__);
+		return ;
+	}
+	fprintf(stderr, " == WarningSafetybelt ==\n");
+	fprintf(stderr, "    Zone: %d\n", p->Zone);
+	fprintf(stderr, "    Value: %s\n", (p->Value) ? "Set" : "None");
+	fprintf(stderr, "    ValueSequence: %d\n", p->ValueSequence);
+	fprintf(stderr, "    Time: %f\n", p->Time);
+
+	amb_release_data(p);
+}
+
+static void WarningSafetybelts_handler(const gchar *objname, gpointer data)
+{
+	struct WarningSafetybeltsType retdata;
+
+	if (!data)
+		return ;
+
+	amb_convert_WarningSafetybeltsType(data, &retdata);
+
+	fprintf(stderr, " == WarningSafetybelts ==\n");
+	fprintf(stderr, "    Zone: %d\n", retdata.Zone);
+	fprintf(stderr, "    Value: %s\n", (retdata.Value) ? "Set" : "None");
+	fprintf(stderr, "    ValueSequence: %d\n", retdata.ValueSequence);
+	fprintf(stderr, "    Time: %f\n", retdata.Time);
+}
+
+static void test_WarningSafetybelts_listen()
+{
+	GMainLoop *loop;
+	int rc;
+
+	rc = amb_register_property_changed_handler("WarningSafetybelts", 0,
+			(AMB_PROPERTY_CHANGED_CALLBACK)WarningSafetybelts_handler);
+	if (rc != 0) {
+                fprintf(stderr, "Fail to amb_register_property_changed_handler(): %s\n", "WarningSafetybelts");
+                return ;
+	}
+
+	g_timeout_add_seconds(10, timer_callback, "WarningSafetybelts");
+
+	loop = g_main_loop_new(NULL, FALSE);
+	g_main_loop_run(loop);
+
+	g_main_loop_unref(loop);
+}
+
 static void test_samsungcan_VehicleOdometer()
 {
 	struct VehicleOdometerType *p;
@@ -255,10 +361,95 @@ static void test_samsungcan_VehicleOdometer()
 	return ;
 }
 
+static void test_TPMS_FL()
+{
+	struct TPMS_FLType *p;
+	int ret = amb_get_TPMS_FL_with_zone(&p, None);
+	if (ret != 0) {
+		fprintf(stderr, "Fail to %s\n", __func__);
+		return ;
+	}
+	fprintf(stderr, " == TPMS_FL ==\n");
+	fprintf(stderr, "    Zone: %d\n", p->Zone);
+	// fprintf(stderr, "    Value: %u\n", (unsigned int)p->Value);
+	fprintf(stderr, "    Value: %u\n", p->Value);
+	fprintf(stderr, "    ValueSequence: %d\n", p->ValueSequence);
+	fprintf(stderr, "    Time: %f\n", p->Time);
+
+	amb_release_data(p);
+}
+
+static void TPMS_FL_handler(const gchar *objname, gpointer data)
+{
+	struct TPMS_FLType retdata;
+
+	if (!data)
+		return ;
+
+	amb_convert_TPMS_FLType(data, &retdata);
+
+	fprintf(stderr, " == TPMS_FL ==\n");
+	fprintf(stderr, "    Zone: %d\n", retdata.Zone);
+	fprintf(stderr, "    Value: %u\n", retdata.Value);
+	fprintf(stderr, "    ValueSequence: %d\n", retdata.ValueSequence);
+	fprintf(stderr, "    Time: %f\n", retdata.Time);
+}
+
+static void test_TPMS_FL_listen()
+{
+	GMainLoop *loop;
+	int rc;
+
+	rc = amb_register_property_changed_handler("TPMS_FL", 0,
+			(AMB_PROPERTY_CHANGED_CALLBACK)TPMS_FL_handler);
+	if (rc != 0) {
+                fprintf(stderr, "Fail to amb_register_property_changed_handler(): %s\n", "WarningSafetybelts");
+                return ;
+	}
+
+	g_timeout_add_seconds(10, timer_callback, "TPMS_FL");
+
+	loop = g_main_loop_new(NULL, FALSE);
+	g_main_loop_run(loop);
+
+	g_main_loop_unref(loop);
+}
+
+static void test_FuelGage()
+{
+	struct FuelGageType *p;
+	int ret = amb_get_FuelGage_with_zone(&p, None);
+	if (ret != 0) {
+		fprintf(stderr, "Fail to %s\n", __func__);
+		return ;
+	}
+	fprintf(stderr, " == FuelGage ==\n");
+	fprintf(stderr, "    Zone: %d\n", p->Zone);
+	fprintf(stderr, "    Value: %u\n", p->Value);
+	fprintf(stderr, "    ValueSequence: %d\n", p->ValueSequence);
+	fprintf(stderr, "    Time: %f\n", p->Time);
+
+	amb_release_data(p);
+}
+
 int main()
 {
 	test_get_object_list();
 
+	// cansend vcan0 104#3C.00.00.00.00.00.00.00
+	test_FuelGage();
+
+	// cansend vcan0 104#3C.00.00.00.00.00.00.00
+	test_TPMS_FL();
+	test_TPMS_FL_listen();
+
+	// cansend vcan0 206#00.00.00.00.01.00.00.00
+	test_LampHazardLight();
+	test_LampHazardLight_listen();
+
+	// cansend vcan0 206#01.00.00.00.00.00.00.00
+	test_WarningSafetybelts();
+	test_WarningSafetybelts_listen();
 	test_samsungcan_VehicleOdometer();
 	test_samsungcan_VehicleSpeed();
 	test_samsungcan_GearboxPosition();

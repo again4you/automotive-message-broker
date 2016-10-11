@@ -31,6 +31,7 @@ extern "C" {
 #include "libamb-common.h"
 #include "libamb-client.h"
 
+#define g_variant_get_gboolean g_variant_get_boolean
 #define g_variant_get_guchar g_variant_get_byte
 #define g_variant_get_gint16 g_variant_get_int16
 #define g_variant_get_guint16 g_variant_get_uint16

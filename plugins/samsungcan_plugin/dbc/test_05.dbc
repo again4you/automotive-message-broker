@@ -1,0 +1,133 @@
+VERSION ""
+
+
+NS_ : 
+	NS_DESC_
+	CM_
+	BA_DEF_
+	BA_
+	VAL_
+	CAT_DEF_
+	CAT_
+	FILTER
+	BA_DEF_DEF_
+	EV_DATA_
+	ENVVAR_DATA_
+	SGTYPE_
+	SGTYPE_VAL_
+	BA_DEF_SGTYPE_
+	BA_SGTYPE_
+	SIG_TYPE_REF_
+	VAL_TABLE_
+	SIG_GROUP_
+	SIG_VALTYPE_
+	SIGTYPE_VALTYPE_
+	BO_TX_BU_
+	BA_DEF_REL_
+	BA_REL_
+	BA_DEF_DEF_REL_
+	BU_SG_REL_
+	BU_EV_REL_
+	BU_BO_REL_
+	SG_MUL_VAL_
+
+BS_:
+
+BU_: Vector__XXX
+
+
+BO_ 519 CAN207: 8 Vector__XXX
+ SG_ FR_KeyEvent24 : 24|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ FR_KeyEvent23 : 23|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ FR_KeyEvent22 : 22|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ FR_KeyEvent21 : 21|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ FR_KeyEvent20 : 20|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ FR_KeyEvent19 : 19|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ FR_KeyEvent18 : 18|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ FR_KeyEvent17 : 17|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ FR_KeyEvent16 : 16|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ FR_KeyEvent15 : 14|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ FR_KeyEvent14 : 13|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ FR_KeyEvent13 : 12|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ FR_KeyEvent12 : 11|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ FR_KeyEvent11 : 10|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ FR_KeyEvent10 : 9|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ FR_KeyEvent09 : 8|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ FR_KeyEvent08 : 7|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ FR_KeyEvent07 : 6|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ FR_KeyEvent06 : 5|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ FR_KeyEvent05 : 4|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ FR_KeyEvent04 : 3|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ FR_KeyEvent03 : 2|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ FR_KeyEvent02 : 1|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ FR_KeyEvent01 : 0|1@1+ (1,0) [0|1] "" Vector__XXX
+
+BO_ 518 CAN206: 7 Vector__XXX
+ SG_ CheckSeatCoolerR : 54|2@1+ (1,0) [0|3] "" Vector__XXX
+ SG_ CheckSeatCoolerL : 52|2@1+ (1,0) [0|3] "" Vector__XXX
+ SG_ CheckSeatHeaterR : 50|2@1- (1,0) [0|3] "" Vector__XXX
+ SG_ CheckSeatHeaterL : 48|2@1+ (1,0) [0|3] "" Vector__XXX
+ SG_ CheckInRear : 8|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ WarningParkingBreak : 46|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ LampDoorOpenTrunk : 45|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ LampDoorOpenBonnet : 44|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ LampDoorOpenR_R : 43|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ LampDoorOpenR_L : 42|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ LampDoorOpenF_R : 41|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ LampDoorOpenF_L : 40|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ LampCruiseCntSet : 38|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ LampCruiseCnt : 37|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ LampHighBeam : 36|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ LampHighBeamAuto : 35|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ LampTailLight : 34|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ LampFrontFog : 33|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ LampHazardLight : 32|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ LampRearFogLights : 28|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ WarningImmobilizer : 27|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ StsTrunkOpen : 26|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ StsDoorOpen : 25|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ WarningABS : 24|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ SystemESCOff : 23|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ SystemESC : 22|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ LowWasher : 21|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ WarningTPM : 20|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ FuelLeveltooLow : 18|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ EmergencyFlasher : 17|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ CheckEnging : 16|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ WarningEBD : 6|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ WarningBrake : 5|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ CheckPowerSteering : 4|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ WarningLowOilLevel : 3|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ CheckCharging : 2|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ WarningAirbag : 1|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ WarningSafetybelts : 0|1@1+ (1,0) [0|1] "" Vector__XXX
+
+BO_ 261 CAN05: 8 Vector__XXX
+ SG_ LampAutomaticHold : 0|8@1+ (1,0) [0|255] "" Vector__XXX
+ SG_ AliveCounter : 56|8@1+ (1,0) [1|9] "" Vector__XXX
+
+BO_ 260 CAN04: 8 Vector__XXX
+ SG_ TPMS_RR : 24|8@1+ (1,0) [0|60] "psi" Vector__XXX
+ SG_ TPMS_RL : 16|8@1+ (1,0) [0|60] "psi" Vector__XXX
+ SG_ TPMS_FR : 8|8@1+ (1,0) [0|60] "psi" Vector__XXX
+ SG_ TPMS_FL : 0|8@1+ (1,0) [0|60] "psi" Vector__XXX
+
+BO_ 259 CAN03: 8 Vector__XXX
+ SG_ FuelGage : 56|8@1+ (1,0) [0|100] "%" Vector__XXX
+ SG_ WarterTemperature : 16|16@1+ (1,0) [0|16] "EA" Vector__XXX
+ SG_ EngineRPM : 0|16@1+ (1,0) [0|8000] "rpm" Vector__XXX
+
+BO_ 258 CAN02: 8 Vector__XXX
+ SG_ VehicleOdometer : 40|24@1+ (1,0) [0|999000] "km" Vector__XXX
+ SG_ VehicleSpeed : 0|16@1+ (1,0) [0|512] "km/h" Vector__XXX
+
+BO_ 257 CAN01: 8 Vector__XXX
+ SG_ DriveMode : 16|8@1+ (1,0) [0|255] "" Vector__XXX
+ SG_ GearboxPosition : 8|8@1+ (1,0) [0|8] "" Vector__XXX
+ SG_ GearboxPositionDisplay : 0|8@1+ (1,0) [0|15] "" Vector__XXX
+
+
+
+BA_DEF_  "BusType" STRING ;
+BA_DEF_DEF_  "BusType" "CAN";
+

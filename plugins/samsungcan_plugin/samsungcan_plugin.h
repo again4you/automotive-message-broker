@@ -52,7 +52,7 @@ public:
     /*! uuid() is a unique identifier of the plugin
       * @return a guid-style unique identifier
       */
-    const std::string uuid() const { return "E9DE9A5C-8159-11E6-BCAA-511E1A799B42"; }
+    const std::string uuid() const { return "4ADA538C-9037-11E6-9E48-DC9E0B68FC46"; }
 
     /*!
      * \brief setProperty is called when a sink requests to set a value for a given property.

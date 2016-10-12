@@ -146,25 +146,55 @@ CANSIGNAL(FR_KeyEvent02, bool, 1, 1, Endian::Intel, Signedness::Unsigned, 1, 0, 
 const VehicleProperty::Property FR_KeyEvent01 = "FR_KeyEvent01";
 CANSIGNAL(FR_KeyEvent01, bool, 0, 1, Endian::Intel, Signedness::Unsigned, 1, 0, static_cast<bool>(0), static_cast<bool>(1), nullptr, nullptr)
 
+/**< CheckSeatCoolerR.
+ */
+const VehicleProperty::Property CheckSeatCoolerR = "CheckSeatCoolerR";
+CANSIGNAL(CheckSeatCoolerR, char, 54, 2, Endian::Intel, Signedness::Unsigned, 1, 0, static_cast<char>(0), static_cast<char>(3), nullptr, nullptr)
+
+/**< CheckSeatCoolerL.
+ */
+const VehicleProperty::Property CheckSeatCoolerL = "CheckSeatCoolerL";
+CANSIGNAL(CheckSeatCoolerL, char, 52, 2, Endian::Intel, Signedness::Unsigned, 1, 0, static_cast<char>(0), static_cast<char>(3), nullptr, nullptr)
+
+/**< CheckSeatHeaterR.
+ */
+const VehicleProperty::Property CheckSeatHeaterR = "CheckSeatHeaterR";
+CANSIGNAL(CheckSeatHeaterR, char, 50, 2, Endian::Intel, Signedness::Signed, 1, 0, static_cast<char>(0), static_cast<char>(3), nullptr, nullptr)
+
+/**< CheckSeatHeaterL.
+ */
+const VehicleProperty::Property CheckSeatHeaterL = "CheckSeatHeaterL";
+CANSIGNAL(CheckSeatHeaterL, char, 48, 2, Endian::Intel, Signedness::Unsigned, 1, 0, static_cast<char>(0), static_cast<char>(3), nullptr, nullptr)
+
+/**< CheckInRear.
+ */
+const VehicleProperty::Property CheckInRear = "CheckInRear";
+CANSIGNAL(CheckInRear, bool, 8, 1, Endian::Intel, Signedness::Unsigned, 1, 0, static_cast<bool>(0), static_cast<bool>(1), nullptr, nullptr)
+
+/**< WarningParkingBreak.
+ */
+const VehicleProperty::Property WarningParkingBreak = "WarningParkingBreak";
+CANSIGNAL(WarningParkingBreak, bool, 46, 1, Endian::Intel, Signedness::Unsigned, 1, 0, static_cast<bool>(0), static_cast<bool>(1), nullptr, nullptr)
+
 /**< LampDoorOpenTrunk.
  */
 const VehicleProperty::Property LampDoorOpenTrunk = "LampDoorOpenTrunk";
-CANSIGNAL(LampDoorOpenTrunk, char, 45, 8, Endian::Intel, Signedness::Unsigned, 1, 0, static_cast<char>(0), static_cast<char>(1), nullptr, nullptr)
+CANSIGNAL(LampDoorOpenTrunk, bool, 45, 1, Endian::Intel, Signedness::Unsigned, 1, 0, static_cast<bool>(0), static_cast<bool>(1), nullptr, nullptr)
 
 /**< LampDoorOpenBonnet.
  */
 const VehicleProperty::Property LampDoorOpenBonnet = "LampDoorOpenBonnet";
 CANSIGNAL(LampDoorOpenBonnet, bool, 44, 1, Endian::Intel, Signedness::Unsigned, 1, 0, static_cast<bool>(0), static_cast<bool>(1), nullptr, nullptr)
 
-/**< LampDoorOpenR_L.
- */
-const VehicleProperty::Property LampDoorOpenR_L = "LampDoorOpenR_L";
-CANSIGNAL(LampDoorOpenR_L, bool, 43, 1, Endian::Intel, Signedness::Unsigned, 1, 0, static_cast<bool>(0), static_cast<bool>(1), nullptr, nullptr)
-
 /**< LampDoorOpenR_R.
  */
 const VehicleProperty::Property LampDoorOpenR_R = "LampDoorOpenR_R";
-CANSIGNAL(LampDoorOpenR_R, bool, 42, 1, Endian::Intel, Signedness::Unsigned, 1, 0, static_cast<bool>(0), static_cast<bool>(1), nullptr, nullptr)
+CANSIGNAL(LampDoorOpenR_R, bool, 43, 1, Endian::Intel, Signedness::Unsigned, 1, 0, static_cast<bool>(0), static_cast<bool>(1), nullptr, nullptr)
+
+/**< LampDoorOpenR_L.
+ */
+const VehicleProperty::Property LampDoorOpenR_L = "LampDoorOpenR_L";
+CANSIGNAL(LampDoorOpenR_L, bool, 42, 1, Endian::Intel, Signedness::Unsigned, 1, 0, static_cast<bool>(0), static_cast<bool>(1), nullptr, nullptr)
 
 /**< LampDoorOpenF_R.
  */
@@ -175,11 +205,6 @@ CANSIGNAL(LampDoorOpenF_R, bool, 41, 1, Endian::Intel, Signedness::Unsigned, 1, 
  */
 const VehicleProperty::Property LampDoorOpenF_L = "LampDoorOpenF_L";
 CANSIGNAL(LampDoorOpenF_L, bool, 40, 1, Endian::Intel, Signedness::Unsigned, 1, 0, static_cast<bool>(0), static_cast<bool>(1), nullptr, nullptr)
-
-/**< LampAutomaticHold.
- */
-const VehicleProperty::Property LampAutomaticHold = "LampAutomaticHold";
-CANSIGNAL(LampAutomaticHold, bool, 39, 1, Endian::Intel, Signedness::Unsigned, 1, 0, static_cast<bool>(0), static_cast<bool>(1), nullptr, nullptr)
 
 /**< LampCruiseCntSet.
  */
@@ -310,6 +335,11 @@ CANSIGNAL(WarningAirbag, bool, 1, 1, Endian::Intel, Signedness::Unsigned, 1, 0, 
  */
 const VehicleProperty::Property WarningSafetybelts = "WarningSafetybelts";
 CANSIGNAL(WarningSafetybelts, bool, 0, 1, Endian::Intel, Signedness::Unsigned, 1, 0, static_cast<bool>(0), static_cast<bool>(1), nullptr, nullptr)
+
+/**< LampAutomaticHold.
+ */
+const VehicleProperty::Property LampAutomaticHold = "LampAutomaticHold";
+CANSIGNAL(LampAutomaticHold, char, 0, 8, Endian::Intel, Signedness::Unsigned, 1, 0, static_cast<char>(0), static_cast<char>(255), nullptr, nullptr)
 
 /**< AliveCounter.
  */

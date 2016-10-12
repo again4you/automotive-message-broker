@@ -50,8 +50,6 @@ extern "C" AbstractSource * create(AbstractRoutingEngine* routingengine, std::ma
 
 void SamsungCANPlugin::timerDestroyNotify(gpointer data)
 {
-    LOG_INFO( "Enter " << __func__);
-
     TimerData* timerData = reinterpret_cast<TimerData*>(data);
     if(timerData){
         SamsungCANPlugin* plugin = std::get<0>(*timerData);
@@ -64,8 +62,6 @@ void SamsungCANPlugin::timerDestroyNotify(gpointer data)
 
 gboolean SamsungCANPlugin::timeoutCallback(gpointer data)
 {
-    LOG_INFO( "Enter " << __func__);
-
     TimerData* timerData = reinterpret_cast<TimerData*>(data);
     if(!timerData)
         return false;
@@ -93,8 +89,6 @@ SamsungCANPlugin::SamsungCANPlugin(AbstractRoutingEngine* re, const map<string, 
       announcementIntervalTimer(1000),
       announcementCount(20)
 {
-    LOG_INFO( "Enter " << __func__ << endl);
-
     auto it = config.find("interface");
     if (it != config.end() && it->second.length())
         interface = it->second;
@@ -118,8 +112,6 @@ SamsungCANPlugin::~SamsungCANPlugin()
 {
     std::list<guint> timerList;
 
-    LOG_INFO( "Enter " << __func__);
-
     mutex.lock();
     for(auto it=timers.begin();it!=timers.end();++it)
         timerList.push_back(it->second);
@@ -133,8 +125,6 @@ SamsungCANPlugin::~SamsungCANPlugin()
 
 void SamsungCANPlugin::init()
 {
-    LOG_INFO( "Enter " << __func__);
-
     canBus->start(interface.c_str());
 
     for(auto iter = messages.begin(); iter != messages.end(); iter++) {
@@ -145,8 +135,6 @@ void SamsungCANPlugin::init()
 
 AsyncPropertyReply *SamsungCANPlugin::setProperty(const AsyncSetPropertyRequest& request )
 {
-    LOG_INFO( "Enter " << __func__);
-
     AsyncPropertyReply* reply = new AsyncPropertyReply(request);
     reply->success = false;
     reply->error = AsyncPropertyReply::InvalidOperation;
@@ -179,15 +167,11 @@ AsyncPropertyReply *SamsungCANPlugin::setProperty(const AsyncSetPropertyRequest&
 
 int SamsungCANPlugin::supportedOperations() const
 {
-    LOG_INFO( "Enter " << __func__);
-
     return AbstractSource::Get | AbstractSource::Set;
 }
 
 void SamsungCANPlugin::onMessage(const can_frame& frame)
 {
-    LOG_INFO( "Enter " << __func__);
-
     auto messageIt = messages.find(frame.can_id);
     if(messageIt == messages.end())
         return;
@@ -200,8 +184,6 @@ void SamsungCANPlugin::onMessage(const can_frame& frame)
 
 void SamsungCANPlugin::onTimeout(const can_frame& frame)
 {
-    LOG_INFO( "Enter " << __func__);
-
     auto messageIt = messages.find(frame.can_id);
     if(messageIt == messages.end())
         return;
@@ -214,8 +196,6 @@ void SamsungCANPlugin::onTimeout(const can_frame& frame)
 
 bool SamsungCANPlugin::sendValue(AbstractPropertyType* value)
 {
-    LOG_INFO( "Enter " << __func__);
-
     if(!value)
         return false;
 
@@ -357,14 +337,19 @@ void SamsungCANPlugin::registerMessages()
 				   , new FR_KeyEvent02Type()
 				   , new FR_KeyEvent01Type()
 				   );
-	registerMessage(0x206, 8, 100
+	registerMessage(0x206, 7, 100
+				   , new CheckSeatCoolerRType()
+				   , new CheckSeatCoolerLType()
+				   , new CheckSeatHeaterRType()
+				   , new CheckSeatHeaterLType()
+				   , new CheckInRearType()
+				   , new WarningParkingBreakType()
 				   , new LampDoorOpenTrunkType()
 				   , new LampDoorOpenBonnetType()
-				   , new LampDoorOpenR_LType()
 				   , new LampDoorOpenR_RType()
+				   , new LampDoorOpenR_LType()
 				   , new LampDoorOpenF_RType()
 				   , new LampDoorOpenF_LType()
-				   , new LampAutomaticHoldType()
 				   , new LampCruiseCntSetType()
 				   , new LampCruiseCntType()
 				   , new LampHighBeamType()
@@ -393,6 +378,7 @@ void SamsungCANPlugin::registerMessages()
 				   , new WarningSafetybeltsType()
 				   );
 	registerMessage(0x105, 8, 100
+				   , new LampAutomaticHoldType()
 				   , new AliveCounterType()
 				   );
 	registerMessage(0x104, 8, 100

@@ -1,0 +1,702 @@
+/**
+
+
+Details. 
+
+\def-api-feature http://tizen.org/api/vehicle 
+\brief Allows access to the SamsungCANPlugin API
+
+
+
+*/
+
+module SamsungCANPlugin {
+
+[NoInterfaceObject]
+interface org.automotive.FR_KeyEvent24 : VehiclePropertyType {
+
+	/**  FR_KeyEvent24
+	 *   \brief  Returns FR_KeyEvent24
+	 **/
+	readonly attribute boolean FR_KeyEvent24;
+};
+
+[NoInterfaceObject]
+interface org.automotive.FR_KeyEvent23 : VehiclePropertyType {
+
+	/**  FR_KeyEvent23
+	 *   \brief  Returns FR_KeyEvent23
+	 **/
+	readonly attribute boolean FR_KeyEvent23;
+};
+
+[NoInterfaceObject]
+interface org.automotive.FR_KeyEvent22 : VehiclePropertyType {
+
+	/**  FR_KeyEvent22
+	 *   \brief  Returns FR_KeyEvent22
+	 **/
+	readonly attribute boolean FR_KeyEvent22;
+};
+
+[NoInterfaceObject]
+interface org.automotive.FR_KeyEvent21 : VehiclePropertyType {
+
+	/**  FR_KeyEvent21
+	 *   \brief  Returns FR_KeyEvent21
+	 **/
+	readonly attribute boolean FR_KeyEvent21;
+};
+
+[NoInterfaceObject]
+interface org.automotive.FR_KeyEvent20 : VehiclePropertyType {
+
+	/**  FR_KeyEvent20
+	 *   \brief  Returns FR_KeyEvent20
+	 **/
+	readonly attribute boolean FR_KeyEvent20;
+};
+
+[NoInterfaceObject]
+interface org.automotive.FR_KeyEvent19 : VehiclePropertyType {
+
+	/**  FR_KeyEvent19
+	 *   \brief  Returns FR_KeyEvent19
+	 **/
+	readonly attribute boolean FR_KeyEvent19;
+};
+
+[NoInterfaceObject]
+interface org.automotive.FR_KeyEvent18 : VehiclePropertyType {
+
+	/**  FR_KeyEvent18
+	 *   \brief  Returns FR_KeyEvent18
+	 **/
+	readonly attribute boolean FR_KeyEvent18;
+};
+
+[NoInterfaceObject]
+interface org.automotive.FR_KeyEvent17 : VehiclePropertyType {
+
+	/**  FR_KeyEvent17
+	 *   \brief  Returns FR_KeyEvent17
+	 **/
+	readonly attribute boolean FR_KeyEvent17;
+};
+
+[NoInterfaceObject]
+interface org.automotive.FR_KeyEvent16 : VehiclePropertyType {
+
+	/**  FR_KeyEvent16
+	 *   \brief  Returns FR_KeyEvent16
+	 **/
+	readonly attribute boolean FR_KeyEvent16;
+};
+
+[NoInterfaceObject]
+interface org.automotive.FR_KeyEvent15 : VehiclePropertyType {
+
+	/**  FR_KeyEvent15
+	 *   \brief  Returns FR_KeyEvent15
+	 **/
+	readonly attribute boolean FR_KeyEvent15;
+};
+
+[NoInterfaceObject]
+interface org.automotive.FR_KeyEvent14 : VehiclePropertyType {
+
+	/**  FR_KeyEvent14
+	 *   \brief  Returns FR_KeyEvent14
+	 **/
+	readonly attribute boolean FR_KeyEvent14;
+};
+
+[NoInterfaceObject]
+interface org.automotive.FR_KeyEvent13 : VehiclePropertyType {
+
+	/**  FR_KeyEvent13
+	 *   \brief  Returns FR_KeyEvent13
+	 **/
+	readonly attribute boolean FR_KeyEvent13;
+};
+
+[NoInterfaceObject]
+interface org.automotive.FR_KeyEvent12 : VehiclePropertyType {
+
+	/**  FR_KeyEvent12
+	 *   \brief  Returns FR_KeyEvent12
+	 **/
+	readonly attribute boolean FR_KeyEvent12;
+};
+
+[NoInterfaceObject]
+interface org.automotive.FR_KeyEvent11 : VehiclePropertyType {
+
+	/**  FR_KeyEvent11
+	 *   \brief  Returns FR_KeyEvent11
+	 **/
+	readonly attribute boolean FR_KeyEvent11;
+};
+
+[NoInterfaceObject]
+interface org.automotive.FR_KeyEvent10 : VehiclePropertyType {
+
+	/**  FR_KeyEvent10
+	 *   \brief  Returns FR_KeyEvent10
+	 **/
+	readonly attribute boolean FR_KeyEvent10;
+};
+
+[NoInterfaceObject]
+interface org.automotive.FR_KeyEvent09 : VehiclePropertyType {
+
+	/**  FR_KeyEvent09
+	 *   \brief  Returns FR_KeyEvent09
+	 **/
+	readonly attribute boolean FR_KeyEvent09;
+};
+
+[NoInterfaceObject]
+interface org.automotive.FR_KeyEvent08 : VehiclePropertyType {
+
+	/**  FR_KeyEvent08
+	 *   \brief  Returns FR_KeyEvent08
+	 **/
+	readonly attribute boolean FR_KeyEvent08;
+};
+
+[NoInterfaceObject]
+interface org.automotive.FR_KeyEvent07 : VehiclePropertyType {
+
+	/**  FR_KeyEvent07
+	 *   \brief  Returns FR_KeyEvent07
+	 **/
+	readonly attribute boolean FR_KeyEvent07;
+};
+
+[NoInterfaceObject]
+interface org.automotive.FR_KeyEvent06 : VehiclePropertyType {
+
+	/**  FR_KeyEvent06
+	 *   \brief  Returns FR_KeyEvent06
+	 **/
+	readonly attribute boolean FR_KeyEvent06;
+};
+
+[NoInterfaceObject]
+interface org.automotive.FR_KeyEvent05 : VehiclePropertyType {
+
+	/**  FR_KeyEvent05
+	 *   \brief  Returns FR_KeyEvent05
+	 **/
+	readonly attribute boolean FR_KeyEvent05;
+};
+
+[NoInterfaceObject]
+interface org.automotive.FR_KeyEvent04 : VehiclePropertyType {
+
+	/**  FR_KeyEvent04
+	 *   \brief  Returns FR_KeyEvent04
+	 **/
+	readonly attribute boolean FR_KeyEvent04;
+};
+
+[NoInterfaceObject]
+interface org.automotive.FR_KeyEvent03 : VehiclePropertyType {
+
+	/**  FR_KeyEvent03
+	 *   \brief  Returns FR_KeyEvent03
+	 **/
+	readonly attribute boolean FR_KeyEvent03;
+};
+
+[NoInterfaceObject]
+interface org.automotive.FR_KeyEvent02 : VehiclePropertyType {
+
+	/**  FR_KeyEvent02
+	 *   \brief  Returns FR_KeyEvent02
+	 **/
+	readonly attribute boolean FR_KeyEvent02;
+};
+
+[NoInterfaceObject]
+interface org.automotive.FR_KeyEvent01 : VehiclePropertyType {
+
+	/**  FR_KeyEvent01
+	 *   \brief  Returns FR_KeyEvent01
+	 **/
+	readonly attribute boolean FR_KeyEvent01;
+};
+
+[NoInterfaceObject]
+interface org.automotive.CheckSeatCoolerR : VehiclePropertyType {
+
+	/**  CheckSeatCoolerR
+	 *   \brief  Returns CheckSeatCoolerR
+	 **/
+	readonly attribute unsigned octet CheckSeatCoolerR;
+};
+
+[NoInterfaceObject]
+interface org.automotive.CheckSeatCoolerL : VehiclePropertyType {
+
+	/**  CheckSeatCoolerL
+	 *   \brief  Returns CheckSeatCoolerL
+	 **/
+	readonly attribute unsigned octet CheckSeatCoolerL;
+};
+
+[NoInterfaceObject]
+interface org.automotive.CheckSeatHeaterR : VehiclePropertyType {
+
+	/**  CheckSeatHeaterR
+	 *   \brief  Returns CheckSeatHeaterR
+	 **/
+	readonly attribute octet CheckSeatHeaterR;
+};
+
+[NoInterfaceObject]
+interface org.automotive.CheckSeatHeaterL : VehiclePropertyType {
+
+	/**  CheckSeatHeaterL
+	 *   \brief  Returns CheckSeatHeaterL
+	 **/
+	readonly attribute unsigned octet CheckSeatHeaterL;
+};
+
+[NoInterfaceObject]
+interface org.automotive.CheckInRear : VehiclePropertyType {
+
+	/**  CheckInRear
+	 *   \brief  Returns CheckInRear
+	 **/
+	readonly attribute boolean CheckInRear;
+};
+
+[NoInterfaceObject]
+interface org.automotive.WarningParkingBreak : VehiclePropertyType {
+
+	/**  WarningParkingBreak
+	 *   \brief  Returns WarningParkingBreak
+	 **/
+	readonly attribute boolean WarningParkingBreak;
+};
+
+[NoInterfaceObject]
+interface org.automotive.LampDoorOpenTrunk : VehiclePropertyType {
+
+	/**  LampDoorOpenTrunk
+	 *   \brief  Returns LampDoorOpenTrunk
+	 **/
+	readonly attribute boolean LampDoorOpenTrunk;
+};
+
+[NoInterfaceObject]
+interface org.automotive.LampDoorOpenBonnet : VehiclePropertyType {
+
+	/**  LampDoorOpenBonnet
+	 *   \brief  Returns LampDoorOpenBonnet
+	 **/
+	readonly attribute boolean LampDoorOpenBonnet;
+};
+
+[NoInterfaceObject]
+interface org.automotive.LampDoorOpenR_R : VehiclePropertyType {
+
+	/**  LampDoorOpenR_R
+	 *   \brief  Returns LampDoorOpenR_R
+	 **/
+	readonly attribute boolean LampDoorOpenR_R;
+};
+
+[NoInterfaceObject]
+interface org.automotive.LampDoorOpenR_L : VehiclePropertyType {
+
+	/**  LampDoorOpenR_L
+	 *   \brief  Returns LampDoorOpenR_L
+	 **/
+	readonly attribute boolean LampDoorOpenR_L;
+};
+
+[NoInterfaceObject]
+interface org.automotive.LampDoorOpenF_R : VehiclePropertyType {
+
+	/**  LampDoorOpenF_R
+	 *   \brief  Returns LampDoorOpenF_R
+	 **/
+	readonly attribute boolean LampDoorOpenF_R;
+};
+
+[NoInterfaceObject]
+interface org.automotive.LampDoorOpenF_L : VehiclePropertyType {
+
+	/**  LampDoorOpenF_L
+	 *   \brief  Returns LampDoorOpenF_L
+	 **/
+	readonly attribute boolean LampDoorOpenF_L;
+};
+
+[NoInterfaceObject]
+interface org.automotive.LampCruiseCntSet : VehiclePropertyType {
+
+	/**  LampCruiseCntSet
+	 *   \brief  Returns LampCruiseCntSet
+	 **/
+	readonly attribute boolean LampCruiseCntSet;
+};
+
+[NoInterfaceObject]
+interface org.automotive.LampCruiseCnt : VehiclePropertyType {
+
+	/**  LampCruiseCnt
+	 *   \brief  Returns LampCruiseCnt
+	 **/
+	readonly attribute boolean LampCruiseCnt;
+};
+
+[NoInterfaceObject]
+interface org.automotive.LampHighBeam : VehiclePropertyType {
+
+	/**  LampHighBeam
+	 *   \brief  Returns LampHighBeam
+	 **/
+	readonly attribute boolean LampHighBeam;
+};
+
+[NoInterfaceObject]
+interface org.automotive.LampHighBeamAuto : VehiclePropertyType {
+
+	/**  LampHighBeamAuto
+	 *   \brief  Returns LampHighBeamAuto
+	 **/
+	readonly attribute boolean LampHighBeamAuto;
+};
+
+[NoInterfaceObject]
+interface org.automotive.LampTailLight : VehiclePropertyType {
+
+	/**  LampTailLight
+	 *   \brief  Returns LampTailLight
+	 **/
+	readonly attribute boolean LampTailLight;
+};
+
+[NoInterfaceObject]
+interface org.automotive.LampFrontFog : VehiclePropertyType {
+
+	/**  LampFrontFog
+	 *   \brief  Returns LampFrontFog
+	 **/
+	readonly attribute boolean LampFrontFog;
+};
+
+[NoInterfaceObject]
+interface org.automotive.LampHazardLight : VehiclePropertyType {
+
+	/**  LampHazardLight
+	 *   \brief  Returns LampHazardLight
+	 **/
+	readonly attribute boolean LampHazardLight;
+};
+
+[NoInterfaceObject]
+interface org.automotive.LampRearFogLights : VehiclePropertyType {
+
+	/**  LampRearFogLights
+	 *   \brief  Returns LampRearFogLights
+	 **/
+	readonly attribute boolean LampRearFogLights;
+};
+
+[NoInterfaceObject]
+interface org.automotive.WarningImmobilizer : VehiclePropertyType {
+
+	/**  WarningImmobilizer
+	 *   \brief  Returns WarningImmobilizer
+	 **/
+	readonly attribute boolean WarningImmobilizer;
+};
+
+[NoInterfaceObject]
+interface org.automotive.StsTrunkOpen : VehiclePropertyType {
+
+	/**  StsTrunkOpen
+	 *   \brief  Returns StsTrunkOpen
+	 **/
+	readonly attribute boolean StsTrunkOpen;
+};
+
+[NoInterfaceObject]
+interface org.automotive.StsDoorOpen : VehiclePropertyType {
+
+	/**  StsDoorOpen
+	 *   \brief  Returns StsDoorOpen
+	 **/
+	readonly attribute boolean StsDoorOpen;
+};
+
+[NoInterfaceObject]
+interface org.automotive.WarningABS : VehiclePropertyType {
+
+	/**  WarningABS
+	 *   \brief  Returns WarningABS
+	 **/
+	readonly attribute boolean WarningABS;
+};
+
+[NoInterfaceObject]
+interface org.automotive.SystemESCOff : VehiclePropertyType {
+
+	/**  SystemESCOff
+	 *   \brief  Returns SystemESCOff
+	 **/
+	readonly attribute boolean SystemESCOff;
+};
+
+[NoInterfaceObject]
+interface org.automotive.SystemESC : VehiclePropertyType {
+
+	/**  SystemESC
+	 *   \brief  Returns SystemESC
+	 **/
+	readonly attribute boolean SystemESC;
+};
+
+[NoInterfaceObject]
+interface org.automotive.LowWasher : VehiclePropertyType {
+
+	/**  LowWasher
+	 *   \brief  Returns LowWasher
+	 **/
+	readonly attribute boolean LowWasher;
+};
+
+[NoInterfaceObject]
+interface org.automotive.WarningTPM : VehiclePropertyType {
+
+	/**  WarningTPM
+	 *   \brief  Returns WarningTPM
+	 **/
+	readonly attribute boolean WarningTPM;
+};
+
+[NoInterfaceObject]
+interface org.automotive.FuelLeveltooLow : VehiclePropertyType {
+
+	/**  FuelLeveltooLow
+	 *   \brief  Returns FuelLeveltooLow
+	 **/
+	readonly attribute boolean FuelLeveltooLow;
+};
+
+[NoInterfaceObject]
+interface org.automotive.EmergencyFlasher : VehiclePropertyType {
+
+	/**  EmergencyFlasher
+	 *   \brief  Returns EmergencyFlasher
+	 **/
+	readonly attribute boolean EmergencyFlasher;
+};
+
+[NoInterfaceObject]
+interface org.automotive.CheckEnging : VehiclePropertyType {
+
+	/**  CheckEnging
+	 *   \brief  Returns CheckEnging
+	 **/
+	readonly attribute boolean CheckEnging;
+};
+
+[NoInterfaceObject]
+interface org.automotive.WarningEBD : VehiclePropertyType {
+
+	/**  WarningEBD
+	 *   \brief  Returns WarningEBD
+	 **/
+	readonly attribute boolean WarningEBD;
+};
+
+[NoInterfaceObject]
+interface org.automotive.WarningBrake : VehiclePropertyType {
+
+	/**  WarningBrake
+	 *   \brief  Returns WarningBrake
+	 **/
+	readonly attribute boolean WarningBrake;
+};
+
+[NoInterfaceObject]
+interface org.automotive.CheckPowerSteering : VehiclePropertyType {
+
+	/**  CheckPowerSteering
+	 *   \brief  Returns CheckPowerSteering
+	 **/
+	readonly attribute boolean CheckPowerSteering;
+};
+
+[NoInterfaceObject]
+interface org.automotive.WarningLowOilLevel : VehiclePropertyType {
+
+	/**  WarningLowOilLevel
+	 *   \brief  Returns WarningLowOilLevel
+	 **/
+	readonly attribute boolean WarningLowOilLevel;
+};
+
+[NoInterfaceObject]
+interface org.automotive.CheckCharging : VehiclePropertyType {
+
+	/**  CheckCharging
+	 *   \brief  Returns CheckCharging
+	 **/
+	readonly attribute boolean CheckCharging;
+};
+
+[NoInterfaceObject]
+interface org.automotive.WarningAirbag : VehiclePropertyType {
+
+	/**  WarningAirbag
+	 *   \brief  Returns WarningAirbag
+	 **/
+	readonly attribute boolean WarningAirbag;
+};
+
+[NoInterfaceObject]
+interface org.automotive.WarningSafetybelts : VehiclePropertyType {
+
+	/**  WarningSafetybelts
+	 *   \brief  Returns WarningSafetybelts
+	 **/
+	readonly attribute boolean WarningSafetybelts;
+};
+
+[NoInterfaceObject]
+interface org.automotive.LampAutomaticHold : VehiclePropertyType {
+
+	/**  LampAutomaticHold
+	 *   \brief  Returns LampAutomaticHold
+	 **/
+	readonly attribute unsigned octet LampAutomaticHold;
+};
+
+[NoInterfaceObject]
+interface org.automotive.AliveCounter : VehiclePropertyType {
+
+	/**  AliveCounter
+	 *   \brief  Returns AliveCounter
+	 **/
+	readonly attribute unsigned octet AliveCounter;
+};
+
+[NoInterfaceObject]
+interface org.automotive.TPMS_RR : VehiclePropertyType {
+
+	/**  TPMS_RR
+	 *   \brief  Returns TPMS_RR
+	 **/
+	readonly attribute unsigned octet TPMS_RR;
+};
+
+[NoInterfaceObject]
+interface org.automotive.TPMS_RL : VehiclePropertyType {
+
+	/**  TPMS_RL
+	 *   \brief  Returns TPMS_RL
+	 **/
+	readonly attribute unsigned octet TPMS_RL;
+};
+
+[NoInterfaceObject]
+interface org.automotive.TPMS_FR : VehiclePropertyType {
+
+	/**  TPMS_FR
+	 *   \brief  Returns TPMS_FR
+	 **/
+	readonly attribute unsigned octet TPMS_FR;
+};
+
+[NoInterfaceObject]
+interface org.automotive.TPMS_FL : VehiclePropertyType {
+
+	/**  TPMS_FL
+	 *   \brief  Returns TPMS_FL
+	 **/
+	readonly attribute unsigned octet TPMS_FL;
+};
+
+[NoInterfaceObject]
+interface org.automotive.FuelGage : VehiclePropertyType {
+
+	/**  FuelGage
+	 *   \brief  Returns FuelGage
+	 **/
+	readonly attribute unsigned octet FuelGage;
+};
+
+[NoInterfaceObject]
+interface org.automotive.WarterTemperature : VehiclePropertyType {
+
+	/**  WarterTemperature
+	 *   \brief  Returns WarterTemperature
+	 **/
+	readonly attribute unsigned short WarterTemperature;
+};
+
+[NoInterfaceObject]
+interface org.automotive.EngineRPM : VehiclePropertyType {
+
+	/**  EngineRPM
+	 *   \brief  Returns EngineRPM
+	 **/
+	readonly attribute unsigned short EngineRPM;
+};
+
+[NoInterfaceObject]
+interface org.automotive.VehicleOdometer : VehiclePropertyType {
+
+	/**  VehicleOdometer
+	 *   \brief  Returns VehicleOdometer
+	 **/
+	readonly attribute unsigned long VehicleOdometer;
+};
+
+[NoInterfaceObject]
+interface org.automotive.VehicleSpeed : VehiclePropertyType {
+
+	/**  VehicleSpeed
+	 *   \brief  Returns VehicleSpeed
+	 **/
+	readonly attribute unsigned short VehicleSpeed;
+};
+
+[NoInterfaceObject]
+interface org.automotive.DriveMode : VehiclePropertyType {
+
+	/**  DriveMode
+	 *   \brief  Returns DriveMode
+	 **/
+	readonly attribute unsigned octet DriveMode;
+};
+
+[NoInterfaceObject]
+interface org.automotive.GearboxPosition : VehiclePropertyType {
+
+	/**  GearboxPosition
+	 *   \brief  Returns GearboxPosition
+	 **/
+	readonly attribute unsigned octet GearboxPosition;
+};
+
+[NoInterfaceObject]
+interface org.automotive.GearboxPositionDisplay : VehiclePropertyType {
+
+	/**  GearboxPositionDisplay
+	 *   \brief  Returns GearboxPositionDisplay
+	 **/
+	readonly attribute unsigned octet GearboxPositionDisplay;
+};
+
+
+
+};
+

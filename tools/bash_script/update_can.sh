@@ -4,12 +4,18 @@ CANSEND=/usr/bin/cansend
 INTERFACE="vcan0"
 
 OBJNAME="$1"
-VALUE=$2
+VALUE="$2"
+#HEXVALUE=$(printf "%x" $2)
 
 if [ "$OBJNAME" = "VehicleSpeed" ]; then
 	CANID="102"
-	
-	echo ${CANSEND} ${INTERFACE} ${CANID}#"01.00.00.00.00.00.00.00"
-	#${CANSEND} ${INTERFACE} ${CANID}#"01.00.00.00.00.00.00.00"
+	CANMSG=${VALUE}".00.00.00.00.00.00"
+elif [ "$OBJNAME" = "VehicleOdometer" ]; then
+	CANID="102"
+	CANMSG="00.00.00.00.00."${VALUE}
+else
+	echo "${OBJNAME} is not support in this script!"
 fi
-${CANSEND} ${INTERFACE} ${CANID}#"AABB00.00.00.00.00.00"
+echo ${CANSEND} ${INTERFACE} ${CANID}#${CANMSG}
+${CANSEND} ${INTERFACE} ${CANID}#${CANMSG}
+

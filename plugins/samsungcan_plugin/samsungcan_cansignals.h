@@ -159,7 +159,7 @@ CANSIGNAL(CheckSeatCoolerL, char, 52, 2, Endian::Intel, Signedness::Unsigned, 1,
 /**< CheckSeatHeaterR.
  */
 const VehicleProperty::Property CheckSeatHeaterR = "CheckSeatHeaterR";
-CANSIGNAL(CheckSeatHeaterR, char, 50, 2, Endian::Intel, Signedness::Signed, 1, 0, static_cast<char>(0), static_cast<char>(3), nullptr, nullptr)
+CANSIGNAL(CheckSeatHeaterR, char, 50, 2, Endian::Intel, Signedness::Unsigned, 1, 0, static_cast<char>(0), static_cast<char>(3), nullptr, nullptr)
 
 /**< CheckSeatHeaterL.
  */

@@ -337,7 +337,7 @@ void SamsungCANPlugin::registerMessages()
 				   , new FR_KeyEvent02Type()
 				   , new FR_KeyEvent01Type()
 				   );
-	registerMessage(0x206, 7, 100
+	registerMessage(0x206, 8, 100
 				   , new CheckSeatCoolerRType()
 				   , new CheckSeatCoolerLType()
 				   , new CheckSeatHeaterRType()

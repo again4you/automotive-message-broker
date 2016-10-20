@@ -252,7 +252,7 @@ interface org.automotive.CheckSeatHeaterR : VehiclePropertyType {
 	/**  CheckSeatHeaterR
 	 *   \brief  Returns CheckSeatHeaterR
 	 **/
-	readonly attribute octet CheckSeatHeaterR;
+	readonly attribute unsigned octet CheckSeatHeaterR;
 };
 
 [NoInterfaceObject]

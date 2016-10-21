@@ -50,8 +50,8 @@ CAN_OBJECT(DriveMode, guchar, NULL);
  * Vehicle Speed & Odometer
  * CANID: 258 (0x102)
  */
-CAN_OBJECT(VehicleOdometer, 	guint32, NULL);
 CAN_OBJECT(VehicleSpeed, 	guint16, Speed);
+CAN_OBJECT(VehicleOdometer, 	guint32, NULL);
 
 /**
  * Engine Information
@@ -81,6 +81,9 @@ CAN_OBJECT(WarningLowOilLevel, 	gboolean, NULL);
 CAN_OBJECT(CheckPowerSteering, 	gboolean, NULL);
 CAN_OBJECT(WarningBrake, 	gboolean, NULL);
 CAN_OBJECT(WarningEBD, 		gboolean, NULL);
+
+CAN_OBJECT(CheckInRear, 	gboolean, NULL);
+
 CAN_OBJECT(CheckEnging, 	gboolean, NULL);
 CAN_OBJECT(EmergencyFlasher, 	gboolean, NULL);
 CAN_OBJECT(FuelLeveltooLow, 	gboolean, NULL);
@@ -88,11 +91,13 @@ CAN_OBJECT(WarningTPM, 		gboolean, NULL);
 CAN_OBJECT(LowWasher, 		gboolean, NULL);
 CAN_OBJECT(SystemESC, 		gboolean, NULL);
 CAN_OBJECT(SystemESCOff, 	gboolean, NULL);
+
 CAN_OBJECT(WarningABS, 		gboolean, NULL);
 CAN_OBJECT(StsDoorOpen, 	gboolean, NULL);
 CAN_OBJECT(StsTrunkOpen, 	gboolean, NULL);
 CAN_OBJECT(WarningImmobilizer, 	gboolean, NULL);
 CAN_OBJECT(LampRearFogLights, 	gboolean, NULL);
+
 CAN_OBJECT(LampHazardLight, 	gboolean, NULL);
 CAN_OBJECT(LampFrontFog, 	gboolean, NULL);
 CAN_OBJECT(LampTailLight, 	gboolean, NULL);
@@ -100,6 +105,7 @@ CAN_OBJECT(LampHighBeamAuto, 	gboolean, NULL);
 CAN_OBJECT(LampHighBeam, 	gboolean, NULL);
 CAN_OBJECT(LampCruiseCnt, 	gboolean, NULL);
 CAN_OBJECT(LampCruiseCntSet, 	gboolean, NULL);
+
 CAN_OBJECT(LampDoorOpenF_L, 	gboolean, NULL);
 CAN_OBJECT(LampDoorOpenF_R, 	gboolean, NULL);
 CAN_OBJECT(LampDoorOpenR_R, 	gboolean, NULL);
@@ -107,6 +113,43 @@ CAN_OBJECT(LampDoorOpenR_L, 	gboolean, NULL);
 CAN_OBJECT(LampDoorOpenBonnet, 	gboolean, NULL);
 CAN_OBJECT(LampDoorOpenTrunk, 	gboolean, NULL);
 CAN_OBJECT(WarningParkingBreak, gboolean, NULL);
+
+CAN_OBJECT(CheckSeatHeaterL, 	guchar, NULL);
+CAN_OBJECT(CheckSeatHeaterR, 	guchar, NULL);
+CAN_OBJECT(CheckSeatCoolerL, 	guchar, NULL);
+CAN_OBJECT(CheckSeatCoolerR, 	guchar, NULL);
+
+/**
+ * Wheel Remote Controller Key Event
+ * CANID: 519 (0x207)
+ */
+CAN_OBJECT(FR_KeyEvent01, 	gboolean, NULL);
+CAN_OBJECT(FR_KeyEvent02, 	gboolean, NULL);
+CAN_OBJECT(FR_KeyEvent03, 	gboolean, NULL);
+CAN_OBJECT(FR_KeyEvent04, 	gboolean, NULL);
+CAN_OBJECT(FR_KeyEvent05, 	gboolean, NULL);
+CAN_OBJECT(FR_KeyEvent06, 	gboolean, NULL);
+CAN_OBJECT(FR_KeyEvent07, 	gboolean, NULL);
+CAN_OBJECT(FR_KeyEvent08, 	gboolean, NULL);
+
+CAN_OBJECT(FR_KeyEvent09, 	gboolean, NULL);
+CAN_OBJECT(FR_KeyEvent10, 	gboolean, NULL);
+CAN_OBJECT(FR_KeyEvent11, 	gboolean, NULL);
+CAN_OBJECT(FR_KeyEvent12, 	gboolean, NULL);
+CAN_OBJECT(FR_KeyEvent13, 	gboolean, NULL);
+CAN_OBJECT(FR_KeyEvent14, 	gboolean, NULL);
+CAN_OBJECT(FR_KeyEvent15, 	gboolean, NULL);
+
+CAN_OBJECT(FR_KeyEvent16, 	gboolean, NULL);
+CAN_OBJECT(FR_KeyEvent17, 	gboolean, NULL);
+CAN_OBJECT(FR_KeyEvent18, 	gboolean, NULL);
+CAN_OBJECT(FR_KeyEvent19, 	gboolean, NULL);
+CAN_OBJECT(FR_KeyEvent20, 	gboolean, NULL);
+CAN_OBJECT(FR_KeyEvent21, 	gboolean, NULL);
+CAN_OBJECT(FR_KeyEvent22, 	gboolean, NULL);
+CAN_OBJECT(FR_KeyEvent23, 	gboolean, NULL);
+
+CAN_OBJECT(FR_KeyEvent24, 	gboolean, NULL);
 
 #ifdef __cplusplus
 }

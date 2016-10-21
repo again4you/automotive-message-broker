@@ -432,8 +432,48 @@ static void test_FuelGage()
 	amb_release_data(p);
 }
 
+
+static void test_FR_KeyEvent01()
+{
+	struct FR_KeyEvent01Type *p;
+	int ret = amb_get_FR_KeyEvent01_with_zone(&p, None);
+	if (ret != 0) {
+		fprintf(stderr, "Fail to %s\n", __func__);
+		return ;
+	}
+	fprintf(stderr, " == FR_KeyEvent01 ==\n");
+	fprintf(stderr, "    Zone: %d\n", p->Zone);
+	fprintf(stderr, "    Value: %u\n", p->Value);
+	fprintf(stderr, "    ValueSequence: %d\n", p->ValueSequence);
+	fprintf(stderr, "    Time: %f\n", p->Time);
+
+	amb_release_data(p);
+}
+
+static void test_FR_KeyEvent02()
+{
+	struct FR_KeyEvent02Type *p;
+	int ret = amb_get_FR_KeyEvent02_with_zone(&p, None);
+	if (ret != 0) {
+		fprintf(stderr, "Fail to %s\n", __func__);
+		return ;
+	}
+	fprintf(stderr, " == FR_KeyEvent02 ==\n");
+	fprintf(stderr, "    Zone: %d\n", p->Zone);
+	fprintf(stderr, "    Value: %u\n", p->Value);
+	fprintf(stderr, "    ValueSequence: %d\n", p->ValueSequence);
+	fprintf(stderr, "    Time: %f\n", p->Time);
+
+	amb_release_data(p);
+}
+
+
 int main()
 {
+	test_FR_KeyEvent01();
+	test_FR_KeyEvent02();
+
+#if 0
 	test_get_object_list();
 
 	// cansend vcan0 104#3C.00.00.00.00.00.00.00
@@ -455,6 +495,7 @@ int main()
 	test_samsungcan_GearboxPosition();
 
 	test_VehicleOdometer_listen();
+#endif
 
 #ifdef EXAMPLE_PLUGIN
 	test_get_property_all("ClimateControl");

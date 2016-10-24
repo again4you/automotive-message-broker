@@ -13,6 +13,17 @@ if [ "$OBJNAME" = "VehicleSpeed" ]; then
 elif [ "$OBJNAME" = "VehicleOdometer" ]; then
 	CANID="102"
 	CANMSG="00.00.00.00.00."${VALUE}
+elif [ "$OBJNAME" = "EngineRPM" ]; then
+	CANID="103"
+	HEXVALUE=$(printf "%04X" ${VALUE})
+	CANMSG=${HEXVALUE:2:2}"."${HEXVALUE:0:2}".00.00.00.00.00.00"
+elif [ "$OBJNAME" = "FuelGage" ]; then
+	CANID="103"
+	HEXVALUE=$(printf "%04X" ${VALUE})
+	CANMSG="00.00."${HEXVALUE:2:2}"."${HEXVALUE:0:2}".00.00.00.00"
+elif [ "$OBJNAME" = "FuelGage" ]; then
+	CANID="104"
+	CANMSG="00.00.00.00.00.00.00."${VALUE}
 elif [ "$OBJNAME" = "TPMS_FL" ]; then
 	CANID="104"
 	HEXVALUE=$(printf "%02X" ${VALUE})
@@ -33,6 +44,6 @@ else
 	echo "${OBJNAME} is not support in this script!"
 fi
 
-echo ${CANSEND} ${INTERFACE} ${CANID}#${CANMSG}
+echo "Send CAN Message: " ${CANSEND} ${INTERFACE} ${CANID}#${CANMSG}
 ${CANSEND} ${INTERFACE} ${CANID}#${CANMSG}
 

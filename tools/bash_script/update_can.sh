@@ -6,6 +6,11 @@ INTERFACE="vcan0"
 OBJNAME="$1"
 VALUE=$2
 
+if [ "$#" -ne 2 ]; then
+	echo "Usage: $0 [Object Name] [Value]"
+	exit
+fi
+
 if [ "$OBJNAME" = "VehicleSpeed" ]; then
 	CANID="102"
 	HEXVALUE=$(printf "%04X" ${VALUE})

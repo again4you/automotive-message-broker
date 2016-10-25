@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 #include <libamb-client.h>
 #include <libamb-objects.h>
@@ -133,7 +135,7 @@ void test_signal_listen(gchar *objname, ZoneType zone)
 	GMainLoop *loop;
 	int rc;
 
-	rc = amb_register_property_changed_handler(objname, zone, (AMB_PROPERTY_CHANGED_CALLBACK)signal_handler);
+	rc = amb_register_property_changed_handler(objname, zone, (AMB_PROPERTY_CHANGED_CALLBACK)signal_handler, NULL);
 	if (rc != 0) {
                 fprintf(stderr, "Fail to amb_register_property_changed_handler(): %s\n", objname);
                 return ;
@@ -147,7 +149,7 @@ void test_signal_listen(gchar *objname, ZoneType zone)
 	g_main_loop_unref(loop);
 }
 
-static void VehicleOdometer_handler(const gchar *objname, gpointer data)
+static void VehicleOdometer_handler(const gchar *objname, gpointer data, void *user_data)
 {
 	struct VehicleOdometerType retdata;
 
@@ -163,13 +165,82 @@ static void VehicleOdometer_handler(const gchar *objname, gpointer data)
 	fprintf(stderr, "    Time: %f\n", retdata.Time);
 }
 
+struct user_data_test {
+	int value;
+	char *name;
+};
+struct user_data_test *udata;
+
+static void VehicleOdometer_handler_with_userdata(const gchar *objname, gpointer data, void *user_data)
+{
+	struct VehicleOdometerType retdata;
+	struct user_data_test *udata = (struct user_data_test *)user_data;
+
+	fprintf(stderr, "== User Data ==\n");
+	fprintf(stderr, "  value: %d\n", udata->value);
+	fprintf(stderr, "  name: %s\n", udata->name);
+
+	if (!data)
+		return ;
+
+	amb_convert_VehicleOdometerType(data, &retdata);
+
+	fprintf(stderr, " == VehicleOdometer ==\n");
+	fprintf(stderr, "    Zone: %d\n", retdata.Zone);
+	fprintf(stderr, "    Value: %d\n", retdata.Value);
+	fprintf(stderr, "    ValueSequence: %d\n", retdata.ValueSequence);
+	fprintf(stderr, "    Time: %f\n", retdata.Time);
+}
+
+static gboolean timer_callback_with_userdata(gpointer d)
+{
+	int rc;
+	gchar *objname = (gchar *)d;
+
+	rc = amb_unregister_property_changed_handler(objname, 0);
+	if (rc != 0) {
+		fprintf(stderr, "Fail to amb_unregister_property_changed_handler(): %s\n", objname);
+	}
+	// cleanup
+	free(udata->name);
+	g_free(udata);
+	exit(0);
+
+	return FALSE;
+}
+
+static void test_VehicleOdometer_listen_with_userdata()
+{
+	GMainLoop *loop;
+	int rc;
+
+	udata = g_new0(struct user_data_test, 1);
+	udata->value = 20;
+	udata->name = strdup("Test Name");
+
+	rc = amb_register_property_changed_handler("VehicleOdometer",
+					0,
+					(AMB_PROPERTY_CHANGED_CALLBACK)VehicleOdometer_handler_with_userdata,
+					(void *)udata);
+	if (rc != 0) {
+                fprintf(stderr, "Fail to amb_register_property_changed_handler(): %s\n", "VehicleOdometer");
+                return ;
+	}
+
+	g_timeout_add_seconds(10, timer_callback_with_userdata, "VehicleOdometer");
+	loop = g_main_loop_new(NULL, FALSE);
+	g_main_loop_run(loop);
+
+	g_main_loop_unref(loop);
+}
+
 static void test_VehicleOdometer_listen()
 {
 	GMainLoop *loop;
 	int rc;
 
 	rc = amb_register_property_changed_handler("VehicleOdometer", 0, 
-			(AMB_PROPERTY_CHANGED_CALLBACK)VehicleOdometer_handler);
+			(AMB_PROPERTY_CHANGED_CALLBACK)VehicleOdometer_handler, NULL);
 	if (rc != 0) {
                 fprintf(stderr, "Fail to amb_register_property_changed_handler(): %s\n", "VehicleOdometer");
                 return ;
@@ -182,6 +253,8 @@ static void test_VehicleOdometer_listen()
 
 	g_main_loop_unref(loop);
 }
+
+
 
 static void test_samsungcan_GearboxPosition()
 {
@@ -254,7 +327,7 @@ static void test_LampHazardLight()
 	amb_release_data(p);
 }
 
-static void LampHazardLight_handler(const gchar *objname, gpointer data)
+static void LampHazardLight_handler(const gchar *objname, gpointer data, void *user_data)
 {
 	struct LampHazardLightType retdata;
 
@@ -276,7 +349,7 @@ static void test_LampHazardLight_listen()
 	int rc;
 
 	rc = amb_register_property_changed_handler("LampHazardLight", 0,
-			(AMB_PROPERTY_CHANGED_CALLBACK)LampHazardLight_handler);
+			(AMB_PROPERTY_CHANGED_CALLBACK)LampHazardLight_handler, NULL);
 	if (rc != 0) {
                 fprintf(stderr, "Fail to amb_register_property_changed_handler(): %s\n", "LampHazardLight");
                 return ;
@@ -307,7 +380,7 @@ static void test_WarningSafetybelts()
 	amb_release_data(p);
 }
 
-static void WarningSafetybelts_handler(const gchar *objname, gpointer data)
+static void WarningSafetybelts_handler(const gchar *objname, gpointer data, void *userdata)
 {
 	struct WarningSafetybeltsType retdata;
 
@@ -329,7 +402,7 @@ static void test_WarningSafetybelts_listen()
 	int rc;
 
 	rc = amb_register_property_changed_handler("WarningSafetybelts", 0,
-			(AMB_PROPERTY_CHANGED_CALLBACK)WarningSafetybelts_handler);
+			(AMB_PROPERTY_CHANGED_CALLBACK)WarningSafetybelts_handler, NULL);
 	if (rc != 0) {
                 fprintf(stderr, "Fail to amb_register_property_changed_handler(): %s\n", "WarningSafetybelts");
                 return ;
@@ -379,7 +452,7 @@ static void test_TPMS_FL()
 	amb_release_data(p);
 }
 
-static void TPMS_FL_handler(const gchar *objname, gpointer data)
+static void TPMS_FL_handler(const gchar *objname, gpointer data, void *userdata)
 {
 	struct TPMS_FLType retdata;
 
@@ -401,7 +474,7 @@ static void test_TPMS_FL_listen()
 	int rc;
 
 	rc = amb_register_property_changed_handler("TPMS_FL", 0,
-			(AMB_PROPERTY_CHANGED_CALLBACK)TPMS_FL_handler);
+			(AMB_PROPERTY_CHANGED_CALLBACK)TPMS_FL_handler, NULL);
 	if (rc != 0) {
                 fprintf(stderr, "Fail to amb_register_property_changed_handler(): %s\n", "WarningSafetybelts");
                 return ;
@@ -470,10 +543,11 @@ static void test_FR_KeyEvent02()
 
 int main()
 {
+	test_VehicleOdometer_listen_with_userdata();
+#if 0
 	test_FR_KeyEvent01();
 	test_FR_KeyEvent02();
 
-#if 0
 	test_get_object_list();
 
 	// cansend vcan0 104#3C.00.00.00.00.00.00.00

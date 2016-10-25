@@ -1,5 +1,5 @@
 PKG_GIO=`pkg-config --cflags --libs gio-2.0`
-CFLAGS=-Wall -g -I../../lib -I.
+CFLAGS=-Wall -g -I../../lib -I. -DDEBUG
 
 TARGET=test
 all:

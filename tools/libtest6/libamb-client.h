@@ -122,7 +122,8 @@ void amb_release_property_all_with_zone(GVariant *proplist);
 int amb_register_property_changed_handler(gchar *objname,
 					ZoneType zone,
 					AMB_PROPERTY_CHANGED_CALLBACK callback,
-					void *user_data);
+					void *user_data,
+					guint32 *id);
 
 /**
  * Unregister property changed handler.
@@ -133,7 +134,7 @@ int amb_register_property_changed_handler(gchar *objname,
  *
  * @see amb_register_property_changed_handler(), AMB_PROPERTY_CHANGED_CALLBACK
  */
-int amb_unregister_property_changed_handler(gchar *objname, ZoneType zone);
+int amb_unregister_property_changed_handler(gchar *objname, ZoneType zone, guint32 id);
 
 /**
  * higher APIs

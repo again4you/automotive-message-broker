@@ -28,9 +28,15 @@
 #define AMB_INTERFACE_NAME  "org.automotive.Manager"
 #define DBUS_INTERFACE_NAME "org.freedesktop.DBus.Properties"
 
+struct callback_item {
+	AMB_PROPERTY_CHANGED_CALLBACK callback;
+	void *user_data;
+};
+
 struct signal_item {
 	guint id;
 	GDBusProxy *obj;
+	struct callback_item citem;
 };
 
 /******************************************************************************
@@ -219,11 +225,11 @@ static void on_signal_handler(GDBusProxy *proxy,
 			gchar *sender_name,
 			gchar *signal_name,
 			GVariant *parameters,
-			gpointer user_callback)
+			gpointer callback_item)
 {
 	gchar *obj_name;
 	GVariant *value;
-	AMB_PROPERTY_CHANGED_CALLBACK callback = (AMB_PROPERTY_CHANGED_CALLBACK)user_callback;
+	struct callback_item *citem = (struct callback_item *)callback_item;
 
 	if (g_strcmp0("PropertiesChanged", signal_name)) {
 		DEBUGOUT("Error: signal name: %s\n", signal_name);
@@ -231,8 +237,8 @@ static void on_signal_handler(GDBusProxy *proxy,
 	}
 
 	g_variant_get(parameters, "(s@a{sv}as)", &obj_name, &value, NULL);
-	if (callback)
-		callback(obj_name, value);
+	if (citem->callback)
+		citem->callback(obj_name, value, citem->user_data);
 
 	g_free(obj_name);
 	g_variant_unref(value);
@@ -373,13 +379,17 @@ EXPORT void amb_release_property_all(GList *proplist)
 
 EXPORT int amb_register_property_changed_handler(gchar *objname,
 				ZoneType zone,
-				AMB_PROPERTY_CHANGED_CALLBACK callback)
+				AMB_PROPERTY_CHANGED_CALLBACK callback,
+				void *user_data)
 {
 	GDBusProxy *proxy;
 	GDBusProxy *objproxy;
 	guint id;
 	struct signal_item *item;
 	GHashTable *htable;
+
+	if (callback == NULL)
+		return -EINVAL;
 
 	htable = get_htable();
 	if (!htable) {
@@ -405,7 +415,10 @@ EXPORT int amb_register_property_changed_handler(gchar *objname,
 		return -ENOMEM;
 	}
 
-	id = g_signal_connect(objproxy, "g-signal", G_CALLBACK(on_signal_handler), (gpointer)callback);
+	item->citem.callback = callback;
+	item->citem.user_data = user_data;
+
+	id = g_signal_connect(objproxy, "g-signal", G_CALLBACK(on_signal_handler), (gpointer)&item->citem);
 	item->id = id;
 	item->obj = objproxy;
 

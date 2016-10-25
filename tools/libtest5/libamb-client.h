@@ -49,11 +49,11 @@ typedef int ZoneType;
  *
  * @param[in] registered object name
  * @param[in] changed status
+ * @param[in] registered user data
  *
  * @see amb_unregister_property_changed_handler(), amb_unregister_property_changed_handler()
  */
-typedef void (*AMB_PROPERTY_CHANGED_CALLBACK)(const gchar *objname, gpointer data);
-// typedef void (*AMB_PROPERTY_CHANGED_CALLBACK)(const gchar *objname, GVariant *data);
+typedef void (*AMB_PROPERTY_CHANGED_CALLBACK)(const gchar *objname, gpointer data, void *user_data);
 
 /**
  * primitive APIs

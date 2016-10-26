@@ -404,12 +404,42 @@ static void test_VehicleOdometer_listen()
 	g_main_loop_unref(loop);
 }
 
+void test_CheckSeatHeaterL()
+{
+	struct CheckSeatHeaterLType *p;
+	int ret = amb_get_CheckSeatHeaterL_with_zone(&p, 0);
+	if (ret != 0) {
+		fprintf(stderr, "Fail to %s\n", __func__);
+		return ;
+	}
+	fprintf(stderr, "Zone: %d\n", p->Zone);
+	fprintf(stderr, "Value: %d\n", p->Value);
+	fprintf(stderr, "ValueSequence: %d\n", p->ValueSequence);
+	fprintf(stderr, "Time: %f\n", p->Time);
 
+	amb_release_data(p);
+	return ;
+}
+
+static void test_set_CheckSeatHeaterL(int value)
+{
+	int rc;
+
+	rc = amb_set_CheckSeatHeaterL_with_zone(value, 0);
+	if (rc < 0) {
+		fprintf(stderr, "Fail to amb_set_CheckSeatHeaterL_with_zone(): %d\n", rc);
+		return ;
+	}
+
+	test_CheckSeatHeaterL();
+}
 
 int main()
 {
-	test_VehicleOdometer_listen();
+	test_set_CheckSeatHeaterL(1);
+	test_set_CheckSeatHeaterL(2);
 #if 0
+	test_VehicleOdometer_listen();
 	test_FR_KeyEvent01();
 	test_FR_KeyEvent02();
 

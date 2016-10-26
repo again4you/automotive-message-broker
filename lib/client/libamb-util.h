@@ -41,6 +41,16 @@ extern "C" {
 #define g_variant_get_guint64 g_variant_get_uint64
 #define g_variant_get_gdouble g_variant_get_double
 
+#define g_variant_new_gboolean g_variant_new_boolean
+#define g_variant_new_guchar g_variant_new_byte
+#define g_variant_new_gint16 g_variant_new_int16
+#define g_variant_new_guint16 g_variant_new_uint16
+#define g_variant_new_gint32 g_variant_new_int32
+#define g_variant_new_guint32 g_variant_new_uint32
+#define g_variant_new_gint64 g_variant_new_int64
+#define g_variant_new_guint64 g_variant_new_uint64
+#define g_variant_new_gdouble g_variant_new_double
+
 /**
  * Generate Custom CAN Object data structure and its related utility function.
  *
@@ -49,7 +59,7 @@ extern "C" {
  * @param[in] Alias name that is used in AMB. If it is NULL, then this value
  * is ignored.
  *
- * @see amb_release_data()
+ * @see amb_release_data() CAN_OBJECT_WRITABLE()
  */
 #define CAN_OBJECT(obj_name, value_type, alias_name) \
 	struct obj_name ## Type { \
@@ -125,6 +135,33 @@ extern "C" {
 			} \
 		} \
 		g_variant_iter_free(iter); \
+		return 0; \
+	}
+
+/**
+ * Generate utility function for writable CAN object
+ *
+ * @param[in] CAN Object name
+ * @param[in] data type for CAN object
+ * @param[in] Alias name that is used in AMB. If it is NULL, then this value
+ * is ignored.
+ *
+ * @see CAN_OBJECT()
+ */
+#define CAN_OBJECT_WRITABLE(obj_name, value_type, alias_name) \
+	int amb_set_ ## obj_name ## _with_zone(value_type value, int zone) \
+	{ \
+		GVariant *variant; \
+		int ret; \
+		variant = g_variant_new_ ## value_type(value); \
+		ret = amb_set_property(#obj_name, \
+				g_strcmp0(#alias_name, "NULL") ? #alias_name : "Value", \
+				zone, variant);\
+		if (ret < 0) { \
+			fprintf(stderr, "Fail to amb_set_property: %d\n", ret); \
+			return ret; \
+		} \
+		\
 		return 0; \
 	}
 

@@ -151,6 +151,14 @@ CAN_OBJECT(FR_KeyEvent23, 	gboolean, NULL);
 
 CAN_OBJECT(FR_KeyEvent24, 	gboolean, NULL);
 
+/**
+ * Writable AMB Object
+ */
+CAN_OBJECT_WRITABLE(CheckSeatHeaterL,	guchar, NULL);
+CAN_OBJECT_WRITABLE(CheckSeatHeaterR,	guchar, NULL);
+CAN_OBJECT_WRITABLE(CheckSeatCoolerL,	guchar, NULL);
+CAN_OBJECT_WRITABLE(CheckSeatCoolerR,	guchar, NULL);
+
 #ifdef __cplusplus
 }
 #endif

@@ -21,8 +21,18 @@
 #include <gio/gio.h>
 #include <errno.h>
 
-#include "libamb-common.h"
 #include "libamb-client.h"
+
+#ifndef EXPORT
+#  define EXPORT __attribute__((visibility("default")))
+#endif
+
+#if defined DEBUG
+#  define DEBUGOUT(fmt, ...) do { fprintf(stderr, fmt, ##__VA_ARGS__); } while(0);
+#else
+#  define DEBUGOUT(fmt,...)
+#endif /* DEBUG */
+
 
 #define AMB_BUS_NAME        "org.automotive.message.broker"
 #define AMB_INTERFACE_NAME  "org.automotive.Manager"
@@ -273,14 +283,15 @@ static void on_signal_handler(GDBusProxy *proxy,
 			DEBUGOUT("Error: get_htable() returns NULL\n");
 			return ;
 		}
-
+			
 		g_signal_handler_disconnect(item->obj, item->id);
-		if (!g_hash_table_remove(htable, item->key))
-			DEBUGOUT("Error: fail to g_hash_table_remove()\n");
-
+		if (!g_hash_table_remove(htable, item->key)) {
+			DEBUGOUT("Error: fail to g_hash_table_remove()\n");	
+		}
 		g_free(item->key);
 		g_free(item);
 	}
+
 	return ;
 }
 
@@ -324,6 +335,7 @@ EXPORT int amb_get_property_all_with_zone(GVariant **proplist, const char *obj_n
 
 	objproxy = find_objects_with_zone(proxy, obj_name, zone);
 	if (!objproxy) {
+		fprintf(stderr, "%s: obj_name: %s, zone: %d\n", __func__, obj_name, zone);
 		return -EINVAL;
 	}
 
@@ -427,6 +439,8 @@ EXPORT int amb_register_property_changed_handler(gchar *objname,
 	struct callback_item *citem;
 	GHashTable *htable;
 
+	DEBUGOUT("Enter %s()\n", __func__);
+
 	if (callback == NULL)
 		return -EINVAL;
 
@@ -452,7 +466,7 @@ EXPORT int amb_register_property_changed_handler(gchar *objname,
 				NULL, (gpointer*)&item)) {
 		guint sid;
 		DEBUGOUT("Not register: %s\n", g_dbus_proxy_get_object_path(objproxy));
-
+		
 		item = g_new0(struct signal_item, 1);
 		if (!item) {
 			DEBUGOUT("Error: fail to g_new0()\n");
@@ -520,6 +534,8 @@ EXPORT int amb_unregister_property_changed_handler(gchar *objname, ZoneType zone
 		return -EINVAL;
 	}
 
+	DEBUGOUT("instance: %s ID: %u\n", objpath, id);
+
 	// mark to delete
 	for (l = item->cb_list; l != NULL; l = l->next) {
 		struct callback_item *citem = l->data;
@@ -528,11 +544,5 @@ EXPORT int amb_unregister_property_changed_handler(gchar *objname, ZoneType zone
 			citem->is_delete = TRUE;
 		}
 	}
-	DEBUGOUT("Delete monitoring: %s ID: %u\n", objpath, id);
 	return 0;
-}
-
-EXPORT void amb_release_data(void *retdata)
-{
-	g_free(retdata);
 }

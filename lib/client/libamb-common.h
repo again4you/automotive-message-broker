@@ -24,7 +24,7 @@
 #endif
 
 #if defined DEBUG
-#  define DEBUGOUT(fmt, ...) do { fprintf(stderr, fmt, __VA_ARGS__); } while(0);
+#  define DEBUGOUT(fmt, ...) do { fprintf(stderr, fmt, ##__VA_ARGS__); } while(0);
 #else
 #  define DEBUGOUT(fmt,...)
 #endif /* DEBUG */

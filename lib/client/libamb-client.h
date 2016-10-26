@@ -117,24 +117,27 @@ void amb_release_property_all_with_zone(GVariant *proplist);
  * @param[in] Callback function when the properties of monitored object
  * are changed.
  * @param[in] User data for registered callback function
+ * @param[out] Registered ID to be used for unregister this handler
  * @return 0 on success, negative errno value on error
  *
  * @see amb_unregister_property_changed_handler(), AMB_PROPERTY_CHANGED_CALLBACK */
 int amb_register_property_changed_handler(gchar *objname,
 					ZoneType zone,
 					AMB_PROPERTY_CHANGED_CALLBACK callback,
-					void *user_data);
+					void *user_data,
+					guint32 *id);
 
 /**
  * Unregister property changed handler.
  *
  * @param[in] Object name to be monitored
  * @param[in] zone number to be set
+ * @param[in] Registered ID
  * @return 0 on success, negative errno value on error
  *
  * @see amb_register_property_changed_handler(), AMB_PROPERTY_CHANGED_CALLBACK
  */
-int amb_unregister_property_changed_handler(gchar *objname, ZoneType zone);
+int amb_unregister_property_changed_handler(gchar *objname, ZoneType zone, guint32 id);
 
 /**
  * higher APIs

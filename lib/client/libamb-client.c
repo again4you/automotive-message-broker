@@ -31,12 +31,16 @@
 struct callback_item {
 	AMB_PROPERTY_CHANGED_CALLBACK callback;
 	void *user_data;
+	gboolean is_delete;
+	guint32 cid;
 };
 
 struct signal_item {
+	gchar *key;
 	guint id;
 	GDBusProxy *obj;
-	struct callback_item citem;
+	GList *cb_list;
+	guint32 next_cid;
 };
 
 /******************************************************************************
@@ -225,11 +229,13 @@ static void on_signal_handler(GDBusProxy *proxy,
 			gchar *sender_name,
 			gchar *signal_name,
 			GVariant *parameters,
-			gpointer callback_item)
+			gpointer signal_item)
 {
 	gchar *obj_name;
 	GVariant *value;
-	struct callback_item *citem = (struct callback_item *)callback_item;
+	GList *l;
+	GList *ll;
+	struct signal_item *item = (struct signal_item *)signal_item;
 
 	if (g_strcmp0("PropertiesChanged", signal_name)) {
 		DEBUGOUT("Error: signal name: %s\n", signal_name);
@@ -237,12 +243,44 @@ static void on_signal_handler(GDBusProxy *proxy,
 	}
 
 	g_variant_get(parameters, "(s@a{sv}as)", &obj_name, &value, NULL);
-	if (citem->callback)
-		citem->callback(obj_name, value, citem->user_data);
 
+	for (l = item->cb_list; l != NULL; l = l->next) {
+		struct callback_item *citem = l->data;
+		if (!citem->is_delete && citem->callback) {
+			citem->callback(obj_name, value, citem->user_data);
+		}
+	}
 	g_free(obj_name);
 	g_variant_unref(value);
 
+	// remove all marked callback items
+	for (l = item->cb_list, ll = g_list_next(l);
+		l != NULL;
+		l = ll, ll = g_list_next(ll)) {
+		struct callback_item *citem = l->data;
+		if (citem->is_delete) {
+			DEBUGOUT("%s, id = %u is deleted\n", signal_name, citem->cid);
+			g_free(citem);
+			item->cb_list = g_list_delete_link(item->cb_list, l);
+		}
+	}
+
+	if (g_list_length(item->cb_list) == 0) {
+		DEBUGOUT("Remove item from htable\n");
+
+		GHashTable *htable = get_htable();
+		if (!htable) {
+			DEBUGOUT("Error: get_htable() returns NULL\n");
+			return ;
+		}
+
+		g_signal_handler_disconnect(item->obj, item->id);
+		if (!g_hash_table_remove(htable, item->key))
+			DEBUGOUT("Error: fail to g_hash_table_remove()\n");
+
+		g_free(item->key);
+		g_free(item);
+	}
 	return ;
 }
 
@@ -380,12 +418,13 @@ EXPORT void amb_release_property_all(GList *proplist)
 EXPORT int amb_register_property_changed_handler(gchar *objname,
 				ZoneType zone,
 				AMB_PROPERTY_CHANGED_CALLBACK callback,
-				void *user_data)
+				void *user_data,
+				guint32 *id)
 {
 	GDBusProxy *proxy;
 	GDBusProxy *objproxy;
-	guint id;
 	struct signal_item *item;
+	struct callback_item *citem;
 	GHashTable *htable;
 
 	if (callback == NULL)
@@ -408,37 +447,53 @@ EXPORT int amb_register_property_changed_handler(gchar *objname,
 		return -EINVAL;
 	}
 
-	item = g_new0(struct signal_item, 1);
-	if (!item) {
+	if (!g_hash_table_lookup_extended(htable,
+				g_dbus_proxy_get_object_path(objproxy),
+				NULL, (gpointer*)&item)) {
+		guint sid;
+		DEBUGOUT("Not register: %s\n", g_dbus_proxy_get_object_path(objproxy));
+
+		item = g_new0(struct signal_item, 1);
+		if (!item) {
+			DEBUGOUT("Error: fail to g_new0()\n");
+			g_object_unref(objproxy);
+			return -ENOMEM;
+		}
+		sid = g_signal_connect(objproxy, "g-signal", G_CALLBACK(on_signal_handler), (gpointer)item);
+
+		item->key = g_strdup(g_dbus_proxy_get_object_path(objproxy));
+		item->id = sid;
+		item->next_cid = 0;
+		item->obj = objproxy;
+		g_hash_table_insert(htable, item->key, item);
+	}
+
+	citem = g_new0(struct callback_item, 1);
+	if (!citem) {
 		DEBUGOUT("Error: fail to g_new0()\n");
 		g_object_unref(objproxy);
 		return -ENOMEM;
 	}
 
-	item->citem.callback = callback;
-	item->citem.user_data = user_data;
+	citem->cid = __atomic_fetch_add(&item->next_cid, 1, __ATOMIC_RELAXED);
+	citem->is_delete = FALSE;
+	citem->callback = callback;
+	citem->user_data = user_data;
+	*id = citem->cid;
+	item->cb_list = g_list_append(item->cb_list, citem);
 
-	id = g_signal_connect(objproxy, "g-signal", G_CALLBACK(on_signal_handler), (gpointer)&item->citem);
-	item->id = id;
-	item->obj = objproxy;
-
-	g_hash_table_insert(htable,
-			g_strdup(g_dbus_proxy_get_object_path(objproxy)),
-			item);
-
-	DEBUGOUT("instance: %s ID: %u\n", g_dbus_proxy_get_object_path(objproxy), id);
-
+	DEBUGOUT("instance: %s ID: %u\n", g_dbus_proxy_get_object_path(objproxy), *id);
 	return 0;
 }
 
-EXPORT int amb_unregister_property_changed_handler(gchar *objname, ZoneType zone)
+EXPORT int amb_unregister_property_changed_handler(gchar *objname, ZoneType zone, guint32 id)
 {
 	GHashTable *htable;
 	GDBusProxy *proxy;
 	GDBusProxy *objproxy;
-	gpointer key;
 	struct signal_item *item;
 	gchar *objpath;
+	GList *l;
 
 	htable = get_htable();
 	if (!htable) {
@@ -459,22 +514,21 @@ EXPORT int amb_unregister_property_changed_handler(gchar *objname, ZoneType zone
 
 	objpath = (gchar*)g_dbus_proxy_get_object_path(objproxy);
 
-	if (!g_hash_table_lookup_extended(htable, objpath, &key, (gpointer*)&item)) {
+	if (!g_hash_table_lookup_extended(htable, objpath, NULL, (gpointer*)&item)) {
 		DEBUGOUT("Error: fail to find the object :%s\n", objpath);
 		g_object_unref(objproxy);
 		return -EINVAL;
 	}
 
-	DEBUGOUT("instance: %s ID: %u\n", objpath, item->id);
-
-	g_signal_handler_disconnect(item->obj, item->id);
-	if (!g_hash_table_remove(htable, objpath)) {
-		DEBUGOUT("Error: fail to g_hash_table_remove()\n");
+	// mark to delete
+	for (l = item->cb_list; l != NULL; l = l->next) {
+		struct callback_item *citem = l->data;
+		if (citem->cid == id) {
+			DEBUGOUT("%s: id: %u is marked to delete\n", objname, citem->cid);
+			citem->is_delete = TRUE;
+		}
 	}
-
-	g_free(key);
-	g_free(item);
-
+	DEBUGOUT("Delete monitoring: %s ID: %u\n", objpath, id);
 	return 0;
 }
 

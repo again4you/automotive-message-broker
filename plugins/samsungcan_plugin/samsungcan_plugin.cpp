@@ -131,6 +131,14 @@ void SamsungCANPlugin::init()
         if (!iter->second.registerOnCANBus(*canBus))
             LOG_ERROR("Cannot register a message with can_id=0x" << std::hex << iter->first);
     }
+
+#if 1
+    // Add monitoring value
+    AbstractRoutingEngine* re = routingEngine;
+    // re->subscribeToProperty(VehicleProperty::VehicleSpeed, &source);
+    // re->subscribeToProperty("VehicleOdometer", &source);
+    re->subscribeToProperty(TPMS_FL, &source);
+#endif
 }
 
 AsyncPropertyReply *SamsungCANPlugin::setProperty(const AsyncSetPropertyRequest& request )
@@ -168,6 +176,42 @@ AsyncPropertyReply *SamsungCANPlugin::setProperty(const AsyncSetPropertyRequest&
 int SamsungCANPlugin::supportedOperations() const
 {
     return AbstractSource::Get | AbstractSource::Set;
+}
+
+void SamsungCANPlugin::propertyChanged(AbstractPropertyType *value)
+{
+    VehicleProperty::Property property = value->name;
+
+    // LOG_INFO( "SamsungCANPlugin::errorOccured() not implemented "<< std::endl );
+    DebugOut() << "SJ - 1: " << property << " value: " << value->toString() << endl;
+
+    if (!value->name.compare(TPMS_FL)) {
+    	AbstractPropertyType *nvalue = findPropertyType(VehicleOdometer, Zone::None);
+    	DebugOut() << "SJ - 2: " << property << " value: " << (int)value->value<char>() << endl;
+    	DebugOut() << "SJ - 3: " << nvalue->name << " value: " << nvalue->toString() << endl;
+
+	GVariant *var = g_variant_new_uint32((guint32)value->value<char>());
+	nvalue->fromVariant(var);
+    	DebugOut() << "SJ - 4: " << nvalue->name << " value: " << nvalue->toString() << endl;
+
+	routingEngine->updateProperty(nvalue, uuid()); 
+
+	g_variant_unref(var);
+#if 0
+	std::unique_ptr<GVariant, decltype(&g_variant_unref)> variant(value->toVariant(), &g_variant_unref);
+	nvalue->timestamp = amb::currentTime();
+	nvalue->fromVariant(variant.get());
+    	DebugOut() << "SJ - 4: " << nvalue->name << " value: " << nvalue->toString() << endl;
+	routingEngine->updateProperty(nvalue, uuid()); 
+#endif
+    }
+
+#if 0
+    AbstractPropertyType *nvalue = findPropertyType(TPMS_FL, Zone::None);
+    if (value) {
+    	DebugOut() << "SJ - 2: " << property << " value: " << nvalue->toString() << endl;
+    }
+#endif
 }
 
 void SamsungCANPlugin::onMessage(const can_frame& frame)

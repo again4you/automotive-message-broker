@@ -68,6 +68,8 @@ public:
      */
     int supportedOperations() const;
 
+    virtual void propertyChanged(AbstractPropertyType *value);
+
 
     // from CANObserver
 public:

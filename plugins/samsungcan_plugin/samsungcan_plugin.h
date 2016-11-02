@@ -181,6 +181,7 @@ private:
 
     static void timerDestroyNotify(gpointer data);
     static gboolean timeoutCallback(gpointer data);
+    static gboolean gwbox_callback(gpointer data);
 //
 // data:
 //

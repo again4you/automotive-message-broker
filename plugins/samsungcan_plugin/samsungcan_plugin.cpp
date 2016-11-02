@@ -48,6 +48,24 @@ extern "C" AbstractSource * create(AbstractRoutingEngine* routingengine, std::ma
     return plugin.release();
 }
 
+gboolean SamsungCANPlugin::gwbox_callback(gpointer data)
+{
+    	DebugOut() << "SJ-C1: Enter gwbox_callback()" << endl;
+	SamsungCANPlugin *scan = (SamsungCANPlugin *)data;
+
+	AbstractPropertyType *nvalue = scan->findPropertyType(VehicleOdometer, Zone::None);
+	if (nvalue) {
+    		DebugOut() << "SJ-C2: " << nvalue->name << " value: " << nvalue->toString() << endl;
+		if (scan->sendValue(nvalue)) {
+    			DebugOut() << "SJ-C3: Success" << endl;
+		} else {
+    			DebugOut() << "SJ-C3: Fail" << endl;
+		}
+	}
+
+	return true;
+}
+
 void SamsungCANPlugin::timerDestroyNotify(gpointer data)
 {
     TimerData* timerData = reinterpret_cast<TimerData*>(data);
@@ -106,6 +124,11 @@ SamsungCANPlugin::SamsungCANPlugin(AbstractRoutingEngine* re, const map<string, 
             announcementIntervalTimer = 1;
 
     registerMessages();
+
+#if 1
+    g_timeout_add(1000, gwbox_callback, this);
+
+#endif
 }
 
 SamsungCANPlugin::~SamsungCANPlugin()

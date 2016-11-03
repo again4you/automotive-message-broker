@@ -19,6 +19,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #ifndef SAMSUNGCAN_PLUGIN_H_
 #define SAMSUNGCAN_PLUGIN_H_
 
+#define GATEWAYBOX
+
 #include <map>
 #include <memory>
 #include <tgmath.h>
@@ -202,6 +204,9 @@ private:
     interprocess_recursive_mutex mutex;
     uint announcementIntervalTimer;
     uint announcementCount;
+#ifdef GATEWAYBOX
+    uint notificationIntervalTime;
+#endif
 };
 
 #endif /* SAMSUNGCAN_PLUGIN_H_ */

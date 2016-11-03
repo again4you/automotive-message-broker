@@ -31,6 +31,12 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 //using namespace SamsungCANPlugin;
 
+#ifdef GATEWAYBOX
+VehicleProperty::Property knobItems[] = { VehicleOdometer
+				};
+#endif
+
+
 static const char* DEFAULT_CAN_IF_NAME = "vcan0";
 
 // library exported function for plugin loader
@@ -48,23 +54,24 @@ extern "C" AbstractSource * create(AbstractRoutingEngine* routingengine, std::ma
     return plugin.release();
 }
 
+#ifdef GATEWAYBOX
 gboolean SamsungCANPlugin::gwbox_callback(gpointer data)
 {
-    	DebugOut() << "SJ-C1: Enter gwbox_callback()" << endl;
 	SamsungCANPlugin *scan = (SamsungCANPlugin *)data;
+	unsigned int cnt = sizeof(knobItems)/sizeof(knobItems[0]);
 
-	AbstractPropertyType *nvalue = scan->findPropertyType(VehicleOdometer, Zone::None);
-	if (nvalue) {
-    		DebugOut() << "SJ-C2: " << nvalue->name << " value: " << nvalue->toString() << endl;
-		if (scan->sendValue(nvalue)) {
-    			DebugOut() << "SJ-C3: Success" << endl;
-		} else {
-    			DebugOut() << "SJ-C3: Fail" << endl;
+	for (int i=0; i<cnt; ++i) {
+		AbstractPropertyType *nvalue = scan->findPropertyType(VehicleOdometer, Zone::None);
+		if (!nvalue) {
+			LOG_WARNING("Fail to find " << nvalue->name << endl);
+		}
+		if (!scan->sendValue(nvalue)) {
+			LOG_WARNING("Fail to send CAN frame: " << nvalue->name << endl);
 		}
 	}
-
 	return true;
 }
+#endif
 
 void SamsungCANPlugin::timerDestroyNotify(gpointer data)
 {
@@ -125,9 +132,20 @@ SamsungCANPlugin::SamsungCANPlugin(AbstractRoutingEngine* re, const map<string, 
 
     registerMessages();
 
-#if 1
-    g_timeout_add(1000, gwbox_callback, this);
+#ifdef GATEWAYBOX
+    notificationIntervalTime = 0;
+    it = config.find("notificationIntervalTime");
+    if (it != config.end() && it->second.length())
+        notificationIntervalTime = atoi(std::string(it->second).c_str());
+    if (notificationIntervalTime != 0 && notificationIntervalTime < 100)
+	    notificationIntervalTime = 1000;
 
+    if (notificationIntervalTime)
+        g_timeout_add_full(G_PRIORITY_HIGH,
+			notificationIntervalTime,
+			gwbox_callback,
+			this,
+			NULL);
 #endif
 }
 
@@ -155,11 +173,9 @@ void SamsungCANPlugin::init()
             LOG_ERROR("Cannot register a message with can_id=0x" << std::hex << iter->first);
     }
 
-#if 1
-    // Add monitoring value
+#ifdef GATEWAYBOX
+    // subscribe Knob CAN ID
     AbstractRoutingEngine* re = routingEngine;
-    // re->subscribeToProperty(VehicleProperty::VehicleSpeed, &source);
-    // re->subscribeToProperty("VehicleOdometer", &source);
     re->subscribeToProperty(TPMS_FL, &source);
 #endif
 }

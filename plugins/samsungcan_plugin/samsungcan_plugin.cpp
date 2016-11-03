@@ -210,6 +210,38 @@ void SamsungCANPlugin::propertyChanged(AbstractPropertyType *value)
 
     if (!value->name.compare(TPMS_FL)) {
     	AbstractPropertyType *nvalue = findPropertyType(VehicleOdometer, Zone::None);
+	if (nvalue) {
+		GVariant *var = g_variant_new_uint32((guint32)value->value<char>());
+		nvalue->fromVariant(var);
+    		DebugOut() << "SJ - 2: " << nvalue->name << " value: " << nvalue->toString() << endl;
+		routingEngine->updateProperty(nvalue, uuid()); 
+		if (sendValue(nvalue)) {
+			DebugOut() << "SJ-3: Success" << endl;		
+		} else {
+			DebugOut() << "SJ-3: Fail" << endl;		
+		}
+	}
+    }
+
+
+#if 0
+    if (!value->name.compare(TPMS_FL)) {
+    	AbstractPropertyType *nvalue = findPropertyType(VehicleOdometer, Zone::None);
+	if (nvalue) {
+		GVariant *var = g_variant_new_uint32((guint32)value->value<char>());
+		nvalue->fromVariant(var);
+    		DebugOut() << "SJ - 2: " << nvalue->name << " value: " << nvalue->toString() << endl;
+		if (sendValue(nvalue)) {
+			DebugOut() << "SJ-3: Success" << endl;		
+		} else {
+			DebugOut() << "SJ-3: Fail" << endl;		
+		}
+	}
+    }
+#endif
+#if 0
+    if (!value->name.compare(TPMS_FL)) {
+    	AbstractPropertyType *nvalue = findPropertyType(VehicleOdometer, Zone::None);
     	DebugOut() << "SJ - 2: " << property << " value: " << (int)value->value<char>() << endl;
     	DebugOut() << "SJ - 3: " << nvalue->name << " value: " << nvalue->toString() << endl;
 
@@ -228,6 +260,7 @@ void SamsungCANPlugin::propertyChanged(AbstractPropertyType *value)
 	routingEngine->updateProperty(nvalue, uuid()); 
 #endif
     }
+#endif
 
 #if 0
     AbstractPropertyType *nvalue = findPropertyType(TPMS_FL, Zone::None);

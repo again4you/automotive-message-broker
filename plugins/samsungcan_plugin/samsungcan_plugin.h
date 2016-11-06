@@ -19,8 +19,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #ifndef SAMSUNGCAN_PLUGIN_H_
 #define SAMSUNGCAN_PLUGIN_H_
 
-#define GATEWAYBOX
-
 #include <map>
 #include <memory>
 #include <tgmath.h>
@@ -54,7 +52,7 @@ public:
     /*! uuid() is a unique identifier of the plugin
       * @return a guid-style unique identifier
       */
-    const std::string uuid() const { return "A5071A4A-96B1-11E6-B1CE-F5EF0B68FC46"; }
+    const std::string uuid() const { return "E9DE9A5C-8159-11E6-BCAA-511E1A799B42"; }
 
     /*!
      * \brief setProperty is called when a sink requests to set a value for a given property.
@@ -69,8 +67,6 @@ public:
      * \return returns the supported operations.
      */
     int supportedOperations() const;
-
-    virtual void propertyChanged(AbstractPropertyType *value);
 
 
     // from CANObserver
@@ -183,7 +179,6 @@ private:
 
     static void timerDestroyNotify(gpointer data);
     static gboolean timeoutCallback(gpointer data);
-    static gboolean gwbox_callback(gpointer data);
 //
 // data:
 //
@@ -204,9 +199,6 @@ private:
     interprocess_recursive_mutex mutex;
     uint announcementIntervalTimer;
     uint announcementCount;
-#ifdef GATEWAYBOX
-    uint notificationIntervalTime;
-#endif
 };
 
 #endif /* SAMSUNGCAN_PLUGIN_H_ */

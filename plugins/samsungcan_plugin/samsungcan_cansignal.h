@@ -242,7 +242,7 @@ private:
     } \
     uint64_t conversionFunctionTo(double value, uint64_t bits) { \
         if(convertToFunction) \
-            return convertToFunction(convert<valueType>(value), bits); \
+            convertToFunction(convert<valueType>(value), bits); \
         else return bits; \
     } \
     valueType m_minValue; \

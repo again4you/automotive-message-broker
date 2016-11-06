@@ -31,12 +31,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 //using namespace SamsungCANPlugin;
 
-#ifdef GATEWAYBOX
-VehicleProperty::Property knobItems[] = { VehicleOdometer
-				};
-#endif
-
-
 static const char* DEFAULT_CAN_IF_NAME = "vcan0";
 
 // library exported function for plugin loader
@@ -53,25 +47,6 @@ extern "C" AbstractSource * create(AbstractRoutingEngine* routingengine, std::ma
     plugin->init();
     return plugin.release();
 }
-
-#ifdef GATEWAYBOX
-gboolean SamsungCANPlugin::gwbox_callback(gpointer data)
-{
-	SamsungCANPlugin *scan = (SamsungCANPlugin *)data;
-	unsigned int cnt = sizeof(knobItems)/sizeof(knobItems[0]);
-
-	for (int i=0; i<cnt; ++i) {
-		AbstractPropertyType *nvalue = scan->findPropertyType(VehicleOdometer, Zone::None);
-		if (!nvalue) {
-			LOG_WARNING("Fail to find " << nvalue->name << endl);
-		}
-		if (!scan->sendValue(nvalue)) {
-			LOG_WARNING("Fail to send CAN frame: " << nvalue->name << endl);
-		}
-	}
-	return true;
-}
-#endif
 
 void SamsungCANPlugin::timerDestroyNotify(gpointer data)
 {
@@ -131,22 +106,6 @@ SamsungCANPlugin::SamsungCANPlugin(AbstractRoutingEngine* re, const map<string, 
             announcementIntervalTimer = 1;
 
     registerMessages();
-
-#ifdef GATEWAYBOX
-    notificationIntervalTime = 0;
-    it = config.find("notificationIntervalTime");
-    if (it != config.end() && it->second.length())
-        notificationIntervalTime = atoi(std::string(it->second).c_str());
-    if (notificationIntervalTime != 0 && notificationIntervalTime < 100)
-	    notificationIntervalTime = 1000;
-
-    if (notificationIntervalTime)
-        g_timeout_add_full(G_PRIORITY_HIGH,
-			notificationIntervalTime,
-			gwbox_callback,
-			this,
-			NULL);
-#endif
 }
 
 SamsungCANPlugin::~SamsungCANPlugin()
@@ -172,12 +131,6 @@ void SamsungCANPlugin::init()
         if (!iter->second.registerOnCANBus(*canBus))
             LOG_ERROR("Cannot register a message with can_id=0x" << std::hex << iter->first);
     }
-
-#ifdef GATEWAYBOX
-    // subscribe Knob CAN ID
-    AbstractRoutingEngine* re = routingEngine;
-    re->subscribeToProperty(TPMS_FL, &source);
-#endif
 }
 
 AsyncPropertyReply *SamsungCANPlugin::setProperty(const AsyncSetPropertyRequest& request )
@@ -215,75 +168,6 @@ AsyncPropertyReply *SamsungCANPlugin::setProperty(const AsyncSetPropertyRequest&
 int SamsungCANPlugin::supportedOperations() const
 {
     return AbstractSource::Get | AbstractSource::Set;
-}
-
-void SamsungCANPlugin::propertyChanged(AbstractPropertyType *value)
-{
-    VehicleProperty::Property property = value->name;
-
-    // LOG_INFO( "SamsungCANPlugin::errorOccured() not implemented "<< std::endl );
-    DebugOut() << "SJ - 1: " << property << " value: " << value->toString() << endl;
-
-    if (!value->name.compare(TPMS_FL)) {
-    	AbstractPropertyType *nvalue = findPropertyType(VehicleOdometer, Zone::None);
-	if (nvalue) {
-		GVariant *var = g_variant_new_uint32((guint32)value->value<char>());
-		nvalue->fromVariant(var);
-    		DebugOut() << "SJ - 2: " << nvalue->name << " value: " << nvalue->toString() << endl;
-		routingEngine->updateProperty(nvalue, uuid()); 
-		if (sendValue(nvalue)) {
-			DebugOut() << "SJ-3: Success" << endl;		
-		} else {
-			DebugOut() << "SJ-3: Fail" << endl;		
-		}
-	}
-    }
-
-
-#if 0
-    if (!value->name.compare(TPMS_FL)) {
-    	AbstractPropertyType *nvalue = findPropertyType(VehicleOdometer, Zone::None);
-	if (nvalue) {
-		GVariant *var = g_variant_new_uint32((guint32)value->value<char>());
-		nvalue->fromVariant(var);
-    		DebugOut() << "SJ - 2: " << nvalue->name << " value: " << nvalue->toString() << endl;
-		if (sendValue(nvalue)) {
-			DebugOut() << "SJ-3: Success" << endl;		
-		} else {
-			DebugOut() << "SJ-3: Fail" << endl;		
-		}
-	}
-    }
-#endif
-#if 0
-    if (!value->name.compare(TPMS_FL)) {
-    	AbstractPropertyType *nvalue = findPropertyType(VehicleOdometer, Zone::None);
-    	DebugOut() << "SJ - 2: " << property << " value: " << (int)value->value<char>() << endl;
-    	DebugOut() << "SJ - 3: " << nvalue->name << " value: " << nvalue->toString() << endl;
-
-	GVariant *var = g_variant_new_uint32((guint32)value->value<char>());
-	nvalue->fromVariant(var);
-    	DebugOut() << "SJ - 4: " << nvalue->name << " value: " << nvalue->toString() << endl;
-
-	routingEngine->updateProperty(nvalue, uuid()); 
-
-	g_variant_unref(var);
-#if 0
-	std::unique_ptr<GVariant, decltype(&g_variant_unref)> variant(value->toVariant(), &g_variant_unref);
-	nvalue->timestamp = amb::currentTime();
-	nvalue->fromVariant(variant.get());
-    	DebugOut() << "SJ - 4: " << nvalue->name << " value: " << nvalue->toString() << endl;
-	routingEngine->updateProperty(nvalue, uuid()); 
-#endif
-    }
-#endif
-
-#if 0
-    AbstractPropertyType *nvalue = findPropertyType(TPMS_FL, Zone::None);
-    if (value) {
-    	DebugOut() << "SJ - 2: " << property << " value: " << nvalue->toString() << endl;
-    }
-#endif
 }
 
 void SamsungCANPlugin::onMessage(const can_frame& frame)
@@ -427,6 +311,46 @@ void SamsungCANPlugin::printFrame(const can_frame& frame) const
 
 void SamsungCANPlugin::registerMessages()
 {
+	registerMessage(0x302, 8, 100
+				   , new TRIP_B_EllapsedTimeType()
+				   , new TRIP_B_Avg_SpeedType()
+				   , new TRIP_B_Fuel_UsedType()
+				   , new TRIP_B_RangeType()
+				   );
+	registerMessage(0x301, 8, 100
+				   , new TRIP_A_EllapsedTimeType()
+				   , new TRIP_A_Avg_SpeedType()
+				   , new TRIP_A_Fuel_UsedType()
+				   , new TRIP_A_RangeType()
+				   );
+	registerMessage(0x402, 8, 100
+				   , new MediaVolumeCIDType()
+				   , new RightAirflowCIDType()
+				   , new RightTemperatureCIDType()
+				   , new LeftAirflowCIDType()
+				   , new LeftTemperatureCIDType()
+				   , new AirDistributionCIDType()
+				   );
+	registerMessage(0x702, 8, 100
+				   , new MediaVolumeRightKnobType()
+				   , new RightAirflowLeftKnobType()
+				   , new RightTemperatureRightKnobType()
+				   , new AirDistributionRightKnobType()
+				   );
+	registerMessage(0x701, 8, 100
+				   , new MediaVolumeLeftKnobType()
+				   , new LeftAirflowLeftKnobType()
+				   , new LeftTemperatureLeftKnobType()
+				   , new AirDistributionLeftKnobType()
+				   );
+	registerMessage(0x401, 8, 100
+				   , new CidWatchDDType()
+				   , new CidWatchMMType()
+				   , new CidWatchYYType()
+				   , new CidWatchSecType()
+				   , new CidWatchMinType()
+				   , new CidWatchHourType()
+				   );
 	registerMessage(0x207, 8, 100
 				   , new FR_KeyEvent24Type()
 				   , new FR_KeyEvent23Type()
@@ -485,6 +409,8 @@ void SamsungCANPlugin::registerMessages()
 				   , new FuelLeveltooLowType()
 				   , new EmergencyFlasherType()
 				   , new CheckEngingType()
+				   , new RightTurnSignalType()
+				   , new LeftTurnSignalType()
 				   , new WarningEBDType()
 				   , new WarningBrakeType()
 				   , new CheckPowerSteeringType()
@@ -494,8 +420,10 @@ void SamsungCANPlugin::registerMessages()
 				   , new WarningSafetybeltsType()
 				   );
 	registerMessage(0x105, 8, 100
+				   , new BatteryChargeLevelType()
+				   , new BatteryCurrentType()
+				   , new BatteryVoltageType()
 				   , new LampAutomaticHoldType()
-				   , new AliveCounterType()
 				   );
 	registerMessage(0x104, 8, 100
 				   , new TPMS_RRType()
@@ -513,6 +441,7 @@ void SamsungCANPlugin::registerMessages()
 				   , new VehicleSpeedType()
 				   );
 	registerMessage(0x101, 8, 100
+				   , new AliveCounterType()
 				   , new DriveModeType()
 				   , new GearboxPositionType()
 				   , new GearboxPositionDisplayType()

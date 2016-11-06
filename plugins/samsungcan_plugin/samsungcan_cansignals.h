@@ -26,50 +26,190 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include <vehicleproperty.h>
 
 
+/**< TRIP_B_EllapsedTime.
+ */
+const VehicleProperty::Property TRIP_B_EllapsedTime = "TRIP_B_EllapsedTime";
+CANSIGNAL(TRIP_B_EllapsedTime, uint16_t, 48, 16, Endian::Intel, Signedness::Unsigned, 1, 0, static_cast<uint16_t>(0), static_cast<uint16_t>(65535), nullptr, nullptr)
+
+/**< TRIP_B_Avg_Speed.
+ */
+const VehicleProperty::Property TRIP_B_Avg_Speed = "TRIP_B_Avg_Speed";
+CANSIGNAL(TRIP_B_Avg_Speed, uint16_t, 32, 16, Endian::Intel, Signedness::Unsigned, 1, 0, static_cast<uint16_t>(0), static_cast<uint16_t>(512), nullptr, nullptr)
+
+/**< TRIP_B_Fuel_Used.
+ */
+const VehicleProperty::Property TRIP_B_Fuel_Used = "TRIP_B_Fuel_Used";
+CANSIGNAL(TRIP_B_Fuel_Used, char, 24, 8, Endian::Intel, Signedness::Unsigned, 1, 0, static_cast<char>(0), static_cast<char>(255), nullptr, nullptr)
+
+/**< TRIP_B_Range.
+ */
+const VehicleProperty::Property TRIP_B_Range = "TRIP_B_Range";
+CANSIGNAL(TRIP_B_Range, uint32_t, 0, 24, Endian::Intel, Signedness::Unsigned, 1, 0, static_cast<uint32_t>(0), static_cast<uint32_t>(999999), nullptr, nullptr)
+
+/**< TRIP_A_EllapsedTime.
+ */
+const VehicleProperty::Property TRIP_A_EllapsedTime = "TRIP_A_EllapsedTime";
+CANSIGNAL(TRIP_A_EllapsedTime, uint16_t, 48, 16, Endian::Intel, Signedness::Unsigned, 1, 0, static_cast<uint16_t>(0), static_cast<uint16_t>(65535), nullptr, nullptr)
+
+/**< TRIP_A_Avg_Speed.
+ */
+const VehicleProperty::Property TRIP_A_Avg_Speed = "TRIP_A_Avg_Speed";
+CANSIGNAL(TRIP_A_Avg_Speed, uint16_t, 32, 16, Endian::Intel, Signedness::Unsigned, 1, 0, static_cast<uint16_t>(0), static_cast<uint16_t>(512), nullptr, nullptr)
+
+/**< TRIP_A_Fuel_Used.
+ */
+const VehicleProperty::Property TRIP_A_Fuel_Used = "TRIP_A_Fuel_Used";
+CANSIGNAL(TRIP_A_Fuel_Used, char, 24, 8, Endian::Intel, Signedness::Unsigned, 1, 0, static_cast<char>(0), static_cast<char>(255), nullptr, nullptr)
+
+/**< TRIP_A_Range.
+ */
+const VehicleProperty::Property TRIP_A_Range = "TRIP_A_Range";
+CANSIGNAL(TRIP_A_Range, uint32_t, 0, 24, Endian::Intel, Signedness::Unsigned, 1, 0, static_cast<uint32_t>(0), static_cast<uint32_t>(999999), nullptr, nullptr)
+
+/**< MediaVolumeCID.
+ */
+const VehicleProperty::Property MediaVolumeCID = "MediaVolumeCID";
+CANSIGNAL(MediaVolumeCID, char, 56, 8, Endian::Intel, Signedness::Unsigned, 1, 0, static_cast<char>(0), static_cast<char>(15), nullptr, nullptr)
+
+/**< RightAirflowCID.
+ */
+const VehicleProperty::Property RightAirflowCID = "RightAirflowCID";
+CANSIGNAL(RightAirflowCID, char, 48, 8, Endian::Intel, Signedness::Unsigned, 1, 0, static_cast<char>(0), static_cast<char>(5), nullptr, nullptr)
+
+/**< RightTemperatureCID.
+ */
+const VehicleProperty::Property RightTemperatureCID = "RightTemperatureCID";
+CANSIGNAL(RightTemperatureCID, double, 40, 8, Endian::Intel, Signedness::Unsigned, 0.1, -170, static_cast<double>(0), static_cast<double>(150), nullptr, nullptr)
+
+/**< LeftAirflowCID.
+ */
+const VehicleProperty::Property LeftAirflowCID = "LeftAirflowCID";
+CANSIGNAL(LeftAirflowCID, char, 32, 8, Endian::Intel, Signedness::Unsigned, 1, 0, static_cast<char>(0), static_cast<char>(5), nullptr, nullptr)
+
+/**< LeftTemperatureCID.
+ */
+const VehicleProperty::Property LeftTemperatureCID = "LeftTemperatureCID";
+CANSIGNAL(LeftTemperatureCID, double, 24, 8, Endian::Intel, Signedness::Unsigned, 0.1, -170, static_cast<double>(0), static_cast<double>(0), nullptr, nullptr)
+
+/**< AirDistributionCID.
+ */
+const VehicleProperty::Property AirDistributionCID = "AirDistributionCID";
+CANSIGNAL(AirDistributionCID, char, 16, 8, Endian::Intel, Signedness::Unsigned, 1, 0, static_cast<char>(0), static_cast<char>(4), nullptr, nullptr)
+
+/**< MediaVolumeRightKnob.
+ */
+const VehicleProperty::Property MediaVolumeRightKnob = "MediaVolumeRightKnob";
+CANSIGNAL(MediaVolumeRightKnob, char, 56, 8, Endian::Intel, Signedness::Unsigned, 1, 0, static_cast<char>(0), static_cast<char>(15), nullptr, nullptr)
+
+/**< RightAirflowLeftKnob.
+ */
+const VehicleProperty::Property RightAirflowLeftKnob = "RightAirflowLeftKnob";
+CANSIGNAL(RightAirflowLeftKnob, char, 48, 8, Endian::Intel, Signedness::Unsigned, 1, 0, static_cast<char>(0), static_cast<char>(5), nullptr, nullptr)
+
+/**< RightTemperatureRightKnob.
+ */
+const VehicleProperty::Property RightTemperatureRightKnob = "RightTemperatureRightKnob";
+CANSIGNAL(RightTemperatureRightKnob, double, 40, 8, Endian::Intel, Signedness::Unsigned, 0.1, 170, static_cast<double>(0), static_cast<double>(150), nullptr, nullptr)
+
+/**< AirDistributionRightKnob.
+ */
+const VehicleProperty::Property AirDistributionRightKnob = "AirDistributionRightKnob";
+CANSIGNAL(AirDistributionRightKnob, char, 32, 8, Endian::Intel, Signedness::Unsigned, 1, 0, static_cast<char>(0), static_cast<char>(4), nullptr, nullptr)
+
+/**< MediaVolumeLeftKnob.
+ */
+const VehicleProperty::Property MediaVolumeLeftKnob = "MediaVolumeLeftKnob";
+CANSIGNAL(MediaVolumeLeftKnob, char, 56, 8, Endian::Intel, Signedness::Unsigned, 1, 0, static_cast<char>(0), static_cast<char>(15), nullptr, nullptr)
+
+/**< LeftAirflowLeftKnob.
+ */
+const VehicleProperty::Property LeftAirflowLeftKnob = "LeftAirflowLeftKnob";
+CANSIGNAL(LeftAirflowLeftKnob, char, 48, 8, Endian::Intel, Signedness::Unsigned, 1, 0, static_cast<char>(0), static_cast<char>(5), nullptr, nullptr)
+
+/**< LeftTemperatureLeftKnob.
+ */
+const VehicleProperty::Property LeftTemperatureLeftKnob = "LeftTemperatureLeftKnob";
+CANSIGNAL(LeftTemperatureLeftKnob, double, 40, 8, Endian::Intel, Signedness::Unsigned, 0.1, 170, static_cast<double>(0), static_cast<double>(150), nullptr, nullptr)
+
+/**< AirDistributionLeftKnob.
+ */
+const VehicleProperty::Property AirDistributionLeftKnob = "AirDistributionLeftKnob";
+CANSIGNAL(AirDistributionLeftKnob, char, 32, 8, Endian::Intel, Signedness::Unsigned, 1, 0, static_cast<char>(0), static_cast<char>(4), nullptr, nullptr)
+
+/**< CidWatchDD.
+ */
+const VehicleProperty::Property CidWatchDD = "CidWatchDD";
+CANSIGNAL(CidWatchDD, char, 56, 8, Endian::Intel, Signedness::Unsigned, 1, 0, static_cast<char>(1), static_cast<char>(31), nullptr, nullptr)
+
+/**< CidWatchMM.
+ */
+const VehicleProperty::Property CidWatchMM = "CidWatchMM";
+CANSIGNAL(CidWatchMM, char, 48, 8, Endian::Intel, Signedness::Unsigned, 1, 0, static_cast<char>(1), static_cast<char>(12), nullptr, nullptr)
+
+/**< CidWatchYY.
+ */
+const VehicleProperty::Property CidWatchYY = "CidWatchYY";
+CANSIGNAL(CidWatchYY, uint16_t, 32, 16, Endian::Intel, Signedness::Unsigned, 1, 0, static_cast<uint16_t>(0), static_cast<uint16_t>(9999), nullptr, nullptr)
+
+/**< CidWatchSec.
+ */
+const VehicleProperty::Property CidWatchSec = "CidWatchSec";
+CANSIGNAL(CidWatchSec, char, 16, 8, Endian::Intel, Signedness::Unsigned, 1, 0, static_cast<char>(0), static_cast<char>(59), nullptr, nullptr)
+
+/**< CidWatchMin.
+ */
+const VehicleProperty::Property CidWatchMin = "CidWatchMin";
+CANSIGNAL(CidWatchMin, char, 8, 8, Endian::Intel, Signedness::Unsigned, 1, 0, static_cast<char>(0), static_cast<char>(59), nullptr, nullptr)
+
+/**< CidWatchHour.
+ */
+const VehicleProperty::Property CidWatchHour = "CidWatchHour";
+CANSIGNAL(CidWatchHour, char, 0, 8, Endian::Intel, Signedness::Unsigned, 1, 0, static_cast<char>(1), static_cast<char>(24), nullptr, nullptr)
+
 /**< FR_KeyEvent24.
  */
 const VehicleProperty::Property FR_KeyEvent24 = "FR_KeyEvent24";
-CANSIGNAL(FR_KeyEvent24, bool, 24, 1, Endian::Intel, Signedness::Unsigned, 1, 0, static_cast<bool>(0), static_cast<bool>(1), nullptr, nullptr)
+CANSIGNAL(FR_KeyEvent24, bool, 23, 1, Endian::Intel, Signedness::Unsigned, 1, 0, static_cast<bool>(0), static_cast<bool>(1), nullptr, nullptr)
 
 /**< FR_KeyEvent23.
  */
 const VehicleProperty::Property FR_KeyEvent23 = "FR_KeyEvent23";
-CANSIGNAL(FR_KeyEvent23, bool, 23, 1, Endian::Intel, Signedness::Unsigned, 1, 0, static_cast<bool>(0), static_cast<bool>(1), nullptr, nullptr)
+CANSIGNAL(FR_KeyEvent23, bool, 22, 1, Endian::Intel, Signedness::Unsigned, 1, 0, static_cast<bool>(0), static_cast<bool>(1), nullptr, nullptr)
 
 /**< FR_KeyEvent22.
  */
 const VehicleProperty::Property FR_KeyEvent22 = "FR_KeyEvent22";
-CANSIGNAL(FR_KeyEvent22, bool, 22, 1, Endian::Intel, Signedness::Unsigned, 1, 0, static_cast<bool>(0), static_cast<bool>(1), nullptr, nullptr)
+CANSIGNAL(FR_KeyEvent22, bool, 21, 1, Endian::Intel, Signedness::Unsigned, 1, 0, static_cast<bool>(0), static_cast<bool>(1), nullptr, nullptr)
 
 /**< FR_KeyEvent21.
  */
 const VehicleProperty::Property FR_KeyEvent21 = "FR_KeyEvent21";
-CANSIGNAL(FR_KeyEvent21, bool, 21, 1, Endian::Intel, Signedness::Unsigned, 1, 0, static_cast<bool>(0), static_cast<bool>(1), nullptr, nullptr)
+CANSIGNAL(FR_KeyEvent21, bool, 20, 1, Endian::Intel, Signedness::Unsigned, 1, 0, static_cast<bool>(0), static_cast<bool>(1), nullptr, nullptr)
 
 /**< FR_KeyEvent20.
  */
 const VehicleProperty::Property FR_KeyEvent20 = "FR_KeyEvent20";
-CANSIGNAL(FR_KeyEvent20, bool, 20, 1, Endian::Intel, Signedness::Unsigned, 1, 0, static_cast<bool>(0), static_cast<bool>(1), nullptr, nullptr)
+CANSIGNAL(FR_KeyEvent20, bool, 19, 1, Endian::Intel, Signedness::Unsigned, 1, 0, static_cast<bool>(0), static_cast<bool>(1), nullptr, nullptr)
 
 /**< FR_KeyEvent19.
  */
 const VehicleProperty::Property FR_KeyEvent19 = "FR_KeyEvent19";
-CANSIGNAL(FR_KeyEvent19, bool, 19, 1, Endian::Intel, Signedness::Unsigned, 1, 0, static_cast<bool>(0), static_cast<bool>(1), nullptr, nullptr)
+CANSIGNAL(FR_KeyEvent19, bool, 18, 1, Endian::Intel, Signedness::Unsigned, 1, 0, static_cast<bool>(0), static_cast<bool>(1), nullptr, nullptr)
 
 /**< FR_KeyEvent18.
  */
 const VehicleProperty::Property FR_KeyEvent18 = "FR_KeyEvent18";
-CANSIGNAL(FR_KeyEvent18, bool, 18, 1, Endian::Intel, Signedness::Unsigned, 1, 0, static_cast<bool>(0), static_cast<bool>(1), nullptr, nullptr)
+CANSIGNAL(FR_KeyEvent18, bool, 17, 1, Endian::Intel, Signedness::Unsigned, 1, 0, static_cast<bool>(0), static_cast<bool>(1), nullptr, nullptr)
 
 /**< FR_KeyEvent17.
  */
 const VehicleProperty::Property FR_KeyEvent17 = "FR_KeyEvent17";
-CANSIGNAL(FR_KeyEvent17, bool, 17, 1, Endian::Intel, Signedness::Unsigned, 1, 0, static_cast<bool>(0), static_cast<bool>(1), nullptr, nullptr)
+CANSIGNAL(FR_KeyEvent17, bool, 16, 1, Endian::Intel, Signedness::Unsigned, 1, 0, static_cast<bool>(0), static_cast<bool>(1), nullptr, nullptr)
 
 /**< FR_KeyEvent16.
  */
 const VehicleProperty::Property FR_KeyEvent16 = "FR_KeyEvent16";
-CANSIGNAL(FR_KeyEvent16, bool, 16, 1, Endian::Intel, Signedness::Unsigned, 1, 0, static_cast<bool>(0), static_cast<bool>(1), nullptr, nullptr)
+CANSIGNAL(FR_KeyEvent16, bool, 15, 1, Endian::Intel, Signedness::Unsigned, 1, 0, static_cast<bool>(0), static_cast<bool>(1), nullptr, nullptr)
 
 /**< FR_KeyEvent15.
  */
@@ -169,7 +309,7 @@ CANSIGNAL(CheckSeatHeaterL, char, 48, 2, Endian::Intel, Signedness::Unsigned, 1,
 /**< CheckInRear.
  */
 const VehicleProperty::Property CheckInRear = "CheckInRear";
-CANSIGNAL(CheckInRear, bool, 8, 1, Endian::Intel, Signedness::Unsigned, 1, 0, static_cast<bool>(0), static_cast<bool>(1), nullptr, nullptr)
+CANSIGNAL(CheckInRear, bool, 47, 1, Endian::Intel, Signedness::Unsigned, 1, 0, static_cast<bool>(0), static_cast<bool>(1), nullptr, nullptr)
 
 /**< WarningParkingBreak.
  */
@@ -301,6 +441,16 @@ CANSIGNAL(EmergencyFlasher, bool, 17, 1, Endian::Intel, Signedness::Unsigned, 1,
 const VehicleProperty::Property CheckEnging = "CheckEnging";
 CANSIGNAL(CheckEnging, bool, 16, 1, Endian::Intel, Signedness::Unsigned, 1, 0, static_cast<bool>(0), static_cast<bool>(1), nullptr, nullptr)
 
+/**< RightTurnSignal.
+ */
+const VehicleProperty::Property RightTurnSignal = "RightTurnSignal";
+CANSIGNAL(RightTurnSignal, bool, 9, 1, Endian::Intel, Signedness::Unsigned, 1, 0, static_cast<bool>(0), static_cast<bool>(1), nullptr, nullptr)
+
+/**< LeftTurnSignal.
+ */
+const VehicleProperty::Property LeftTurnSignal = "LeftTurnSignal";
+CANSIGNAL(LeftTurnSignal, bool, 8, 1, Endian::Intel, Signedness::Unsigned, 1, 0, static_cast<bool>(0), static_cast<bool>(1), nullptr, nullptr)
+
 /**< WarningEBD.
  */
 const VehicleProperty::Property WarningEBD = "WarningEBD";
@@ -336,15 +486,25 @@ CANSIGNAL(WarningAirbag, bool, 1, 1, Endian::Intel, Signedness::Unsigned, 1, 0, 
 const VehicleProperty::Property WarningSafetybelts = "WarningSafetybelts";
 CANSIGNAL(WarningSafetybelts, bool, 0, 1, Endian::Intel, Signedness::Unsigned, 1, 0, static_cast<bool>(0), static_cast<bool>(1), nullptr, nullptr)
 
+/**< BatteryChargeLevel.
+ */
+const VehicleProperty::Property BatteryChargeLevel = "BatteryChargeLevel";
+CANSIGNAL(BatteryChargeLevel, char, 24, 8, Endian::Intel, Signedness::Unsigned, 1, 0, static_cast<char>(0), static_cast<char>(0), nullptr, nullptr)
+
+/**< BatteryCurrent.
+ */
+const VehicleProperty::Property BatteryCurrent = "BatteryCurrent";
+CANSIGNAL(BatteryCurrent, char, 16, 8, Endian::Intel, Signedness::Unsigned, 1, 0, static_cast<char>(0), static_cast<char>(0), nullptr, nullptr)
+
+/**< BatteryVoltage.
+ */
+const VehicleProperty::Property BatteryVoltage = "BatteryVoltage";
+CANSIGNAL(BatteryVoltage, double, 8, 8, Endian::Intel, Signedness::Unsigned, 0.1, 0, static_cast<double>(90), static_cast<double>(220), nullptr, nullptr)
+
 /**< LampAutomaticHold.
  */
 const VehicleProperty::Property LampAutomaticHold = "LampAutomaticHold";
 CANSIGNAL(LampAutomaticHold, char, 0, 8, Endian::Intel, Signedness::Unsigned, 1, 0, static_cast<char>(0), static_cast<char>(255), nullptr, nullptr)
-
-/**< AliveCounter.
- */
-const VehicleProperty::Property AliveCounter = "AliveCounter";
-CANSIGNAL(AliveCounter, char, 56, 8, Endian::Intel, Signedness::Unsigned, 1, 0, static_cast<char>(1), static_cast<char>(9), nullptr, nullptr)
 
 /**< TPMS_RR.
  */
@@ -374,7 +534,7 @@ CANSIGNAL(FuelGage, char, 56, 8, Endian::Intel, Signedness::Unsigned, 1, 0, stat
 /**< WarterTemperature.
  */
 const VehicleProperty::Property WarterTemperature = "WarterTemperature";
-CANSIGNAL(WarterTemperature, uint16_t, 16, 16, Endian::Intel, Signedness::Unsigned, 1, 0, static_cast<uint16_t>(0), static_cast<uint16_t>(16), nullptr, nullptr)
+CANSIGNAL(WarterTemperature, uint16_t, 16, 16, Endian::Intel, Signedness::Unsigned, 1, 0, static_cast<uint16_t>(0), static_cast<uint16_t>(100), nullptr, nullptr)
 
 /**< EngineRPM.
  */
@@ -390,6 +550,11 @@ CANSIGNAL(VehicleOdometer, uint32_t, 40, 24, Endian::Intel, Signedness::Unsigned
  */
 const VehicleProperty::Property VehicleSpeed = "VehicleSpeed";
 CANSIGNAL(VehicleSpeed, uint16_t, 0, 16, Endian::Intel, Signedness::Unsigned, 1, 0, static_cast<uint16_t>(0), static_cast<uint16_t>(512), nullptr, nullptr)
+
+/**< AliveCounter.
+ */
+const VehicleProperty::Property AliveCounter = "AliveCounter";
+CANSIGNAL(AliveCounter, char, 56, 8, Endian::Intel, Signedness::Unsigned, 1, 0, static_cast<char>(1), static_cast<char>(9), nullptr, nullptr)
 
 /**< DriveMode.
  */

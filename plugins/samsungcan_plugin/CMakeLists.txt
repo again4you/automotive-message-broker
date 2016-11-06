@@ -13,7 +13,7 @@ pkg_check_modules(json REQUIRED json)
 include_directories(${CMAKE_SOURCE_DIR}/lib ${include_dirs} ${CMAKE_SOURCE_DIR}/plugins/common ${glib_INCLUDE_DIRS} ${gio_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS} ${json_INCLUDE_DIRS} )
 
 set(samsungcan_plugin_headers samsungcan_plugin.h  samsungcan_cansignals.h samsungcan_cansignal.h)
-set(samsungcan_plugin_sources samsungcan_plugin.cpp samsungcan_cansignal.cpp)
+set(samsungcan_plugin_sources samsungcan_plugin.cpp samsungcan_cansignal.cpp samsungcan_plugin_addon.cpp)
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/samsungcan.in.json ${CMAKE_CURRENT_BINARY_DIR}/samsungcan @ONLY)
 

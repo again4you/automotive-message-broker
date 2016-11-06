@@ -34,6 +34,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include <ambpluginimpl.h>
 #include "samsungcan_cansignal.h"
 
+#define GATEWAYBOX
+
 using namespace boost::interprocess;
 
 // forward declaration
@@ -179,6 +181,10 @@ private:
 
     static void timerDestroyNotify(gpointer data);
     static gboolean timeoutCallback(gpointer data);
+#ifdef GATEWAYBOX
+    static gboolean gwbox_callback(gpointer data);
+    static gboolean timeupdate_callback(gpointer data);
+#endif /* GATEWAYBOX */
 //
 // data:
 //
@@ -199,6 +205,9 @@ private:
     interprocess_recursive_mutex mutex;
     uint announcementIntervalTimer;
     uint announcementCount;
+#ifdef GATEWAYBOX
+    uint notificationIntervalTime;
+#endif /* GATEWAYBOX */
 };
 
 #endif /* SAMSUNGCAN_PLUGIN_H_ */

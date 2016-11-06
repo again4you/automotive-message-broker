@@ -105,6 +105,27 @@ SamsungCANPlugin::SamsungCANPlugin(AbstractRoutingEngine* re, const map<string, 
     if(announcementCount < 1)
             announcementIntervalTimer = 1;
 
+#ifdef GATEWAYBOX
+    notificationIntervalTime = 0;
+    it = config.find("notificationIntervalTime");
+    if (it != config.end() && it->second.length())
+        notificationIntervalTime = atoi(std::string(it->second).c_str());
+    if (notificationIntervalTime != 0 && notificationIntervalTime < 100)
+        notificationIntervalTime = 1000;
+
+    if (notificationIntervalTime)
+        g_timeout_add_full(G_PRIORITY_HIGH,
+                        notificationIntervalTime,
+                        gwbox_callback,
+                        this,
+                        NULL);
+    g_timeout_add_full(G_PRIORITY_HIGH,
+		    1000,
+		    timeupdate_callback,
+		    this,
+		    NULL);
+#endif /* GATEWAYBOX */
+
     registerMessages();
 }
 

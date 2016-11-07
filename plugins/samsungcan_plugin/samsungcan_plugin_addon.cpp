@@ -103,7 +103,59 @@ void SamsungCANPlugin::subscribeProperty()
 
 void SamsungCANPlugin::propertyChanged(AbstractPropertyType *value)
 {
-    VehicleProperty::Property property = value->name;
-    DebugOut() << "SJ - 1: " << property << " value: " << value->toString() << endl;
+    AbstractPropertyType *nvalue;
+    GVariant *var;
+    // TODO Wheel Volumn Control, LeftTemperatureLeftKnob, RightTemperatureRightKnob
+
+    if (!value->name.compare(AirDistributionLeftKnob) ||
+        !value->name.compare(AirDistributionRightKnob)) {
+        // Update AirDistributionCID
+	nvalue = findPropertyType(AirDistributionCID, Zone::None);
+	if (!nvalue) {
+	    LOG_ERROR("Fail to find AirDistributionCID" << endl);
+	    return ;
+	}
+	var = g_variant_new_byte(value->value<char>());
+	LOG_INFO("Update Request: " << nvalue->name << " value: " << (int)value->value<char>() << endl);
+    } else if (!value->name.compare(MediaVolumeLeftKnob) ||
+        !value->name.compare(MediaVolumeRightKnob)) {
+        // Update Media Volumn
+	nvalue = findPropertyType(MediaVolumeCID, Zone::None);
+        if (!nvalue) {
+	    LOG_ERROR("Fail to find MediaVolumeCID" << endl);
+	    return ;
+	}
+	var = g_variant_new_byte(value->value<char>());
+	LOG_INFO("Update Request:" << nvalue->name << " value: " << (int)value->value<char>() << endl);
+    } else if (!value->name.compare(LeftAirflowLeftKnob)) {
+        // Update LeftAirflowCID
+	nvalue = findPropertyType(LeftAirflowCID, Zone::None);
+        if (!nvalue) {
+	    LOG_ERROR("Fail to find LeftAirflowCID" << endl);
+	    return ;
+	}
+	var = g_variant_new_byte(value->value<char>());
+	LOG_INFO("Update Request: " << nvalue->name << " value: " << (int)value->value<char>() << endl);
+    } else if (!value->name.compare(RightAirflowLeftKnob)) {
+        // Update RightAirflowCID
+	nvalue = findPropertyType(RightAirflowCID, Zone::None);
+        if (!nvalue) {
+	    LOG_ERROR("Fail to find RightAirflowCID" << endl);
+	    return ;
+	}
+	var = g_variant_new_byte(value->value<char>());
+	LOG_INFO("Update Request: " << nvalue->name << " value: " << (int)value->value<char>() << endl);
+    } else {
+       LOG_ERROR("Fail to find " << value->name << endl);
+       return ;
+    }
+
+    nvalue->fromVariant(var);
+    routingEngine->updateProperty(nvalue, uuid());
+    if (!sendValue(nvalue))
+        LOG_ERROR("Fail to send CAN frame" << endl);
+
+    g_variant_unref(var);
+    return ;
 }
 #endif /* GATEWAYBOX */

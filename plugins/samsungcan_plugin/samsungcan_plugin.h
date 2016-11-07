@@ -70,6 +70,10 @@ public:
      */
     int supportedOperations() const;
 
+#ifdef GATEWAYBOX
+    virtual void propertyChanged(AbstractPropertyType *value); 
+#endif
+
 
     // from CANObserver
 public:
@@ -184,6 +188,7 @@ private:
 #ifdef GATEWAYBOX
     static gboolean gwbox_callback(gpointer data);
     static gboolean timeupdate_callback(gpointer data);
+    void subscribeProperty();
 #endif /* GATEWAYBOX */
 //
 // data:

@@ -152,6 +152,9 @@ void SamsungCANPlugin::init()
         if (!iter->second.registerOnCANBus(*canBus))
             LOG_ERROR("Cannot register a message with can_id=0x" << std::hex << iter->first);
     }
+#ifdef GATEWAYBOX
+    subscribeProperty();
+#endif /* GATEWAYBOX */
 }
 
 AsyncPropertyReply *SamsungCANPlugin::setProperty(const AsyncSetPropertyRequest& request )

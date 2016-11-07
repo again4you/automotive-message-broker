@@ -18,6 +18,17 @@ VehicleProperty::Property notiItems[] = {
     AirDistributionCID
 };
 
+VehicleProperty::Property subscribedItems[] = {
+    AirDistributionLeftKnob,
+    LeftTemperatureLeftKnob,
+    LeftAirflowLeftKnob,
+    MediaVolumeLeftKnob,
+    AirDistributionRightKnob,
+    RightTemperatureRightKnob,
+    RightAirflowLeftKnob,
+    MediaVolumeRightKnob
+};
+
 gboolean SamsungCANPlugin::gwbox_callback(gpointer data)
 {
     SamsungCANPlugin *scan = (SamsungCANPlugin *)data;
@@ -81,5 +92,18 @@ gboolean SamsungCANPlugin::timeupdate_callback(gpointer data)
     }
     return true;
 }
-#endif /* GATEWAYBOX */
 
+void SamsungCANPlugin::subscribeProperty()
+{
+    int cnt = sizeof(subscribedItems)/sizeof(subscribedItems[0]);
+    for (int i=0; i<cnt; ++i) {
+        routingEngine->subscribeToProperty(subscribedItems[i], &source);
+    }
+}
+
+void SamsungCANPlugin::propertyChanged(AbstractPropertyType *value)
+{
+    VehicleProperty::Property property = value->name;
+    DebugOut() << "SJ - 1: " << property << " value: " << value->toString() << endl;
+}
+#endif /* GATEWAYBOX */

@@ -79,7 +79,7 @@ CANSIGNAL(RightAirflowCID, char, 48, 8, Endian::Intel, Signedness::Unsigned, 1, 
 /**< RightTemperatureCID.
  */
 const VehicleProperty::Property RightTemperatureCID = "RightTemperatureCID";
-CANSIGNAL(RightTemperatureCID, double, 40, 8, Endian::Intel, Signedness::Unsigned, 0.1, -170, static_cast<double>(0), static_cast<double>(150), nullptr, nullptr)
+CANSIGNAL(RightTemperatureCID, double, 40, 8, Endian::Intel, Signedness::Unsigned, 0.1, 17, static_cast<double>(0), static_cast<double>(150), nullptr, nullptr)
 
 /**< LeftAirflowCID.
  */
@@ -89,7 +89,7 @@ CANSIGNAL(LeftAirflowCID, char, 32, 8, Endian::Intel, Signedness::Unsigned, 1, 0
 /**< LeftTemperatureCID.
  */
 const VehicleProperty::Property LeftTemperatureCID = "LeftTemperatureCID";
-CANSIGNAL(LeftTemperatureCID, double, 24, 8, Endian::Intel, Signedness::Unsigned, 0.1, -170, static_cast<double>(0), static_cast<double>(0), nullptr, nullptr)
+CANSIGNAL(LeftTemperatureCID, double, 24, 8, Endian::Intel, Signedness::Unsigned, 0.1, 17, static_cast<double>(0), static_cast<double>(150), nullptr, nullptr)
 
 /**< AirDistributionCID.
  */
@@ -109,7 +109,7 @@ CANSIGNAL(RightAirflowLeftKnob, char, 48, 8, Endian::Intel, Signedness::Unsigned
 /**< RightTemperatureRightKnob.
  */
 const VehicleProperty::Property RightTemperatureRightKnob = "RightTemperatureRightKnob";
-CANSIGNAL(RightTemperatureRightKnob, double, 40, 8, Endian::Intel, Signedness::Unsigned, 0.1, 170, static_cast<double>(0), static_cast<double>(150), nullptr, nullptr)
+CANSIGNAL(RightTemperatureRightKnob, double, 40, 8, Endian::Intel, Signedness::Unsigned, 0.1, 17, static_cast<double>(0), static_cast<double>(150), nullptr, nullptr)
 
 /**< AirDistributionRightKnob.
  */
@@ -129,7 +129,7 @@ CANSIGNAL(LeftAirflowLeftKnob, char, 48, 8, Endian::Intel, Signedness::Unsigned,
 /**< LeftTemperatureLeftKnob.
  */
 const VehicleProperty::Property LeftTemperatureLeftKnob = "LeftTemperatureLeftKnob";
-CANSIGNAL(LeftTemperatureLeftKnob, double, 40, 8, Endian::Intel, Signedness::Unsigned, 0.1, 170, static_cast<double>(0), static_cast<double>(150), nullptr, nullptr)
+CANSIGNAL(LeftTemperatureLeftKnob, double, 40, 8, Endian::Intel, Signedness::Unsigned, 0.1, 17, static_cast<double>(0), static_cast<double>(150), nullptr, nullptr)
 
 /**< AirDistributionLeftKnob.
  */

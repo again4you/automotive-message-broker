@@ -11,6 +11,9 @@
 #include "samsungcan_plugin.h"
 #include "samsungcan_cansignals.h"
 
+const int MAX_VOLUMN = 15;
+const int MIN_VOLUMN = 0; 
+
 VehicleProperty::Property notiItems[] = {
     CidWatchHour,
     AirDistributionCID
@@ -24,7 +27,9 @@ VehicleProperty::Property subscribedItems[] = {
     AirDistributionRightKnob,
     RightTemperatureRightKnob,
     RightAirflowLeftKnob,
-    MediaVolumeRightKnob
+    MediaVolumeRightKnob,
+    FR_KeyEvent04,
+    FR_KeyEvent05
 };
 
 gboolean SamsungCANPlugin::gwbox_callback(gpointer data)
@@ -33,13 +38,13 @@ gboolean SamsungCANPlugin::gwbox_callback(gpointer data)
     unsigned int cnt = sizeof(notiItems)/sizeof(notiItems[0]);
     for (int i=0; i<cnt; ++i) {
         AbstractPropertyType *nvalue = scan->findPropertyType(notiItems[i], Zone::None);
-	if (!nvalue) {
+        if (!nvalue) {
             LOG_ERROR("Fail to find " << notiItems[i] << endl);
             continue;
         }
         if (!scan->sendValue(nvalue)) {
             LOG_ERROR("Fail to send CAN frame: " << nvalue->name << endl);
-	}
+        }
     }
     return true;
 }
@@ -52,11 +57,11 @@ gboolean SamsungCANPlugin::timeupdate_callback(gpointer data)
     SamsungCANPlugin *scan = (SamsungCANPlugin *)data;
     VehicleProperty::Property timeItems[] = {
         CidWatchHour,
-	CidWatchMin,
-	CidWatchSec,
-	CidWatchYY,
-	CidWatchMM,
-	CidWatchDD
+        CidWatchMin,
+        CidWatchSec,
+        CidWatchYY,
+        CidWatchMM,
+        CidWatchDD
     };
     cnt = sizeof(timeItems)/sizeof(timeItems[0]);
 
@@ -64,29 +69,29 @@ gboolean SamsungCANPlugin::timeupdate_callback(gpointer data)
     localtime_r(&ctime, &ts);
 
     for (int i=0; i<cnt; ++i) {
-	GVariant *var;
+        GVariant *var;
 
         AbstractPropertyType *nvalue = scan->findPropertyType(timeItems[i], Zone::None);
-	if (!nvalue) {
+        if (!nvalue) {
             LOG_ERROR("Fail to find " << timeItems[i] << endl);
-	    continue;
-	}
+            continue;
+        }
 
-	if (!nvalue->name.compare(CidWatchYY)) {
-	    var = g_variant_new_uint16(ts.tm_year + 1900);
-	} else if (!nvalue->name.compare(CidWatchMM)) {
+        if (!nvalue->name.compare(CidWatchYY)) {
+            var = g_variant_new_uint16(ts.tm_year + 1900);
+        } else if (!nvalue->name.compare(CidWatchMM)) {
             var = g_variant_new_byte(ts.tm_mon + 1);
-	} else if (!nvalue->name.compare(CidWatchDD)) {
+        } else if (!nvalue->name.compare(CidWatchDD)) {
             var = g_variant_new_byte(ts.tm_mday);
-	} else if (!nvalue->name.compare(CidWatchHour)) {
+        } else if (!nvalue->name.compare(CidWatchHour)) {
             var = g_variant_new_byte(ts.tm_hour);
-	} else if (!nvalue->name.compare(CidWatchMin)) {
+        } else if (!nvalue->name.compare(CidWatchMin)) {
             var = g_variant_new_byte(ts.tm_min);
-	} else if (!nvalue->name.compare(CidWatchSec)) {
+        } else if (!nvalue->name.compare(CidWatchSec)) {
             var = g_variant_new_byte(ts.tm_sec);
-	}
-	nvalue->fromVariant(var);
-	g_variant_unref(var);
+        }
+        nvalue->fromVariant(var);
+        g_variant_unref(var);
     }
     return true;
 }
@@ -103,49 +108,73 @@ void SamsungCANPlugin::propertyChanged(AbstractPropertyType *value)
 {
     AbstractPropertyType *nvalue;
     GVariant *var;
-    // TODO Wheel Volumn Control, LeftTemperatureLeftKnob, RightTemperatureRightKnob
+    // TODO LeftTemperatureLeftKnob, RightTemperatureRightKnob
 
     if (!value->name.compare(AirDistributionLeftKnob) ||
-        !value->name.compare(AirDistributionRightKnob)) {
+            !value->name.compare(AirDistributionRightKnob)) {
         // Update AirDistributionCID
-	nvalue = findPropertyType(AirDistributionCID, Zone::None);
-	if (!nvalue) {
-	    LOG_ERROR("Fail to find AirDistributionCID" << endl);
-	    return ;
-	}
-	var = g_variant_new_byte(value->value<char>());
-	LOG_INFO("Update Request: " << nvalue->name << " value: " << (int)value->value<char>() << endl);
-    } else if (!value->name.compare(MediaVolumeLeftKnob) ||
-        !value->name.compare(MediaVolumeRightKnob)) {
-        // Update Media Volumn
-	nvalue = findPropertyType(MediaVolumeCID, Zone::None);
+        nvalue = findPropertyType(AirDistributionCID, Zone::None);
         if (!nvalue) {
-	    LOG_ERROR("Fail to find MediaVolumeCID" << endl);
-	    return ;
-	}
-	var = g_variant_new_byte(value->value<char>());
-	LOG_INFO("Update Request:" << nvalue->name << " value: " << (int)value->value<char>() << endl);
+            LOG_ERROR("Fail to find AirDistributionCID" << endl);
+            return ;
+        }
+        var = g_variant_new_byte(value->value<char>());
+        LOG_INFO("Update Request: " << nvalue->name << " value: " << (int)value->value<char>() << endl);
+    } else if (!value->name.compare(MediaVolumeLeftKnob) ||
+            !value->name.compare(MediaVolumeRightKnob)) {
+        // Update Media Volumn
+        nvalue = findPropertyType(MediaVolumeCID, Zone::None);
+        if (!nvalue) {
+            LOG_ERROR("Fail to find MediaVolumeCID" << endl);
+            return ;
+        }
+        var = g_variant_new_byte(value->value<char>());
+        LOG_INFO("Update Request:" << nvalue->name << " value: " << (int)value->value<char>() << endl);
     } else if (!value->name.compare(LeftAirflowLeftKnob)) {
         // Update LeftAirflowCID
-	nvalue = findPropertyType(LeftAirflowCID, Zone::None);
+        nvalue = findPropertyType(LeftAirflowCID, Zone::None);
         if (!nvalue) {
-	    LOG_ERROR("Fail to find LeftAirflowCID" << endl);
-	    return ;
-	}
-	var = g_variant_new_byte(value->value<char>());
-	LOG_INFO("Update Request: " << nvalue->name << " value: " << (int)value->value<char>() << endl);
+            LOG_ERROR("Fail to find LeftAirflowCID" << endl);
+            return ;
+        }
+        var = g_variant_new_byte(value->value<char>());
+        LOG_INFO("Update Request: " << nvalue->name << " value: " << (int)value->value<char>() << endl);
     } else if (!value->name.compare(RightAirflowLeftKnob)) {
         // Update RightAirflowCID
-	nvalue = findPropertyType(RightAirflowCID, Zone::None);
+        nvalue = findPropertyType(RightAirflowCID, Zone::None);
         if (!nvalue) {
-	    LOG_ERROR("Fail to find RightAirflowCID" << endl);
-	    return ;
-	}
-	var = g_variant_new_byte(value->value<char>());
-	LOG_INFO("Update Request: " << nvalue->name << " value: " << (int)value->value<char>() << endl);
+            LOG_ERROR("Fail to find RightAirflowCID" << endl);
+            return ;
+        }
+        var = g_variant_new_byte(value->value<char>());
+        LOG_INFO("Update Request: " << nvalue->name << " value: " << (int)value->value<char>() << endl);
+    } else if (!value->name.compare(FR_KeyEvent04) || 
+            !value->name.compare(FR_KeyEvent05)) {
+        // Master Volumn Up / Down (FR_KeyEvent04, FR_KeyEvent05)
+        gboolean pushed = value->value<bool>();
+        if (!pushed)
+            return ;
+
+        nvalue = findPropertyType(MediaVolumeCID, Zone::None);
+        if (!nvalue) {
+            LOG_ERROR("Fail to find MediaVolumeCID" << endl);
+            return ;
+        }
+
+        char cval = nvalue->value<char>();
+        if (!value->name.compare(FR_KeyEvent04)) {
+            cval += 1;
+            cval = (cval > MAX_VOLUMN) ? MAX_VOLUMN : cval;
+        } else {
+            cval -= 1;
+            cval = (cval < MIN_VOLUMN) ? MIN_VOLUMN : cval;
+        }
+
+        var = g_variant_new_byte(cval);
+        LOG_INFO("Update Request: " << nvalue->name << " value: " << (int)cval<< endl);
     } else {
-       LOG_ERROR("Fail to find " << value->name << endl);
-       return ;
+        LOG_ERROR("Fail to find " << value->name << endl);
+        return ;
     }
 
     nvalue->fromVariant(var);

@@ -148,6 +148,24 @@ void SamsungCANPlugin::propertyChanged(AbstractPropertyType *value)
         }
         var = g_variant_new_byte(value->value<char>());
         LOG_INFO("Update Request: " << nvalue->name << " value: " << (int)value->value<char>() << endl);
+    } else if (!value->name.compare(LeftTemperatureLeftKnob)) {
+        // Update LeftTemperatureLeftKnob
+        nvalue = findPropertyType(LeftTemperatureCID, Zone::None);
+        if (!nvalue) {
+            LOG_ERROR("Fail to find LeftTemperatureCID" << endl);
+            return ;
+        }
+        var = g_variant_new_double(value->value<double>());
+        LOG_INFO("Update Request: " << nvalue->name << " value: " << value->value<double>() << endl);
+    } else if (!value->name.compare(RightTemperatureRightKnob)) {
+        // Update RightTemperatureRightKnob
+        nvalue = findPropertyType(RightTemperatureCID, Zone::None);
+        if (!nvalue) {
+            LOG_ERROR("Fail to find RightTemperatureCID" << endl);
+            return ;
+        }
+        var = g_variant_new_double(value->value<double>());
+        LOG_INFO("Update Request: " << nvalue->name << " value: " << value->value<double>() << endl);
     } else if (!value->name.compare(FR_KeyEvent04) || 
             !value->name.compare(FR_KeyEvent05)) {
         // Master Volumn Up / Down (FR_KeyEvent04, FR_KeyEvent05)

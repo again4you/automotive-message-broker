@@ -34,8 +34,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include <ambpluginimpl.h>
 #include "samsungcan_cansignal.h"
 
-#define GATEWAYBOX
-
 using namespace boost::interprocess;
 
 // forward declaration

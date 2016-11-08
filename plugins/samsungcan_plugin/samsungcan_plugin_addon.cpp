@@ -11,8 +11,6 @@
 #include "samsungcan_plugin.h"
 #include "samsungcan_cansignals.h"
 
-
-#ifdef GATEWAYBOX
 VehicleProperty::Property notiItems[] = {
     CidWatchHour,
     AirDistributionCID
@@ -158,4 +156,3 @@ void SamsungCANPlugin::propertyChanged(AbstractPropertyType *value)
     g_variant_unref(var);
     return ;
 }
-#endif /* GATEWAYBOX */

@@ -34,6 +34,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include <ambpluginimpl.h>
 #include "samsungcan_cansignal.h"
 
+#define GATEWAYBOX
+
 using namespace boost::interprocess;
 
 // forward declaration
@@ -52,7 +54,7 @@ public:
     /*! uuid() is a unique identifier of the plugin
       * @return a guid-style unique identifier
       */
-    const std::string uuid() const { return "A5071A4A-96B1-11E6-B1CE-F5EF0B68FC46"; }
+    const std::string uuid() const { return "E9DE9A5C-8159-11E6-BCAA-511E1A799B42"; }
 
     /*!
      * \brief setProperty is called when a sink requests to set a value for a given property.
@@ -67,6 +69,10 @@ public:
      * \return returns the supported operations.
      */
     int supportedOperations() const;
+
+#ifdef GATEWAYBOX
+    virtual void propertyChanged(AbstractPropertyType *value); 
+#endif
 
 
     // from CANObserver
@@ -179,6 +185,11 @@ private:
 
     static void timerDestroyNotify(gpointer data);
     static gboolean timeoutCallback(gpointer data);
+#ifdef GATEWAYBOX
+    static gboolean gwbox_callback(gpointer data);
+    static gboolean timeupdate_callback(gpointer data);
+    void subscribeProperty();
+#endif /* GATEWAYBOX */
 //
 // data:
 //
@@ -199,6 +210,9 @@ private:
     interprocess_recursive_mutex mutex;
     uint announcementIntervalTimer;
     uint announcementCount;
+#ifdef GATEWAYBOX
+    uint notificationIntervalTime;
+#endif /* GATEWAYBOX */
 };
 
 #endif /* SAMSUNGCAN_PLUGIN_H_ */

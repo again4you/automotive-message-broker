@@ -14,6 +14,10 @@ include_directories(${CMAKE_SOURCE_DIR}/lib ${include_dirs} ${CMAKE_SOURCE_DIR}/
 
 set(samsungcan_plugin_headers samsungcan_plugin.h  samsungcan_cansignals.h samsungcan_cansignal.h)
 set(samsungcan_plugin_sources samsungcan_plugin.cpp samsungcan_cansignal.cpp)
+if (GATEWAYBOX STREQUAL on)
+	set(samsungcan_plugin_sources ${samsungcan_plugin_sources} samsungcan_plugin_addon.cpp)
+	ADD_DEFINITIONS("-DGATEWAYBOX")
+endif(DEFINED GATEWAYBOX)
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/samsungcan.in.json ${CMAKE_CURRENT_BINARY_DIR}/samsungcan @ONLY)
 

@@ -54,3 +54,5 @@ add_subdirectory(chrony)
 
 add_subdirectory(ethernet)
 add_subdirectory(samsungcan_plugin)
+
+add_subdirectory(updatesink)

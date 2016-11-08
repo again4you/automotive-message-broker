@@ -105,6 +105,27 @@ SamsungCANPlugin::SamsungCANPlugin(AbstractRoutingEngine* re, const map<string, 
     if(announcementCount < 1)
             announcementIntervalTimer = 1;
 
+#ifdef GATEWAYBOX
+    notificationIntervalTime = 0;
+    it = config.find("notificationIntervalTime");
+    if (it != config.end() && it->second.length())
+        notificationIntervalTime = atoi(std::string(it->second).c_str());
+    if (notificationIntervalTime != 0 && notificationIntervalTime < 100)
+        notificationIntervalTime = 1000;
+
+    if (notificationIntervalTime)
+        g_timeout_add_full(G_PRIORITY_HIGH,
+                        notificationIntervalTime,
+                        gwbox_callback,
+                        this,
+                        NULL);
+    g_timeout_add_full(G_PRIORITY_HIGH,
+		    1000,
+		    timeupdate_callback,
+		    this,
+		    NULL);
+#endif /* GATEWAYBOX */
+
     registerMessages();
 }
 
@@ -131,6 +152,9 @@ void SamsungCANPlugin::init()
         if (!iter->second.registerOnCANBus(*canBus))
             LOG_ERROR("Cannot register a message with can_id=0x" << std::hex << iter->first);
     }
+#ifdef GATEWAYBOX
+    subscribeProperty();
+#endif /* GATEWAYBOX */
 }
 
 AsyncPropertyReply *SamsungCANPlugin::setProperty(const AsyncSetPropertyRequest& request )
@@ -311,6 +335,46 @@ void SamsungCANPlugin::printFrame(const can_frame& frame) const
 
 void SamsungCANPlugin::registerMessages()
 {
+	registerMessage(0x302, 8, 100
+				   , new TRIP_B_EllapsedTimeType()
+				   , new TRIP_B_Avg_SpeedType()
+				   , new TRIP_B_Fuel_UsedType()
+				   , new TRIP_B_RangeType()
+				   );
+	registerMessage(0x301, 8, 100
+				   , new TRIP_A_EllapsedTimeType()
+				   , new TRIP_A_Avg_SpeedType()
+				   , new TRIP_A_Fuel_UsedType()
+				   , new TRIP_A_RangeType()
+				   );
+	registerMessage(0x402, 8, 100
+				   , new MediaVolumeCIDType()
+				   , new RightAirflowCIDType()
+				   , new RightTemperatureCIDType()
+				   , new LeftAirflowCIDType()
+				   , new LeftTemperatureCIDType()
+				   , new AirDistributionCIDType()
+				   );
+	registerMessage(0x702, 8, 100
+				   , new MediaVolumeRightKnobType()
+				   , new RightAirflowLeftKnobType()
+				   , new RightTemperatureRightKnobType()
+				   , new AirDistributionRightKnobType()
+				   );
+	registerMessage(0x701, 8, 100
+				   , new MediaVolumeLeftKnobType()
+				   , new LeftAirflowLeftKnobType()
+				   , new LeftTemperatureLeftKnobType()
+				   , new AirDistributionLeftKnobType()
+				   );
+	registerMessage(0x401, 8, 100
+				   , new CidWatchDDType()
+				   , new CidWatchMMType()
+				   , new CidWatchYYType()
+				   , new CidWatchSecType()
+				   , new CidWatchMinType()
+				   , new CidWatchHourType()
+				   );
 	registerMessage(0x207, 8, 100
 				   , new FR_KeyEvent24Type()
 				   , new FR_KeyEvent23Type()
@@ -369,6 +433,8 @@ void SamsungCANPlugin::registerMessages()
 				   , new FuelLeveltooLowType()
 				   , new EmergencyFlasherType()
 				   , new CheckEngingType()
+				   , new RightTurnSignalType()
+				   , new LeftTurnSignalType()
 				   , new WarningEBDType()
 				   , new WarningBrakeType()
 				   , new CheckPowerSteeringType()
@@ -378,8 +444,10 @@ void SamsungCANPlugin::registerMessages()
 				   , new WarningSafetybeltsType()
 				   );
 	registerMessage(0x105, 8, 100
+				   , new BatteryChargeLevelType()
+				   , new BatteryCurrentType()
+				   , new BatteryVoltageType()
 				   , new LampAutomaticHoldType()
-				   , new AliveCounterType()
 				   );
 	registerMessage(0x104, 8, 100
 				   , new TPMS_RRType()
@@ -397,6 +465,7 @@ void SamsungCANPlugin::registerMessages()
 				   , new VehicleSpeedType()
 				   );
 	registerMessage(0x101, 8, 100
+				   , new AliveCounterType()
 				   , new DriveModeType()
 				   , new GearboxPositionType()
 				   , new GearboxPositionDisplayType()

@@ -16,6 +16,7 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
  *****************************************************************/
+#include <math.h>
 
 #include "samsungcan_cansignal.h"
 
@@ -122,9 +123,10 @@ bool CANSignal::updateFrame(can_frame* frame)
     double val(fromGVariant(variant.get()));
     double temp = (val - signalInfo.m_offset)/signalInfo.m_factor;
 
-    int64_t bits = conversionFunctionTo(val, static_cast<int64_t>(temp));
+    int64_t bits = conversionFunctionTo(val, static_cast<int64_t>(round(temp)));
 
     *(reinterpret_cast<uint64_t*>(&frame->data[0])) |= toSignalBits(bits);
+    return true;
 }
 
 int64_t CANSignal::getSignalBits( const can_frame& frame )

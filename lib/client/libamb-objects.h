@@ -45,6 +45,7 @@ enum DriveMode {
 CAN_OBJECT(GearboxPositionDisplay, guchar, NULL);
 CAN_OBJECT(GearboxPosition, guchar, NULL);
 CAN_OBJECT(DriveMode, guchar, NULL);
+CAN_OBJECT(AliveCounter, guchar, NULL);
 
 /**
  * Vehicle Speed & Odometer
@@ -71,6 +72,15 @@ CAN_OBJECT(TPMS_RL, guchar, NULL);
 CAN_OBJECT(TPMS_RR, guchar, NULL);
 
 /**
+ * Battery Status
+ * CANID: 261 (0x105)
+ */
+CAN_OBJECT(LampAutomaticHold,   guchar, NULL);
+CAN_OBJECT(BatteryVoltage,      gdouble, NULL);
+CAN_OBJECT(BatteryCurrent,      guchar, NULL);
+CAN_OBJECT(BatteryChargeLevel,   guchar, NULL);
+
+/**
  * Warning Message & Status
  * CANID: 518 (0x206)
  */
@@ -82,9 +92,9 @@ CAN_OBJECT(CheckPowerSteering, 	gboolean, NULL);
 CAN_OBJECT(WarningBrake, 	gboolean, NULL);
 CAN_OBJECT(WarningEBD, 		gboolean, NULL);
 
-CAN_OBJECT(CheckInRear, 	gboolean, NULL);
+CAN_OBJECT(LeftTurnSignal,  gboolean, NULL);
+CAN_OBJECT(RightTurnSignal,  gboolean, NULL);
 
-CAN_OBJECT(CheckEnging, 	gboolean, NULL);
 CAN_OBJECT(EmergencyFlasher, 	gboolean, NULL);
 CAN_OBJECT(FuelLeveltooLow, 	gboolean, NULL);
 CAN_OBJECT(WarningTPM, 		gboolean, NULL);
@@ -108,11 +118,12 @@ CAN_OBJECT(LampCruiseCntSet, 	gboolean, NULL);
 
 CAN_OBJECT(LampDoorOpenF_L, 	gboolean, NULL);
 CAN_OBJECT(LampDoorOpenF_R, 	gboolean, NULL);
-CAN_OBJECT(LampDoorOpenR_R, 	gboolean, NULL);
 CAN_OBJECT(LampDoorOpenR_L, 	gboolean, NULL);
+CAN_OBJECT(LampDoorOpenR_R, 	gboolean, NULL);
 CAN_OBJECT(LampDoorOpenBonnet, 	gboolean, NULL);
 CAN_OBJECT(LampDoorOpenTrunk, 	gboolean, NULL);
 CAN_OBJECT(WarningParkingBreak, gboolean, NULL);
+CAN_OBJECT(CheckInRear, 	gboolean, NULL);
 
 CAN_OBJECT(CheckSeatHeaterL, 	guchar, NULL);
 CAN_OBJECT(CheckSeatHeaterR, 	guchar, NULL);
@@ -139,8 +150,8 @@ CAN_OBJECT(FR_KeyEvent12, 	gboolean, NULL);
 CAN_OBJECT(FR_KeyEvent13, 	gboolean, NULL);
 CAN_OBJECT(FR_KeyEvent14, 	gboolean, NULL);
 CAN_OBJECT(FR_KeyEvent15, 	gboolean, NULL);
-
 CAN_OBJECT(FR_KeyEvent16, 	gboolean, NULL);
+
 CAN_OBJECT(FR_KeyEvent17, 	gboolean, NULL);
 CAN_OBJECT(FR_KeyEvent18, 	gboolean, NULL);
 CAN_OBJECT(FR_KeyEvent19, 	gboolean, NULL);
@@ -148,16 +159,103 @@ CAN_OBJECT(FR_KeyEvent20, 	gboolean, NULL);
 CAN_OBJECT(FR_KeyEvent21, 	gboolean, NULL);
 CAN_OBJECT(FR_KeyEvent22, 	gboolean, NULL);
 CAN_OBJECT(FR_KeyEvent23, 	gboolean, NULL);
-
 CAN_OBJECT(FR_KeyEvent24, 	gboolean, NULL);
 
 /**
- * Writable AMB Object
+ * CID Time Information
+ * CANID: 1025 (0x401)
  */
-CAN_OBJECT_WRITABLE(CheckSeatHeaterL,	guchar, NULL);
-CAN_OBJECT_WRITABLE(CheckSeatHeaterR,	guchar, NULL);
-CAN_OBJECT_WRITABLE(CheckSeatCoolerL,	guchar, NULL);
-CAN_OBJECT_WRITABLE(CheckSeatCoolerR,	guchar, NULL);
+CAN_OBJECT(CidWatchHour, 	guchar, NULL);
+CAN_OBJECT(CidWatchMin, 	guchar, NULL);
+CAN_OBJECT(CidWatchSec, 	guchar, NULL);
+CAN_OBJECT(CidWatchYY, 	    guint16, NULL);
+CAN_OBJECT(CidWatchMM, 	    guchar, NULL);
+CAN_OBJECT(CidWatchDD, 	    guchar, NULL);
+
+/**
+ * CID Climate & Media Volumn Information
+ * CANID: 1026 (0x402)
+ */
+CAN_OBJECT(AirDistributionCID,  guchar, NULL);
+CAN_OBJECT(LeftTemperatureCID,  gdouble, NULL);
+CAN_OBJECT(LeftAirflowCID,      guchar, NULL);
+CAN_OBJECT(RightTemperatureCID, gdouble, NULL);
+CAN_OBJECT(RightAirflowCID,     guchar, NULL);
+CAN_OBJECT(MediaVolumeCID,      guchar, NULL);
+
+/**
+ * Cluster Trip Information A
+ * CANID: 769 (0x301)
+ */
+CAN_OBJECT(TRIP_A_Range,        guint32, NULL);
+CAN_OBJECT(TRIP_A_Fuel_Used,    guchar, NULL);
+CAN_OBJECT(TRIP_A_Avg_Speed,    guint16, NULL);
+CAN_OBJECT(TRIP_A_EllapsedTime, guint16, NULL);
+
+/**
+ * Cluster Trip Information B
+ * CANID: 770 (0x302)
+ */
+CAN_OBJECT(TRIP_B_Range,        guint32, NULL);
+CAN_OBJECT(TRIP_B_Fuel_Used,    guchar, NULL);
+CAN_OBJECT(TRIP_B_Avg_Speed,    guint16, NULL);
+CAN_OBJECT(TRIP_B_EllapsedTime, guint16, NULL);
+
+/**
+ * Left Knob Control
+ * CANID: 1793 (0x701)
+ */
+CAN_OBJECT(AirDistributionLeftKnob,     guchar, NULL);
+CAN_OBJECT(LeftTemperatureLeftKnob,     gdouble, NULL);
+CAN_OBJECT(LeftAirflowLeftKnob,         guchar, NULL);
+CAN_OBJECT(MediaVolumeLeftKnob,         guchar, NULL);
+
+/**
+ * Right Knob Control
+ * CANID: 1794 (0x702)
+ */
+CAN_OBJECT(AirDistributionRightKnob,    guchar, NULL);
+CAN_OBJECT(RightTemperatureRightKnob,   gdouble, NULL);
+CAN_OBJECT(RightAirflowLeftKnob,        guchar, NULL);
+CAN_OBJECT(MediaVolumeRightKnob,        guchar, NULL);
+
+/**
+ * Writable AMB Object
+ * Climate
+ */
+CAN_OBJECT_WRITABLE(CheckSeatHeaterL,	    guchar, NULL);
+CAN_OBJECT_WRITABLE(CheckSeatHeaterR,	    guchar, NULL);
+CAN_OBJECT_WRITABLE(CheckSeatCoolerL,	    guchar, NULL);
+CAN_OBJECT_WRITABLE(CheckSeatCoolerR,	    guchar, NULL);
+CAN_OBJECT_WRITABLE(AirDistributionCID,	    guchar, NULL);
+CAN_OBJECT_WRITABLE(LeftTemperatureCID,	    gdouble, NULL);
+CAN_OBJECT_WRITABLE(LeftAirflowCID,	        guchar, NULL);
+CAN_OBJECT_WRITABLE(RightTemperatureCID,    gdouble, NULL);
+CAN_OBJECT_WRITABLE(RightAirflowCID,	    guchar, NULL);
+
+/**
+ * Writable AMB Object
+ * Media Volumn
+ */
+CAN_OBJECT_WRITABLE(MediaVolumeCID,     guchar, NULL);
+
+/**
+ * Writable AMB Object
+ * Left Knob Control
+ */
+CAN_OBJECT_WRITABLE(AirDistributionLeftKnob,    guchar, NULL);
+CAN_OBJECT_WRITABLE(LeftTemperatureLeftKnob,    gdouble, NULL);
+CAN_OBJECT_WRITABLE(LeftAirflowLeftKnob,        guchar, NULL);
+CAN_OBJECT_WRITABLE(MediaVolumeLeftKnob,        guchar, NULL);
+
+/**
+ * Writable AMB Object
+ * Right Knob Control
+ */
+CAN_OBJECT_WRITABLE(AirDistributionRightKnob,   guchar, NULL);
+CAN_OBJECT_WRITABLE(RightTemperatureRightKnob,  gdouble, NULL);
+CAN_OBJECT_WRITABLE(RightAirflowLeftKnob,       guchar, NULL);
+CAN_OBJECT_WRITABLE(MediaVolumeRightKnob,       guchar, NULL);
 
 #ifdef __cplusplus
 }

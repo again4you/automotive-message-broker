@@ -154,6 +154,7 @@ void SamsungCANPlugin::init()
     }
 #ifdef GATEWAYBOX
     subscribeProperty();
+    setInitPropertyValue();
 #endif /* GATEWAYBOX */
 }
 

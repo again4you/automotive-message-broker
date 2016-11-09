@@ -434,11 +434,94 @@ static void test_set_CheckSeatHeaterL(int value)
 	test_CheckSeatHeaterL();
 }
 
+static void show_LeftTemperatureCID()
+{
+    struct LeftTemperatureCIDType *p;
+    int rc = amb_get_LeftTemperatureCID_with_zone(&p, 0);
+    if (rc != 0) {
+        fprintf(stderr, "Fail to amb_get_LeftTemperatureCID_with_zone(): %d\n", rc);
+        return ;
+    }
+    fprintf(stderr, "Value: %f\n", p->Value);
+	fprintf(stderr, "ValueSequence: %d\n", p->ValueSequence);
+	fprintf(stderr, "Time: %f\n", p->Time);
+
+    amb_release_data(p);
+    return ;
+}
+
+static void test_LeftTemperatureCID(double value)
+{
+    int rc;
+    rc = amb_set_LeftTemperatureCID_with_zone(value, 0);
+    if (rc < 0) {
+        fprintf(stderr, "Fail to amb_set_LeftTemperatureCID_with_zone(): %d\n", rc);
+        return ;
+    }
+
+    show_LeftTemperatureCID();
+    return ;
+}
+
+static void show_LeftTemperatureLeftKnob()
+{
+    struct LeftTemperatureLeftKnobType *p;
+    int rc = amb_get_LeftTemperatureLeftKnob_with_zone(&p, 0);
+    if (rc != 0) {
+        fprintf(stderr, "Fail to amb_get_LeftTemperatureLeftKnob_with_zone(): %d\n", rc);
+        return ;
+    }
+    fprintf(stderr, "Value: %f\n", p->Value);
+	fprintf(stderr, "ValueSequence: %d\n", p->ValueSequence);
+	fprintf(stderr, "Time: %f\n", p->Time);
+
+    amb_release_data(p);
+    return ;
+}
+
+static void test_LeftTemperatureLeftKnob(double value)
+{
+    int rc;
+    rc = amb_set_LeftTemperatureLeftKnob_with_zone(value, 0);
+    if (rc < 0) {
+        fprintf(stderr, "Fail to amb_set_LeftTemperatureLeftKnob_with_zone(): %d\n", rc);
+        return ;
+    }
+
+    show_LeftTemperatureLeftKnob();
+    return ;
+}
+
+static void show_AirDistributionCID()
+{
+    struct AirDistributionCIDType *p;
+    int rc = amb_get_AirDistributionCID_with_zone(&p, 0);
+    if (rc != 0) {
+        fprintf(stderr, "Fail to amb_get_AirDistributionCID_with_zone(): %d\n", rc);
+        return ;
+    }
+    fprintf(stderr, "Value: %d\n", p->Value);
+	fprintf(stderr, "ValueSequence: %d\n", p->ValueSequence);
+	fprintf(stderr, "Time: %f\n", p->Time);
+
+    amb_release_data(p);
+    return ;
+}
+
+
 int main()
 {
+    test_LeftTemperatureLeftKnob(30.5);
+#if 0
+    show_AirDistributionCID();
+    test_LeftTemperatureLeftKnob(22.2);
+    test_LeftTemperatureLeftKnob(30.5);
+    test_LeftTemperatureCID(17.1);
+    test_LeftTemperatureCID(20.1);
+
+
 	test_set_CheckSeatHeaterL(1);
 	test_set_CheckSeatHeaterL(2);
-#if 0
 	test_VehicleOdometer_listen();
 	test_FR_KeyEvent01();
 	test_FR_KeyEvent02();

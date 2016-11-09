@@ -187,6 +187,7 @@ private:
     static gboolean gwbox_callback(gpointer data);
     static gboolean timeupdate_callback(gpointer data);
     void subscribeProperty();
+    void setInitPropertyValue();
 #endif /* GATEWAYBOX */
 //
 // data:

@@ -104,6 +104,29 @@ void SamsungCANPlugin::subscribeProperty()
     }
 }
 
+void SamsungCANPlugin::setInitPropertyValue()
+{
+    // Set LeftTemperatureCID, RightTemperatureCID as 17.0
+    VehicleProperty::Property items[] = {
+        LeftTemperatureCID,
+        RightTemperatureCID
+    };
+    int cnt = sizeof(items)/sizeof(items[0]);
+    for (int i=0; i<cnt; ++i) {
+        AbstractPropertyType *nvalue;
+        GVariant *var;
+        nvalue = findPropertyType(items[i], Zone::None);
+        if (!nvalue) {
+            LOG_ERROR("Fail to find " << items[i] << endl);
+        }
+        var = g_variant_new_double(17.0);
+        nvalue->fromVariant(var);
+        routingEngine->updateProperty(nvalue, uuid());
+
+        g_variant_unref(var);
+    }
+}
+
 void SamsungCANPlugin::propertyChanged(AbstractPropertyType *value)
 {
     AbstractPropertyType *nvalue;

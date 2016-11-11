@@ -8,6 +8,10 @@ VALUE=$2
 
 if [ "$#" -ne 2 ]; then
 	echo "Usage: $0 [Object Name] [Value]"
+    echo "Supported Object List:"
+    echo "  VehicleSpeed VehicleOdometer EngineRPM FuelGage WarterTemperature"
+    echo "  TPMS_FL TPMS_FR TPMS_RL TPMS_RR"
+    echo "  FR_KeyEvent01 FR_KeyEvent02 FR_KeyEvent03 FR_KeyEvent04 FR_KeyEvent05 FR_KeyEvent06 FR_KeyEvent07 FR_KeyEvent08"
 	exit
 fi
 
@@ -45,7 +49,46 @@ elif [ "$OBJNAME" = "TPMS_RL" ]; then
 elif [ "$OBJNAME" = "TPMS_RR" ]; then
 	CANID="104"
 	HEXVALUE=$(printf "%02X" ${VALUE})
-	CANMSG="00.00.00."${HEXVALUE:0:2}".00.00.00.00"
+    CANMSG=${HEXVALUE:0:2}".00.00.00.00.00.00.00"
+elif [ "$OBJNAME" = "FR_KeyEvent01" ]; then
+    CANID="207"
+    HEXVALUE=$(printf "%02X" ${VALUE})
+    CANMSG=${HEXVALUE:0:2}".00.00.00.00.00.00.00"
+elif [ "$OBJNAME" = "FR_KeyEvent02" ]; then
+    CANID="207"
+    VALUE=$((${VALUE} << 1))
+    HEXVALUE=$(printf "%02X" ${VALUE})
+    CANMSG=${HEXVALUE:0:2}".00.00.00.00.00.00.00"
+elif [ "$OBJNAME" = "FR_KeyEvent03" ]; then
+    CANID="207"
+    VALUE=$((${VALUE} << 2))
+    HEXVALUE=$(printf "%02X" ${VALUE})
+    CANMSG=${HEXVALUE:0:2}".00.00.00.00.00.00.00"
+elif [ "$OBJNAME" = "FR_KeyEvent04" ]; then
+    CANID="207"
+    VALUE=$((${VALUE} << 3))
+    HEXVALUE=$(printf "%02X" ${VALUE})
+    CANMSG=${HEXVALUE:0:2}".00.00.00.00.00.00.00"
+elif [ "$OBJNAME" = "FR_KeyEvent05" ]; then
+    CANID="207"
+    VALUE=$((${VALUE} << 4))
+    HEXVALUE=$(printf "%02X" ${VALUE})
+    CANMSG=${HEXVALUE:0:2}".00.00.00.00.00.00.00"
+elif [ "$OBJNAME" = "FR_KeyEvent06" ]; then
+    CANID="207"
+    VALUE=$((${VALUE} << 5))
+    HEXVALUE=$(printf "%02X" ${VALUE})
+    CANMSG=${HEXVALUE:0:2}".00.00.00.00.00.00.00"
+elif [ "$OBJNAME" = "FR_KeyEvent07" ]; then
+    CANID="207"
+    VALUE=$((${VALUE} << 6))
+    HEXVALUE=$(printf "%02X" ${VALUE})
+    CANMSG=${HEXVALUE:0:2}".00.00.00.00.00.00.00"
+elif [ "$OBJNAME" = "FR_KeyEvent08" ]; then
+    CANID="207"
+    VALUE=$((${VALUE} << 7))
+    HEXVALUE=$(printf "%02X" ${VALUE})
+    CANMSG=${HEXVALUE:0:2}".00.00.00.00.00.00.00"
 else
 	echo "${OBJNAME} is not support in this script!"
 fi

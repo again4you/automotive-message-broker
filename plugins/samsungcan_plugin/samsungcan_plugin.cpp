@@ -119,11 +119,6 @@ SamsungCANPlugin::SamsungCANPlugin(AbstractRoutingEngine* re, const map<string, 
                         gwbox_callback,
                         this,
                         NULL);
-    g_timeout_add_full(G_PRIORITY_HIGH,
-		    1000,
-		    timeupdate_callback,
-		    this,
-		    NULL);
 #endif /* GATEWAYBOX */
 
     registerMessages();

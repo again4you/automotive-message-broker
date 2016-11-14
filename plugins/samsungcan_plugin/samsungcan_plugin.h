@@ -185,7 +185,7 @@ private:
     static gboolean timeoutCallback(gpointer data);
 #ifdef GATEWAYBOX
     static gboolean gwbox_callback(gpointer data);
-    static gboolean timeupdate_callback(gpointer data);
+    static void updateTime(gpointer data);
     void subscribeProperty();
     void setInitPropertyValue();
 #endif /* GATEWAYBOX */

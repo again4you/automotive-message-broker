@@ -32,29 +32,11 @@ VehicleProperty::Property subscribedItems[] = {
     FR_KeyEvent05
 };
 
-gboolean SamsungCANPlugin::gwbox_callback(gpointer data)
+void SamsungCANPlugin::updateTime(gpointer data)
 {
     SamsungCANPlugin *scan = (SamsungCANPlugin *)data;
-    unsigned int cnt = sizeof(notiItems)/sizeof(notiItems[0]);
-    for (int i=0; i<cnt; ++i) {
-        AbstractPropertyType *nvalue = scan->findPropertyType(notiItems[i], Zone::None);
-        if (!nvalue) {
-            LOG_ERROR("Fail to find " << notiItems[i] << endl);
-            continue;
-        }
-        if (!scan->sendValue(nvalue)) {
-            LOG_ERROR("Fail to send CAN frame: " << nvalue->name << endl);
-        }
-    }
-    return true;
-}
-
-gboolean SamsungCANPlugin::timeupdate_callback(gpointer data)
-{
     time_t ctime;
     struct tm ts;
-    unsigned int cnt;
-    SamsungCANPlugin *scan = (SamsungCANPlugin *)data;
     VehicleProperty::Property timeItems[] = {
         CidWatchHour,
         CidWatchMin,
@@ -63,7 +45,7 @@ gboolean SamsungCANPlugin::timeupdate_callback(gpointer data)
         CidWatchMM,
         CidWatchDD
     };
-    cnt = sizeof(timeItems)/sizeof(timeItems[0]);
+    int cnt = sizeof(timeItems)/sizeof(timeItems[0]);
 
     ctime = time(NULL);
     localtime_r(&ctime, &ts);
@@ -91,7 +73,30 @@ gboolean SamsungCANPlugin::timeupdate_callback(gpointer data)
             var = g_variant_new_byte(ts.tm_sec);
         }
         nvalue->fromVariant(var);
+        scan->routingEngine->updateProperty(nvalue, scan->uuid());
         g_variant_unref(var);
+    }
+
+}
+
+gboolean SamsungCANPlugin::gwbox_callback(gpointer data)
+{
+    SamsungCANPlugin *scan = (SamsungCANPlugin *)data;
+
+    // Update time
+    updateTime(scan);
+
+    // Send CAN Frame
+    unsigned int cnt = sizeof(notiItems)/sizeof(notiItems[0]);
+    for (int i=0; i<cnt; ++i) {
+        AbstractPropertyType *nvalue = scan->findPropertyType(notiItems[i], Zone::None);
+        if (!nvalue) {
+            LOG_ERROR("Fail to find " << notiItems[i] << endl);
+            continue;
+        }
+        if (!scan->sendValue(nvalue)) {
+            LOG_ERROR("Fail to send CAN frame: " << nvalue->name << endl);
+        }
     }
     return true;
 }

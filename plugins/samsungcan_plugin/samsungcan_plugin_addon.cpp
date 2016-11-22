@@ -1,18 +1,11 @@
-#include <boost/assert.hpp>
-#include <glib.h>
-#include <cstdarg>
-
-#include <vehicleproperty.h>
-#include <listplusplus.h>
 
 #include <logger.h>
 
-#include <canbusimpl.h>
 #include "samsungcan_plugin.h"
 #include "samsungcan_cansignals.h"
 
 const int MAX_VOLUMN = 15;
-const int MIN_VOLUMN = 0; 
+const int MIN_VOLUMN = 0;
 
 VehicleProperty::Property notiItems[] = {
     CidWatchHour,
@@ -28,8 +21,6 @@ VehicleProperty::Property subscribedItems[] = {
     RightTemperatureRightKnob,
     RightAirflowLeftKnob,
     MediaVolumeRightKnob,
-    FR_KeyEvent04,
-    FR_KeyEvent05
 };
 
 void SamsungCANPlugin::updateTime(gpointer data)
@@ -69,14 +60,13 @@ void SamsungCANPlugin::updateTime(gpointer data)
             var = g_variant_new_byte(ts.tm_hour);
         } else if (!nvalue->name.compare(CidWatchMin)) {
             var = g_variant_new_byte(ts.tm_min);
-        } else if (!nvalue->name.compare(CidWatchSec)) {
+        } else { // CidWatchSec
             var = g_variant_new_byte(ts.tm_sec);
         }
         nvalue->fromVariant(var);
         scan->routingEngine->updateProperty(nvalue, scan->uuid());
         g_variant_unref(var);
     }
-
 }
 
 gboolean SamsungCANPlugin::gwbox_callback(gpointer data)
@@ -136,7 +126,6 @@ void SamsungCANPlugin::propertyChanged(AbstractPropertyType *value)
 {
     AbstractPropertyType *nvalue;
     GVariant *var;
-    // TODO LeftTemperatureLeftKnob, RightTemperatureRightKnob
 
     if (!value->name.compare(AirDistributionLeftKnob) ||
             !value->name.compare(AirDistributionRightKnob)) {
@@ -158,20 +147,12 @@ void SamsungCANPlugin::propertyChanged(AbstractPropertyType *value)
         }
         var = g_variant_new_byte(value->value<char>());
         LOG_INFO("Update Request:" << nvalue->name << " value: " << (int)value->value<char>() << endl);
-    } else if (!value->name.compare(LeftAirflowLeftKnob)) {
+    } else if (!value->name.compare(LeftAirflowLeftKnob) ||
+			!value->name.compare(RightAirflowLeftKnob)) {
         // Update LeftAirflowCID
         nvalue = findPropertyType(LeftAirflowCID, Zone::None);
         if (!nvalue) {
             LOG_ERROR("Fail to find LeftAirflowCID" << endl);
-            return ;
-        }
-        var = g_variant_new_byte(value->value<char>());
-        LOG_INFO("Update Request: " << nvalue->name << " value: " << (int)value->value<char>() << endl);
-    } else if (!value->name.compare(RightAirflowLeftKnob)) {
-        // Update RightAirflowCID
-        nvalue = findPropertyType(RightAirflowCID, Zone::None);
-        if (!nvalue) {
-            LOG_ERROR("Fail to find RightAirflowCID" << endl);
             return ;
         }
         var = g_variant_new_byte(value->value<char>());
@@ -194,30 +175,6 @@ void SamsungCANPlugin::propertyChanged(AbstractPropertyType *value)
         }
         var = g_variant_new_double(value->value<double>());
         LOG_INFO("Update Request: " << nvalue->name << " value: " << value->value<double>() << endl);
-    } else if (!value->name.compare(FR_KeyEvent04) || 
-            !value->name.compare(FR_KeyEvent05)) {
-        // Master Volumn Up / Down (FR_KeyEvent04, FR_KeyEvent05)
-        gboolean pushed = value->value<bool>();
-        if (!pushed)
-            return ;
-
-        nvalue = findPropertyType(MediaVolumeCID, Zone::None);
-        if (!nvalue) {
-            LOG_ERROR("Fail to find MediaVolumeCID" << endl);
-            return ;
-        }
-
-        char cval = nvalue->value<char>();
-        if (!value->name.compare(FR_KeyEvent04)) {
-            cval += 1;
-            cval = (cval > MAX_VOLUMN) ? MAX_VOLUMN : cval;
-        } else {
-            cval -= 1;
-            cval = (cval < MIN_VOLUMN) ? MIN_VOLUMN : cval;
-        }
-
-        var = g_variant_new_byte(cval);
-        LOG_INFO("Update Request: " << nvalue->name << " value: " << (int)cval<< endl);
     } else {
         LOG_ERROR("Fail to find " << value->name << endl);
         return ;

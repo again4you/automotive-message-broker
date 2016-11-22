@@ -69,7 +69,7 @@ public:
     int supportedOperations() const;
 
 #ifdef GATEWAYBOX
-    virtual void propertyChanged(AbstractPropertyType *value); 
+    virtual void propertyChanged(AbstractPropertyType *value);
 #endif
 
 
@@ -180,6 +180,7 @@ private:
     void onTimeout(const can_frame& frame);
     bool sendValue(AbstractPropertyType* value);
     void registerMessages();
+    void make_empty_file(const char *path);
 
     static void timerDestroyNotify(gpointer data);
     static gboolean timeoutCallback(gpointer data);

@@ -13,6 +13,330 @@ Details.
 module SamsungCANPlugin {
 
 [NoInterfaceObject]
+interface org.automotive.CidRearDefrostion : VehiclePropertyType {
+
+	/**  CidRearDefrostion
+	 *   \brief  Returns CidRearDefrostion
+	 **/
+	readonly attribute boolean CidRearDefrostion;
+};
+
+[NoInterfaceObject]
+interface org.automotive.CidFrontDefrostion : VehiclePropertyType {
+
+	/**  CidFrontDefrostion
+	 *   \brief  Returns CidFrontDefrostion
+	 **/
+	readonly attribute boolean CidFrontDefrostion;
+};
+
+[NoInterfaceObject]
+interface org.automotive.CidInsideRecirculatedAirMode : VehiclePropertyType {
+
+	/**  CidInsideRecirculatedAirMode
+	 *   \brief  Returns CidInsideRecirculatedAirMode
+	 **/
+	readonly attribute boolean CidInsideRecirculatedAirMode;
+};
+
+[NoInterfaceObject]
+interface org.automotive.CidCheckSeatHeaterR : VehiclePropertyType {
+
+	/**  CidCheckSeatHeaterR
+	 *   \brief  Returns CidCheckSeatHeaterR
+	 **/
+	readonly attribute unsigned octet CidCheckSeatHeaterR;
+};
+
+[NoInterfaceObject]
+interface org.automotive.CidCheckSeatHeaterL : VehiclePropertyType {
+
+	/**  CidCheckSeatHeaterL
+	 *   \brief  Returns CidCheckSeatHeaterL
+	 **/
+	readonly attribute unsigned octet CidCheckSeatHeaterL;
+};
+
+[NoInterfaceObject]
+interface org.automotive.CidCheckSeatCoolerR : VehiclePropertyType {
+
+	/**  CidCheckSeatCoolerR
+	 *   \brief  Returns CidCheckSeatCoolerR
+	 **/
+	readonly attribute unsigned octet CidCheckSeatCoolerR;
+};
+
+[NoInterfaceObject]
+interface org.automotive.CidCheckSeatCoolerL : VehiclePropertyType {
+
+	/**  CidCheckSeatCoolerL
+	 *   \brief  Returns CidCheckSeatCoolerL
+	 **/
+	readonly attribute unsigned octet CidCheckSeatCoolerL;
+};
+
+[NoInterfaceObject]
+interface org.automotive.TRIP_B_EllapsedTime : VehiclePropertyType {
+
+	/**  TRIP_B_EllapsedTime
+	 *   \brief  Returns TRIP_B_EllapsedTime
+	 **/
+	readonly attribute unsigned short TRIP_B_EllapsedTime;
+};
+
+[NoInterfaceObject]
+interface org.automotive.TRIP_B_Avg_Speed : VehiclePropertyType {
+
+	/**  TRIP_B_Avg_Speed
+	 *   \brief  Returns TRIP_B_Avg_Speed
+	 **/
+	readonly attribute unsigned short TRIP_B_Avg_Speed;
+};
+
+[NoInterfaceObject]
+interface org.automotive.TRIP_B_Fuel_Used : VehiclePropertyType {
+
+	/**  TRIP_B_Fuel_Used
+	 *   \brief  Returns TRIP_B_Fuel_Used
+	 **/
+	readonly attribute unsigned octet TRIP_B_Fuel_Used;
+};
+
+[NoInterfaceObject]
+interface org.automotive.TRIP_B_Range : VehiclePropertyType {
+
+	/**  TRIP_B_Range
+	 *   \brief  Returns TRIP_B_Range
+	 **/
+	readonly attribute unsigned long TRIP_B_Range;
+};
+
+[NoInterfaceObject]
+interface org.automotive.TRIP_A_EllapsedTime : VehiclePropertyType {
+
+	/**  TRIP_A_EllapsedTime
+	 *   \brief  Returns TRIP_A_EllapsedTime
+	 **/
+	readonly attribute unsigned short TRIP_A_EllapsedTime;
+};
+
+[NoInterfaceObject]
+interface org.automotive.TRIP_A_Avg_Speed : VehiclePropertyType {
+
+	/**  TRIP_A_Avg_Speed
+	 *   \brief  Returns TRIP_A_Avg_Speed
+	 **/
+	readonly attribute unsigned short TRIP_A_Avg_Speed;
+};
+
+[NoInterfaceObject]
+interface org.automotive.TRIP_A_Fuel_Used : VehiclePropertyType {
+
+	/**  TRIP_A_Fuel_Used
+	 *   \brief  Returns TRIP_A_Fuel_Used
+	 **/
+	readonly attribute unsigned octet TRIP_A_Fuel_Used;
+};
+
+[NoInterfaceObject]
+interface org.automotive.TRIP_A_Range : VehiclePropertyType {
+
+	/**  TRIP_A_Range
+	 *   \brief  Returns TRIP_A_Range
+	 **/
+	readonly attribute unsigned long TRIP_A_Range;
+};
+
+[NoInterfaceObject]
+interface org.automotive.CidACOnOff : VehiclePropertyType {
+
+	/**  CidACOnOff
+	 *   \brief  Returns CidACOnOff
+	 **/
+	readonly attribute boolean CidACOnOff;
+};
+
+[NoInterfaceObject]
+interface org.automotive.MediaVolumeCID : VehiclePropertyType {
+
+	/**  MediaVolumeCID
+	 *   \brief  Returns MediaVolumeCID
+	 **/
+	readonly attribute unsigned octet MediaVolumeCID;
+};
+
+[NoInterfaceObject]
+interface org.automotive.RightAirflowCID : VehiclePropertyType {
+
+	/**  RightAirflowCID
+	 *   \brief  Returns RightAirflowCID
+	 **/
+	readonly attribute unsigned octet RightAirflowCID;
+};
+
+[NoInterfaceObject]
+interface org.automotive.RightTemperatureCID : VehiclePropertyType {
+
+	/**  RightTemperatureCID
+	 *   \brief  Returns RightTemperatureCID
+	 **/
+	readonly attribute double RightTemperatureCID;
+};
+
+[NoInterfaceObject]
+interface org.automotive.LeftAirflowCID : VehiclePropertyType {
+
+	/**  LeftAirflowCID
+	 *   \brief  Returns LeftAirflowCID
+	 **/
+	readonly attribute unsigned octet LeftAirflowCID;
+};
+
+[NoInterfaceObject]
+interface org.automotive.LeftTemperatureCID : VehiclePropertyType {
+
+	/**  LeftTemperatureCID
+	 *   \brief  Returns LeftTemperatureCID
+	 **/
+	readonly attribute double LeftTemperatureCID;
+};
+
+[NoInterfaceObject]
+interface org.automotive.AirDistributionCID : VehiclePropertyType {
+
+	/**  AirDistributionCID
+	 *   \brief  Returns AirDistributionCID
+	 **/
+	readonly attribute unsigned octet AirDistributionCID;
+};
+
+[NoInterfaceObject]
+interface org.automotive.MediaVolumeRightKnob : VehiclePropertyType {
+
+	/**  MediaVolumeRightKnob
+	 *   \brief  Returns MediaVolumeRightKnob
+	 **/
+	readonly attribute unsigned octet MediaVolumeRightKnob;
+};
+
+[NoInterfaceObject]
+interface org.automotive.RightAirflowLeftKnob : VehiclePropertyType {
+
+	/**  RightAirflowLeftKnob
+	 *   \brief  Returns RightAirflowLeftKnob
+	 **/
+	readonly attribute unsigned octet RightAirflowLeftKnob;
+};
+
+[NoInterfaceObject]
+interface org.automotive.RightTemperatureRightKnob : VehiclePropertyType {
+
+	/**  RightTemperatureRightKnob
+	 *   \brief  Returns RightTemperatureRightKnob
+	 **/
+	readonly attribute double RightTemperatureRightKnob;
+};
+
+[NoInterfaceObject]
+interface org.automotive.AirDistributionRightKnob : VehiclePropertyType {
+
+	/**  AirDistributionRightKnob
+	 *   \brief  Returns AirDistributionRightKnob
+	 **/
+	readonly attribute unsigned octet AirDistributionRightKnob;
+};
+
+[NoInterfaceObject]
+interface org.automotive.MediaVolumeLeftKnob : VehiclePropertyType {
+
+	/**  MediaVolumeLeftKnob
+	 *   \brief  Returns MediaVolumeLeftKnob
+	 **/
+	readonly attribute unsigned octet MediaVolumeLeftKnob;
+};
+
+[NoInterfaceObject]
+interface org.automotive.LeftAirflowLeftKnob : VehiclePropertyType {
+
+	/**  LeftAirflowLeftKnob
+	 *   \brief  Returns LeftAirflowLeftKnob
+	 **/
+	readonly attribute unsigned octet LeftAirflowLeftKnob;
+};
+
+[NoInterfaceObject]
+interface org.automotive.LeftTemperatureLeftKnob : VehiclePropertyType {
+
+	/**  LeftTemperatureLeftKnob
+	 *   \brief  Returns LeftTemperatureLeftKnob
+	 **/
+	readonly attribute double LeftTemperatureLeftKnob;
+};
+
+[NoInterfaceObject]
+interface org.automotive.AirDistributionLeftKnob : VehiclePropertyType {
+
+	/**  AirDistributionLeftKnob
+	 *   \brief  Returns AirDistributionLeftKnob
+	 **/
+	readonly attribute unsigned octet AirDistributionLeftKnob;
+};
+
+[NoInterfaceObject]
+interface org.automotive.CidWatchDD : VehiclePropertyType {
+
+	/**  CidWatchDD
+	 *   \brief  Returns CidWatchDD
+	 **/
+	readonly attribute unsigned octet CidWatchDD;
+};
+
+[NoInterfaceObject]
+interface org.automotive.CidWatchMM : VehiclePropertyType {
+
+	/**  CidWatchMM
+	 *   \brief  Returns CidWatchMM
+	 **/
+	readonly attribute unsigned octet CidWatchMM;
+};
+
+[NoInterfaceObject]
+interface org.automotive.CidWatchYY : VehiclePropertyType {
+
+	/**  CidWatchYY
+	 *   \brief  Returns CidWatchYY
+	 **/
+	readonly attribute unsigned short CidWatchYY;
+};
+
+[NoInterfaceObject]
+interface org.automotive.CidWatchSec : VehiclePropertyType {
+
+	/**  CidWatchSec
+	 *   \brief  Returns CidWatchSec
+	 **/
+	readonly attribute unsigned octet CidWatchSec;
+};
+
+[NoInterfaceObject]
+interface org.automotive.CidWatchMin : VehiclePropertyType {
+
+	/**  CidWatchMin
+	 *   \brief  Returns CidWatchMin
+	 **/
+	readonly attribute unsigned octet CidWatchMin;
+};
+
+[NoInterfaceObject]
+interface org.automotive.CidWatchHour : VehiclePropertyType {
+
+	/**  CidWatchHour
+	 *   \brief  Returns CidWatchHour
+	 **/
+	readonly attribute unsigned octet CidWatchHour;
+};
+
+[NoInterfaceObject]
 interface org.automotive.FR_KeyEvent24 : VehiclePropertyType {
 
 	/**  FR_KeyEvent24
@@ -226,6 +550,33 @@ interface org.automotive.FR_KeyEvent01 : VehiclePropertyType {
 	 *   \brief  Returns FR_KeyEvent01
 	 **/
 	readonly attribute boolean FR_KeyEvent01;
+};
+
+[NoInterfaceObject]
+interface org.automotive.RearDefrostion : VehiclePropertyType {
+
+	/**  RearDefrostion
+	 *   \brief  Returns RearDefrostion
+	 **/
+	readonly attribute boolean RearDefrostion;
+};
+
+[NoInterfaceObject]
+interface org.automotive.FrontDefrostion : VehiclePropertyType {
+
+	/**  FrontDefrostion
+	 *   \brief  Returns FrontDefrostion
+	 **/
+	readonly attribute boolean FrontDefrostion;
+};
+
+[NoInterfaceObject]
+interface org.automotive.InsideRecirculatedAirMode : VehiclePropertyType {
+
+	/**  InsideRecirculatedAirMode
+	 *   \brief  Returns InsideRecirculatedAirMode
+	 **/
+	readonly attribute boolean InsideRecirculatedAirMode;
 };
 
 [NoInterfaceObject]
@@ -508,6 +859,24 @@ interface org.automotive.CheckEnging : VehiclePropertyType {
 };
 
 [NoInterfaceObject]
+interface org.automotive.RightTurnSignal : VehiclePropertyType {
+
+	/**  RightTurnSignal
+	 *   \brief  Returns RightTurnSignal
+	 **/
+	readonly attribute boolean RightTurnSignal;
+};
+
+[NoInterfaceObject]
+interface org.automotive.LeftTurnSignal : VehiclePropertyType {
+
+	/**  LeftTurnSignal
+	 *   \brief  Returns LeftTurnSignal
+	 **/
+	readonly attribute boolean LeftTurnSignal;
+};
+
+[NoInterfaceObject]
 interface org.automotive.WarningEBD : VehiclePropertyType {
 
 	/**  WarningEBD
@@ -571,21 +940,39 @@ interface org.automotive.WarningSafetybelts : VehiclePropertyType {
 };
 
 [NoInterfaceObject]
+interface org.automotive.BatteryChargeLevel : VehiclePropertyType {
+
+	/**  BatteryChargeLevel
+	 *   \brief  Returns BatteryChargeLevel
+	 **/
+	readonly attribute unsigned octet BatteryChargeLevel;
+};
+
+[NoInterfaceObject]
+interface org.automotive.BatteryCurrent : VehiclePropertyType {
+
+	/**  BatteryCurrent
+	 *   \brief  Returns BatteryCurrent
+	 **/
+	readonly attribute unsigned octet BatteryCurrent;
+};
+
+[NoInterfaceObject]
+interface org.automotive.BatteryVoltage : VehiclePropertyType {
+
+	/**  BatteryVoltage
+	 *   \brief  Returns BatteryVoltage
+	 **/
+	readonly attribute double BatteryVoltage;
+};
+
+[NoInterfaceObject]
 interface org.automotive.LampAutomaticHold : VehiclePropertyType {
 
 	/**  LampAutomaticHold
 	 *   \brief  Returns LampAutomaticHold
 	 **/
 	readonly attribute unsigned octet LampAutomaticHold;
-};
-
-[NoInterfaceObject]
-interface org.automotive.AliveCounter : VehiclePropertyType {
-
-	/**  AliveCounter
-	 *   \brief  Returns AliveCounter
-	 **/
-	readonly attribute unsigned octet AliveCounter;
 };
 
 [NoInterfaceObject]
@@ -667,6 +1054,15 @@ interface org.automotive.VehicleSpeed : VehiclePropertyType {
 	 *   \brief  Returns VehicleSpeed
 	 **/
 	readonly attribute unsigned short VehicleSpeed;
+};
+
+[NoInterfaceObject]
+interface org.automotive.AliveCounter : VehiclePropertyType {
+
+	/**  AliveCounter
+	 *   \brief  Returns AliveCounter
+	 **/
+	readonly attribute unsigned octet AliveCounter;
 };
 
 [NoInterfaceObject]

@@ -26,6 +26,41 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include <vehicleproperty.h>
 
 
+/**< CidRearDefrostion.
+ */
+const VehicleProperty::Property CidRearDefrostion = "CidRearDefrostion";
+CANSIGNAL(CidRearDefrostion, bool, 58, 1, Endian::Intel, Signedness::Unsigned, 1, 0, static_cast<bool>(0), static_cast<bool>(1), nullptr, nullptr)
+
+/**< CidFrontDefrostion.
+ */
+const VehicleProperty::Property CidFrontDefrostion = "CidFrontDefrostion";
+CANSIGNAL(CidFrontDefrostion, bool, 57, 1, Endian::Intel, Signedness::Unsigned, 1, 0, static_cast<bool>(0), static_cast<bool>(1), nullptr, nullptr)
+
+/**< CidInsideRecirculatedAirMode.
+ */
+const VehicleProperty::Property CidInsideRecirculatedAirMode = "CidInsideRecirculatedAirMode";
+CANSIGNAL(CidInsideRecirculatedAirMode, bool, 56, 1, Endian::Intel, Signedness::Unsigned, 1, 0, static_cast<bool>(0), static_cast<bool>(1), nullptr, nullptr)
+
+/**< CidCheckSeatHeaterR.
+ */
+const VehicleProperty::Property CidCheckSeatHeaterR = "CidCheckSeatHeaterR";
+CANSIGNAL(CidCheckSeatHeaterR, char, 50, 2, Endian::Intel, Signedness::Unsigned, 1, 0, static_cast<char>(0), static_cast<char>(3), nullptr, nullptr)
+
+/**< CidCheckSeatHeaterL.
+ */
+const VehicleProperty::Property CidCheckSeatHeaterL = "CidCheckSeatHeaterL";
+CANSIGNAL(CidCheckSeatHeaterL, char, 48, 2, Endian::Intel, Signedness::Unsigned, 1, 0, static_cast<char>(0), static_cast<char>(3), nullptr, nullptr)
+
+/**< CidCheckSeatCoolerR.
+ */
+const VehicleProperty::Property CidCheckSeatCoolerR = "CidCheckSeatCoolerR";
+CANSIGNAL(CidCheckSeatCoolerR, char, 54, 2, Endian::Intel, Signedness::Unsigned, 1, 0, static_cast<char>(0), static_cast<char>(3), nullptr, nullptr)
+
+/**< CidCheckSeatCoolerL.
+ */
+const VehicleProperty::Property CidCheckSeatCoolerL = "CidCheckSeatCoolerL";
+CANSIGNAL(CidCheckSeatCoolerL, char, 52, 2, Endian::Intel, Signedness::Unsigned, 1, 0, static_cast<char>(0), static_cast<char>(3), nullptr, nullptr)
+
 /**< TRIP_B_EllapsedTime.
  */
 const VehicleProperty::Property TRIP_B_EllapsedTime = "TRIP_B_EllapsedTime";
@@ -65,6 +100,11 @@ CANSIGNAL(TRIP_A_Fuel_Used, char, 24, 8, Endian::Intel, Signedness::Unsigned, 1,
  */
 const VehicleProperty::Property TRIP_A_Range = "TRIP_A_Range";
 CANSIGNAL(TRIP_A_Range, uint32_t, 0, 24, Endian::Intel, Signedness::Unsigned, 1, 0, static_cast<uint32_t>(0), static_cast<uint32_t>(999999), nullptr, nullptr)
+
+/**< CidACOnOff.
+ */
+const VehicleProperty::Property CidACOnOff = "CidACOnOff";
+CANSIGNAL(CidACOnOff, bool, 0, 1, Endian::Intel, Signedness::Unsigned, 1, 0, static_cast<bool>(0), static_cast<bool>(1), nullptr, nullptr)
 
 /**< MediaVolumeCID.
  */
@@ -164,7 +204,7 @@ CANSIGNAL(CidWatchMin, char, 8, 8, Endian::Intel, Signedness::Unsigned, 1, 0, st
 /**< CidWatchHour.
  */
 const VehicleProperty::Property CidWatchHour = "CidWatchHour";
-CANSIGNAL(CidWatchHour, char, 0, 8, Endian::Intel, Signedness::Unsigned, 1, 0, static_cast<char>(1), static_cast<char>(24), nullptr, nullptr)
+CANSIGNAL(CidWatchHour, char, 0, 8, Endian::Intel, Signedness::Unsigned, 1, 0, static_cast<char>(0), static_cast<char>(23), nullptr, nullptr)
 
 /**< FR_KeyEvent24.
  */
@@ -285,6 +325,21 @@ CANSIGNAL(FR_KeyEvent02, bool, 1, 1, Endian::Intel, Signedness::Unsigned, 1, 0, 
  */
 const VehicleProperty::Property FR_KeyEvent01 = "FR_KeyEvent01";
 CANSIGNAL(FR_KeyEvent01, bool, 0, 1, Endian::Intel, Signedness::Unsigned, 1, 0, static_cast<bool>(0), static_cast<bool>(1), nullptr, nullptr)
+
+/**< RearDefrostion.
+ */
+const VehicleProperty::Property RearDefrostion = "RearDefrostion";
+CANSIGNAL(RearDefrostion, bool, 58, 1, Endian::Intel, Signedness::Unsigned, 1, 0, static_cast<bool>(0), static_cast<bool>(1), nullptr, nullptr)
+
+/**< FrontDefrostion.
+ */
+const VehicleProperty::Property FrontDefrostion = "FrontDefrostion";
+CANSIGNAL(FrontDefrostion, bool, 57, 1, Endian::Intel, Signedness::Unsigned, 1, 0, static_cast<bool>(0), static_cast<bool>(1), nullptr, nullptr)
+
+/**< InsideRecirculatedAirMode.
+ */
+const VehicleProperty::Property InsideRecirculatedAirMode = "InsideRecirculatedAirMode";
+CANSIGNAL(InsideRecirculatedAirMode, bool, 56, 1, Endian::Intel, Signedness::Unsigned, 1, 0, static_cast<bool>(0), static_cast<bool>(1), nullptr, nullptr)
 
 /**< CheckSeatCoolerR.
  */

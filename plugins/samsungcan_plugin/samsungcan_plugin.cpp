@@ -19,6 +19,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include <boost/assert.hpp>
 #include <glib.h>
 #include <cstdarg>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 
 #include <vehicleproperty.h>
 #include <listplusplus.h>
@@ -32,6 +36,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 //using namespace SamsungCANPlugin;
 
 static const char* DEFAULT_CAN_IF_NAME = "vcan0";
+static const char* AMB_READY_MARK = "/run/amb_ready";
 
 // library exported function for plugin loader
 extern "C" AbstractSource * create(AbstractRoutingEngine* routingengine, std::map<std::string, std::string> config)
@@ -78,6 +83,17 @@ gboolean SamsungCANPlugin::timeoutCallback(gpointer data)
     else return false;
 }
 
+void SamsungCANPlugin::make_empty_file(const char *path)
+{
+    int fd;
+    if ((fd = creat(AMB_READY_MARK, 0644)) < 0) {
+        LOG_ERROR("Fail to create " << READY_MARK << endl);
+        return ;
+    }
+    close(fd);
+}
+
+
 //----------------------------------------------------------------------------
 // SamsungCANPlugin
 //----------------------------------------------------------------------------
@@ -122,6 +138,10 @@ SamsungCANPlugin::SamsungCANPlugin(AbstractRoutingEngine* re, const map<string, 
 #endif /* GATEWAYBOX */
 
     registerMessages();
+
+    // registration is completed
+    make_empty_file(AMB_READY_MARK);
+
 }
 
 SamsungCANPlugin::~SamsungCANPlugin()
@@ -331,6 +351,15 @@ void SamsungCANPlugin::printFrame(const can_frame& frame) const
 
 void SamsungCANPlugin::registerMessages()
 {
+	registerMessage(0x403, 8, 100
+				   , new CidRearDefrostionType()
+				   , new CidFrontDefrostionType()
+				   , new CidInsideRecirculatedAirModeType()
+				   , new CidCheckSeatHeaterRType()
+				   , new CidCheckSeatHeaterLType()
+				   , new CidCheckSeatCoolerRType()
+				   , new CidCheckSeatCoolerLType()
+				   );
 	registerMessage(0x302, 8, 100
 				   , new TRIP_B_EllapsedTimeType()
 				   , new TRIP_B_Avg_SpeedType()
@@ -344,6 +373,7 @@ void SamsungCANPlugin::registerMessages()
 				   , new TRIP_A_RangeType()
 				   );
 	registerMessage(0x402, 8, 100
+				   , new CidACOnOffType()
 				   , new MediaVolumeCIDType()
 				   , new RightAirflowCIDType()
 				   , new RightTemperatureCIDType()
@@ -398,6 +428,9 @@ void SamsungCANPlugin::registerMessages()
 				   , new FR_KeyEvent01Type()
 				   );
 	registerMessage(0x206, 8, 100
+				   , new RearDefrostionType()
+				   , new FrontDefrostionType()
+				   , new InsideRecirculatedAirModeType()
 				   , new CheckSeatCoolerRType()
 				   , new CheckSeatCoolerLType()
 				   , new CheckSeatHeaterRType()

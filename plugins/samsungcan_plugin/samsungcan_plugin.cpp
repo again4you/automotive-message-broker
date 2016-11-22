@@ -87,7 +87,7 @@ void SamsungCANPlugin::make_empty_file(const char *path)
 {
     int fd;
     if ((fd = creat(AMB_READY_MARK, 0644)) < 0) {
-        LOG_ERROR("Fail to create " << READY_MARK << endl);
+        LOG_ERROR("Fail to create " << AMB_READY_MARK << endl);
         return ;
     }
     close(fd);
@@ -140,8 +140,7 @@ SamsungCANPlugin::SamsungCANPlugin(AbstractRoutingEngine* re, const map<string, 
     registerMessages();
 
     // registration is completed
-    make_empty_file(AMB_READY_MARK);
-
+    // make_empty_file(AMB_READY_MARK);
 }
 
 SamsungCANPlugin::~SamsungCANPlugin()

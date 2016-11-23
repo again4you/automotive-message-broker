@@ -26,7 +26,11 @@
 
 #define AMB_BUS_NAME        "org.automotive.message.broker"
 #define AMB_INTERFACE_NAME  "org.automotive.Manager"
+#define AMB_OBJ_PATH        "/Org/Automotive/Manager"
+#define AMB_SIGNAL_RESTART  "Restart"
+
 #define DBUS_INTERFACE_NAME "org.freedesktop.DBus.Properties"
+
 
 struct callback_item {
 	AMB_PROPERTY_CHANGED_CALLBACK callback;
@@ -42,6 +46,9 @@ struct signal_item {
 	GList *cb_list;
 	guint32 next_cid;
 };
+
+static guint signalid;
+static GDBusConnection* conn = NULL;
 
 /******************************************************************************
  * internal
@@ -284,6 +291,80 @@ static void on_signal_handler(GDBusProxy *proxy,
 	return ;
 }
 
+static void signal_handler(GDBusConnection *connection,
+                        const gchar *sender_name,
+                        const gchar *object_path,
+                        const gchar *interface_name,
+                        const gchar *signal_name,
+                        GVariant *parameters,
+                        gpointer user_data)
+{
+    GHashTable *htable;
+    GHashTableIter iter;
+    GDBusProxy *objproxy;
+    gchar *objpath;
+    struct signal_item *item;
+
+    DEBUGOUT("DBus Signal catch: %s\n", signal_name);
+
+    if (g_strcmp0(signal_name, AMB_SIGNAL_RESTART))
+        return ;
+
+    htable = get_htable();
+    if (!htable) {
+        DEBUGOUT("Error: get_htable() returns NULL\n");
+        return ;
+    }
+
+    g_hash_table_iter_init(&iter, htable);
+    while (g_hash_table_iter_next(&iter, (gpointer*)&objpath, (gpointer*)&item)) {
+        DEBUGOUT("objpath: %s\n", objpath);
+        int sid = g_signal_connect(item->obj,
+                            "g-signal",
+                            G_CALLBACK(on_signal_handler),
+                            (gpointer)item);
+        item->id = sid;
+    }
+}
+
+static int subscribe_dbus_signal()
+{
+    static int is_subscribe = 0;
+    GError *error;
+
+    DEBUGOUT("%s: Enter subscribe_dbus_signal()\n", __func__);
+
+    if (is_subscribe)
+        return 0;
+
+    error = NULL;
+    conn = g_bus_get_sync(G_BUS_TYPE_SYSTEM, NULL, &error);
+    if (conn == NULL) {
+        DEBUGOUT("%s: %s\n", __func__, error->message);
+        return -1;
+    }
+
+    signalid = g_dbus_connection_signal_subscribe(conn,
+                                    NULL,
+                                    AMB_INTERFACE_NAME,
+                                    AMB_SIGNAL_RESTART,
+                                    AMB_OBJ_PATH,
+                                    NULL,
+                                    G_DBUS_SIGNAL_FLAGS_NONE,
+                                    signal_handler,
+                                    NULL,
+                                    NULL);
+
+    if (!signalid) {
+        DEBUGOUT("%s: Fail to g_dbus_connection_signal_subscribe()\n", __func__);
+        g_object_unref(conn);
+        return -1;
+    }
+    is_subscribe = 1;
+    return 0;
+}
+
+
 /******************************************************************************
  * higher APIs
  *****************************************************************************/
@@ -426,6 +507,11 @@ EXPORT int amb_register_property_changed_handler(gchar *objname,
 	struct signal_item *item;
 	struct callback_item *citem;
 	GHashTable *htable;
+
+    if (subscribe_dbus_signal()) {
+        DEBUGOUT("Error: fail to subscribe_dbus_signal()\n");
+        return -100;
+    }
 
 	if (callback == NULL)
 		return -EINVAL;

@@ -59,9 +59,3 @@ void UpdateSink::supportedChanged(const PropertyList & supportedProperties)
 {
 	DebugOut() << "SJ: Enter Support changed!" << endl;
 }
-
-PropertyList UpdateSink::subscriptions()
-{
-
-}
-

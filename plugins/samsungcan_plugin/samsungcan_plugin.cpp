@@ -139,6 +139,26 @@ SamsungCANPlugin::SamsungCANPlugin(AbstractRoutingEngine* re, const map<string, 
 
     registerMessages();
 
+    auto messageCb = [this](amb::Queue<can_frame*>* q)
+    {
+	    while(q->count()) {
+		    can_frame *f = q->pop();
+		    onMessage(*f);
+		    delete f;
+	    }
+    };
+    watcherMsgQueue = new amb::AsyncQueueWatcher<can_frame *>(&messageQueue, messageCb);
+
+    auto timeoutCb = [this](amb::Queue<can_frame*>* q)
+    {
+	    while(q->count()) {
+		    can_frame *f = q->pop();
+		    onTimeout(*f);
+		    delete f;
+	    }
+    };
+    watcherToQueue = new amb::AsyncQueueWatcher<can_frame *>(&timeoutQueue, timeoutCb);
+
     // registration is completed
     // make_empty_file(AMB_READY_MARK);
 }
@@ -146,6 +166,9 @@ SamsungCANPlugin::SamsungCANPlugin(AbstractRoutingEngine* re, const map<string, 
 SamsungCANPlugin::~SamsungCANPlugin()
 {
     std::list<guint> timerList;
+
+    delete watcherMsgQueue;
+    delete watcherToQueue;
 
     mutex.lock();
     for(auto it=timers.begin();it!=timers.end();++it)
@@ -260,7 +283,8 @@ void SamsungCANPlugin::standardFrameReceived(const can_frame& frame)
     LOG_INFO("SamsungCANPlugin::standardFrameReceived()");
     printFrame( frame );
 
-    onMessage(frame);
+    can_frame *f = new can_frame(frame);
+    messageQueue.append(f);
 }
 
 void SamsungCANPlugin::extendedFrameReceived(const can_frame& frame)
@@ -268,7 +292,8 @@ void SamsungCANPlugin::extendedFrameReceived(const can_frame& frame)
     LOG_INFO("SamsungCANPlugin::extendedFrameReceived()");
     printFrame(frame);
 
-    onMessage(frame);
+    can_frame *f = new can_frame(frame);
+    messageQueue.append(f);
 }
 
 void SamsungCANPlugin::timeoutDetected(const can_frame& frame)
@@ -276,7 +301,8 @@ void SamsungCANPlugin::timeoutDetected(const can_frame& frame)
     LOG_INFO("testPlugin::timeoutDetected()");
     printFrame( frame );
 
-    onTimeout(frame);
+    can_frame *f = new can_frame(frame);
+    timeoutQueue.append(f);
 }
 
 void SamsungCANPlugin::errorFrameReceived(const can_frame& frame)
@@ -351,8 +377,9 @@ void SamsungCANPlugin::printFrame(const can_frame& frame) const
 void SamsungCANPlugin::registerMessages()
 {
 	registerMessage(0x403, 8, 100
-				   , new CidRearDefrostionType()
 				   , new CidFrontDefrostionType()
+				   , new CidRearDefrostionType()
+				   , new CidBtnAutoModeType()
 				   , new CidInsideRecirculatedAirModeType()
 				   , new CidCheckSeatHeaterRType()
 				   , new CidCheckSeatHeaterLType()
@@ -427,6 +454,7 @@ void SamsungCANPlugin::registerMessages()
 				   , new FR_KeyEvent01Type()
 				   );
 	registerMessage(0x206, 8, 100
+				   , new LampHeadBeamType()
 				   , new RearDefrostionType()
 				   , new FrontDefrostionType()
 				   , new InsideRecirculatedAirModeType()
@@ -472,6 +500,11 @@ void SamsungCANPlugin::registerMessages()
 				   , new WarningSafetybeltsType()
 				   );
 	registerMessage(0x105, 8, 100
+				   , new Wiper_SpeedType()
+				   , new Wiper_MistType()
+				   , new Wiper_LoType()
+				   , new Wiper_HiType()
+				   , new Wiper_AutoType()
 				   , new BatteryChargeLevelType()
 				   , new BatteryCurrentType()
 				   , new BatteryVoltageType()
@@ -484,6 +517,7 @@ void SamsungCANPlugin::registerMessages()
 				   , new TPMS_FLType()
 				   );
 	registerMessage(0x103, 8, 100
+				   , new OutsideTemperatureType()
 				   , new FuelGageType()
 				   , new WarterTemperatureType()
 				   , new EngineRPMType()

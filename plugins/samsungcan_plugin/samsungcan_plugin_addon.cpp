@@ -16,11 +16,10 @@ VehicleProperty::Property subscribedItems[] = {
     AirDistributionLeftKnob,
     LeftTemperatureLeftKnob,
     LeftAirflowLeftKnob,
-    MediaVolumeLeftKnob,
     AirDistributionRightKnob,
     RightTemperatureRightKnob,
     RightAirflowLeftKnob,
-    MediaVolumeRightKnob,
+    LeftAirflowCID,
 };
 
 void SamsungCANPlugin::updateTime(gpointer data)
@@ -113,6 +112,7 @@ void SamsungCANPlugin::setInitPropertyValue()
         nvalue = findPropertyType(items[i], Zone::None);
         if (!nvalue) {
             LOG_ERROR("Fail to find " << items[i] << endl);
+            continue;
         }
         var = g_variant_new_double(17.0);
         nvalue->fromVariant(var);
@@ -137,16 +137,6 @@ void SamsungCANPlugin::propertyChanged(AbstractPropertyType *value)
         }
         var = g_variant_new_byte(value->value<char>());
         LOG_INFO("Update Request: " << nvalue->name << " value: " << (int)value->value<char>() << endl);
-    } else if (!value->name.compare(MediaVolumeLeftKnob) ||
-            !value->name.compare(MediaVolumeRightKnob)) {
-        // Update Media Volumn
-        nvalue = findPropertyType(MediaVolumeCID, Zone::None);
-        if (!nvalue) {
-            LOG_ERROR("Fail to find MediaVolumeCID" << endl);
-            return ;
-        }
-        var = g_variant_new_byte(value->value<char>());
-        LOG_INFO("Update Request:" << nvalue->name << " value: " << (int)value->value<char>() << endl);
     } else if (!value->name.compare(LeftAirflowLeftKnob) ||
 			!value->name.compare(RightAirflowLeftKnob)) {
         // Update LeftAirflowCID
@@ -155,6 +145,11 @@ void SamsungCANPlugin::propertyChanged(AbstractPropertyType *value)
             LOG_ERROR("Fail to find LeftAirflowCID" << endl);
             return ;
         }
+
+        if (value->value<char>() == nvalue->value<char>())  {
+            return ;
+        }
+
         var = g_variant_new_byte(value->value<char>());
         LOG_INFO("Update Request: " << nvalue->name << " value: " << (int)value->value<char>() << endl);
     } else if (!value->name.compare(LeftTemperatureLeftKnob)) {
@@ -164,6 +159,10 @@ void SamsungCANPlugin::propertyChanged(AbstractPropertyType *value)
             LOG_ERROR("Fail to find LeftTemperatureCID" << endl);
             return ;
         }
+		if (nvalue->value<double>() == value->value<double>()) {
+			LOG_INFO("No update since same value" << endl);
+			return ;
+		}
         var = g_variant_new_double(value->value<double>());
         LOG_INFO("Update Request: " << nvalue->name << " value: " << value->value<double>() << endl);
     } else if (!value->name.compare(RightTemperatureRightKnob)) {
@@ -173,8 +172,40 @@ void SamsungCANPlugin::propertyChanged(AbstractPropertyType *value)
             LOG_ERROR("Fail to find RightTemperatureCID" << endl);
             return ;
         }
+		if (nvalue->value<double>() == value->value<double>()) {
+			LOG_INFO("No update since same value" << endl);
+			return ;
+		}
         var = g_variant_new_double(value->value<double>());
         LOG_INFO("Update Request: " << nvalue->name << " value: " << value->value<double>() << endl);
+    } else if (!value->name.compare(LeftAirflowCID)) {
+        var = g_variant_new_byte(value->value<char>());
+        AbstractPropertyType *lvalue = findPropertyType(LeftAirflowLeftKnob, Zone::None);
+        if (!lvalue) {
+            LOG_ERROR("Fail to find LeftAirflowLeftKnob" << endl);
+            return ;
+        }
+        AbstractPropertyType *rvalue = findPropertyType(RightAirflowLeftKnob, Zone::None);
+        if (!rvalue) {
+            LOG_ERROR("Fail to find RightAirflowLeftKnob" << endl);
+            return ;
+        }
+
+        if (value->value<char>() != lvalue->value<char>()) {
+            lvalue->fromVariant(var);
+            routingEngine->updateProperty(lvalue, uuid());
+            LOG_INFO("Update Request: " << lvalue->name << " value: " << value->value<char>() << endl);
+        }
+
+        if (value->value<char>() != rvalue->value<char>()) {
+            rvalue->fromVariant(var);
+            routingEngine->updateProperty(rvalue, uuid());
+            LOG_INFO("Update Request: " << rvalue->name << " value: " << value->value<char>() << endl);
+        }
+
+        // No need to send CAN frame
+        g_variant_unref(var);
+        return ;
     } else {
         LOG_ERROR("Fail to find " << value->name << endl);
         return ;

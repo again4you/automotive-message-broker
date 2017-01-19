@@ -13,6 +13,15 @@ Details.
 module SamsungCANPlugin {
 
 [NoInterfaceObject]
+interface org.automotive.CidFrontDefrostion : VehiclePropertyType {
+
+	/**  CidFrontDefrostion
+	 *   \brief  Returns CidFrontDefrostion
+	 **/
+	readonly attribute boolean CidFrontDefrostion;
+};
+
+[NoInterfaceObject]
 interface org.automotive.CidRearDefrostion : VehiclePropertyType {
 
 	/**  CidRearDefrostion
@@ -22,12 +31,12 @@ interface org.automotive.CidRearDefrostion : VehiclePropertyType {
 };
 
 [NoInterfaceObject]
-interface org.automotive.CidFrontDefrostion : VehiclePropertyType {
+interface org.automotive.CidBtnAutoMode : VehiclePropertyType {
 
-	/**  CidFrontDefrostion
-	 *   \brief  Returns CidFrontDefrostion
+	/**  CidBtnAutoMode
+	 *   \brief  Returns CidBtnAutoMode
 	 **/
-	readonly attribute boolean CidFrontDefrostion;
+	readonly attribute boolean CidBtnAutoMode;
 };
 
 [NoInterfaceObject]
@@ -553,6 +562,15 @@ interface org.automotive.FR_KeyEvent01 : VehiclePropertyType {
 };
 
 [NoInterfaceObject]
+interface org.automotive.LampHeadBeam : VehiclePropertyType {
+
+	/**  LampHeadBeam
+	 *   \brief  Returns LampHeadBeam
+	 **/
+	readonly attribute boolean LampHeadBeam;
+};
+
+[NoInterfaceObject]
 interface org.automotive.RearDefrostion : VehiclePropertyType {
 
 	/**  RearDefrostion
@@ -940,6 +958,51 @@ interface org.automotive.WarningSafetybelts : VehiclePropertyType {
 };
 
 [NoInterfaceObject]
+interface org.automotive.Wiper_Speed : VehiclePropertyType {
+
+	/**  Wiper_Speed
+	 *   \brief  Returns Wiper_Speed
+	 **/
+	readonly attribute unsigned octet Wiper_Speed;
+};
+
+[NoInterfaceObject]
+interface org.automotive.Wiper_Mist : VehiclePropertyType {
+
+	/**  Wiper_Mist
+	 *   \brief  Returns Wiper_Mist
+	 **/
+	readonly attribute boolean Wiper_Mist;
+};
+
+[NoInterfaceObject]
+interface org.automotive.Wiper_Lo : VehiclePropertyType {
+
+	/**  Wiper_Lo
+	 *   \brief  Returns Wiper_Lo
+	 **/
+	readonly attribute boolean Wiper_Lo;
+};
+
+[NoInterfaceObject]
+interface org.automotive.Wiper_Hi : VehiclePropertyType {
+
+	/**  Wiper_Hi
+	 *   \brief  Returns Wiper_Hi
+	 **/
+	readonly attribute boolean Wiper_Hi;
+};
+
+[NoInterfaceObject]
+interface org.automotive.Wiper_Auto : VehiclePropertyType {
+
+	/**  Wiper_Auto
+	 *   \brief  Returns Wiper_Auto
+	 **/
+	readonly attribute boolean Wiper_Auto;
+};
+
+[NoInterfaceObject]
 interface org.automotive.BatteryChargeLevel : VehiclePropertyType {
 
 	/**  BatteryChargeLevel
@@ -1009,6 +1072,15 @@ interface org.automotive.TPMS_FL : VehiclePropertyType {
 	 *   \brief  Returns TPMS_FL
 	 **/
 	readonly attribute unsigned octet TPMS_FL;
+};
+
+[NoInterfaceObject]
+interface org.automotive.OutsideTemperature : VehiclePropertyType {
+
+	/**  OutsideTemperature
+	 *   \brief  Returns OutsideTemperature
+	 **/
+	readonly attribute double OutsideTemperature;
 };
 
 [NoInterfaceObject]

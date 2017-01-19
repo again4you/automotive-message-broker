@@ -29,6 +29,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 #include <canbus.h>
 #include <canobserver.h>
+#include <asyncqueue.hpp>
 
 #include <ambplugin.h>
 #include <ambpluginimpl.h>
@@ -213,6 +214,11 @@ private:
 #ifdef GATEWAYBOX
     uint notificationIntervalTime;
 #endif /* GATEWAYBOX */
+
+    amb::Queue<can_frame *> messageQueue;
+    amb::Queue<can_frame *> timeoutQueue;
+    amb::AsyncQueueWatcher<can_frame *>* watcherMsgQueue;
+    amb::AsyncQueueWatcher<can_frame *>* watcherToQueue;
 };
 
 #endif /* SAMSUNGCAN_PLUGIN_H_ */

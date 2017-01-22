@@ -127,6 +127,8 @@ void SamsungCANPlugin::propertyChanged(AbstractPropertyType *value)
     AbstractPropertyType *nvalue;
     GVariant *var;
 
+    LOG_ERROR("SJ samsungcan #1-1" << endl);
+
     if (!value->name.compare(AirDistributionLeftKnob) ||
             !value->name.compare(AirDistributionRightKnob)) {
         // Update AirDistributionCID
@@ -136,6 +138,7 @@ void SamsungCANPlugin::propertyChanged(AbstractPropertyType *value)
             return ;
         }
         var = g_variant_new_byte(value->value<char>());
+        nvalue->priority = AbstractPropertyType::Internal;
         LOG_INFO("Update Request: " << nvalue->name << " value: " << (int)value->value<char>() << endl);
     } else if (!value->name.compare(LeftAirflowLeftKnob) ||
 			!value->name.compare(RightAirflowLeftKnob)) {
@@ -179,6 +182,7 @@ void SamsungCANPlugin::propertyChanged(AbstractPropertyType *value)
         var = g_variant_new_double(value->value<double>());
         LOG_INFO("Update Request: " << nvalue->name << " value: " << value->value<double>() << endl);
     } else if (!value->name.compare(LeftAirflowCID)) {
+        DebugOut() << "SJ samsungcan #1-1" << endl;
         var = g_variant_new_byte(value->value<char>());
         AbstractPropertyType *lvalue = findPropertyType(LeftAirflowLeftKnob, Zone::None);
         if (!lvalue) {

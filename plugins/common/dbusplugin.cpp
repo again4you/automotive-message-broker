@@ -88,9 +88,13 @@ void DBusSink::propertyChanged(AbstractPropertyType *value)
 			VariantType* prop = i;
 			mTime = value->timestamp;
 			prop->updateValue(value);
-			updateValue(prop);
+
+            if(value->priority != AbstractPropertyType::Internal) {
+			    updateValue(prop);
+            }
 		}
 	}
+    value->priority = AbstractPropertyType::Normal;
 }
 
 const string DBusSink::uuid()

@@ -172,10 +172,6 @@ void Core::updateProperty(AbstractPropertyType *value, const string & uuid)
 	{
 		updatePropertyQueue.append(value);
 	}
-	else if(value->priority == AbstractPropertyType::Internal)
-    {
-		updatePropertyQueue.append(value);
-    }
 	else if(value->priority == AbstractPropertyType::Low)
 	{
 		updatePropertyQueueLow.append(value);

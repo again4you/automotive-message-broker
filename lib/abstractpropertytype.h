@@ -90,8 +90,7 @@ public:
 		/*!< Instant.  Using this priority is not thread safe.  This is typically used for
 		 *    Properties that need to be deterministic.
 		 */
-		Instant,
-        Internal
+		Instant
 	};
 
 	AbstractPropertyType(std::string property)

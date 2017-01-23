@@ -376,7 +376,6 @@ static void test_VehicleOdometer_listen()
                 return ;
 	}
 
-#if 0
 	udata2 = g_new0(struct user_data_test, 1);
 	udata2->value = 100;
 	udata2->name = strdup("Test Name2");
@@ -390,6 +389,7 @@ static void test_VehicleOdometer_listen()
 	}
 	fprintf(stderr, "id1: %u, id2: %u\n", id1, id2);
 
+#if 0
 	rc = amb_unregister_property_changed_handler("VehicleOdometer", 0, id1);
 	if (rc != 0) {
                 fprintf(stderr, "Fail to amb_unregister_property_changed_handler(): %u\n", id1);
@@ -398,49 +398,6 @@ static void test_VehicleOdometer_listen()
 #endif
 
 	// g_timeout_add_seconds(10, timer_callback, "VehicleOdometer");
-	loop = g_main_loop_new(NULL, FALSE);
-	g_main_loop_run(loop);
-
-	g_main_loop_unref(loop);
-}
-
-static void AirDistributionCID_handler(const gchar *objname, gpointer data, void *user_data)
-{
-	struct AirDistributionCIDType retdata;
-	struct user_data_test *udata = (struct user_data_test *)user_data;
-
-	fprintf(stderr, "== User Data ==\n");
-	fprintf(stderr, "  value: %d\n", udata->value);
-	fprintf(stderr, "  name: %s\n", udata->name);
-
-	if (!data)
-		return ;
-
-    amb_convert_AirDistributionCIDType(data, &retdata);
-    fprintf(stderr, " == AirDistributionCID ==\n");
-    fprintf(stderr, "    Value: %u\n", (retdata.Value));
-}
-
-
-static void test_AirDistributionCID_listen()
-{
-	GMainLoop *loop;
-	guint32 id1;
-	int rc;
-
-	udata = g_new0(struct user_data_test, 1);
-	udata->value = 20;
-	udata->name = strdup("Test Name");
-
-	rc = amb_register_property_changed_handler("AirDistributionCID",
-					0,
-					(AMB_PROPERTY_CHANGED_CALLBACK)AirDistributionCID_handler,
-					(void *)udata, &id1);
-	if (rc != 0) {
-                fprintf(stderr, "Fail to amb_register_property_changed_handler(): %s\n", "VehicleOdometer");
-                return ;
-	}
-
 	loop = g_main_loop_new(NULL, FALSE);
 	g_main_loop_run(loop);
 
@@ -554,11 +511,8 @@ static void show_AirDistributionCID()
 
 int main()
 {
-	// test_VehicleOdometer_listen();
-    test_AirDistributionCID_listen();
-
-#if 0
     test_LeftTemperatureLeftKnob(30.5);
+#if 0
     show_AirDistributionCID();
     test_LeftTemperatureLeftKnob(22.2);
     test_LeftTemperatureLeftKnob(30.5);

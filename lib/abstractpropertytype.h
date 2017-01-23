@@ -95,7 +95,7 @@ public:
 
 	AbstractPropertyType(std::string property)
 		: name(property), timestamp(amb::currentTime()), sequence(-1), zone(Zone::None), priority(Normal),
-		  valueQuality(amb::Quality::UncertainInitialValue)
+		  internalUpdate(false), valueQuality(amb::Quality::UncertainInitialValue)
 	{
 
 	}
@@ -237,6 +237,8 @@ public:
 	 * Default priority is AbstractPropertyType::Normal.
 	 */
 	Priority priority;
+
+	bool internalUpdate;
 
 	/*!
 	 * \brief valueQuality is used to indicate the quality of the value

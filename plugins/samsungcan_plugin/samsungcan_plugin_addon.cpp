@@ -20,6 +20,9 @@ VehicleProperty::Property subscribedItems[] = {
     RightTemperatureRightKnob,
     RightAirflowLeftKnob,
     LeftAirflowCID,
+    AirDistributionCID,
+    LeftTemperatureCID,
+    RightTemperatureCID,
 };
 
 void SamsungCANPlugin::updateTime(gpointer data)
@@ -136,6 +139,7 @@ void SamsungCANPlugin::propertyChanged(AbstractPropertyType *value)
             return ;
         }
         var = g_variant_new_byte(value->value<char>());
+	    nvalue->internalUpdate = true;
         LOG_INFO("Update Request: " << nvalue->name << " value: " << (int)value->value<char>() << endl);
     } else if (!value->name.compare(LeftAirflowLeftKnob) ||
 			!value->name.compare(RightAirflowLeftKnob)) {
@@ -151,6 +155,7 @@ void SamsungCANPlugin::propertyChanged(AbstractPropertyType *value)
         }
 
         var = g_variant_new_byte(value->value<char>());
+	    nvalue->internalUpdate = true;
         LOG_INFO("Update Request: " << nvalue->name << " value: " << (int)value->value<char>() << endl);
     } else if (!value->name.compare(LeftTemperatureLeftKnob)) {
         // Update LeftTemperatureLeftKnob
@@ -164,6 +169,7 @@ void SamsungCANPlugin::propertyChanged(AbstractPropertyType *value)
 			return ;
 		}
         var = g_variant_new_double(value->value<double>());
+	    nvalue->internalUpdate = true;
         LOG_INFO("Update Request: " << nvalue->name << " value: " << value->value<double>() << endl);
     } else if (!value->name.compare(RightTemperatureRightKnob)) {
         // Update RightTemperatureRightKnob
@@ -177,6 +183,7 @@ void SamsungCANPlugin::propertyChanged(AbstractPropertyType *value)
 			return ;
 		}
         var = g_variant_new_double(value->value<double>());
+	    nvalue->internalUpdate = true;
         LOG_INFO("Update Request: " << nvalue->name << " value: " << value->value<double>() << endl);
     } else if (!value->name.compare(LeftAirflowCID)) {
         var = g_variant_new_byte(value->value<char>());
@@ -192,12 +199,13 @@ void SamsungCANPlugin::propertyChanged(AbstractPropertyType *value)
         }
 
         if (value->value<char>() != lvalue->value<char>()) {
+            lvalue->internalUpdate = true;
             lvalue->fromVariant(var);
             routingEngine->updateProperty(lvalue, uuid());
             LOG_INFO("Update Request: " << lvalue->name << " value: " << value->value<char>() << endl);
         }
-
         if (value->value<char>() != rvalue->value<char>()) {
+            rvalue->internalUpdate = true;
             rvalue->fromVariant(var);
             routingEngine->updateProperty(rvalue, uuid());
             LOG_INFO("Update Request: " << rvalue->name << " value: " << value->value<char>() << endl);
@@ -206,9 +214,72 @@ void SamsungCANPlugin::propertyChanged(AbstractPropertyType *value)
         // No need to send CAN frame
         g_variant_unref(var);
         return ;
-    } else {
-        LOG_ERROR("Fail to find " << value->name << endl);
+    } else if (!value->name.compare(AirDistributionCID)) {
+        var = g_variant_new_byte(value->value<char>());
+        AbstractPropertyType *lvalue = findPropertyType(AirDistributionLeftKnob, Zone::None);
+        if (!lvalue) {
+            LOG_ERROR("Fail to find AirDistributionLeftKnob" << endl);
+            return ;
+        }
+        AbstractPropertyType *rvalue = findPropertyType(AirDistributionRightKnob, Zone::None);
+        if (!rvalue) {
+            LOG_ERROR("Fail to find AirDistributionLeftKnob" << endl);
+            return ;
+        }
+
+        if (value->value<char>() != lvalue->value<char>()) {
+            lvalue->internalUpdate = true;
+            lvalue->fromVariant(var);
+            routingEngine->updateProperty(lvalue, uuid());
+            LOG_INFO("Update Request: " << lvalue->name << " value: " << value->value<char>() << endl);
+        }
+        if (value->value<char>() != rvalue->value<char>()) {
+            rvalue->internalUpdate = true;
+            rvalue->fromVariant(var);
+            routingEngine->updateProperty(rvalue, uuid());
+            LOG_INFO("Update Request: " << rvalue->name << " value: " << value->value<char>() << endl);
+        }
+
+        // No need to send CAN frame
+        g_variant_unref(var);
         return ;
+    } else if (!value->name.compare(LeftTemperatureCID)) {
+        nvalue = findPropertyType(LeftTemperatureLeftKnob, Zone::None);
+        if (!nvalue) {
+            LOG_ERROR("Fail to find LeftTemperatureLeftKnob" << endl);
+            return ;
+        }
+
+        if (nvalue->value<double>() == value->value<double>()) {
+            LOG_INFO("No update since same value" << endl);
+            return ;
+        }
+        var = g_variant_new_double(value->value<double>());
+        nvalue->internalUpdate = true;
+        nvalue->fromVariant(var);
+        routingEngine->updateProperty(nvalue, uuid());
+        g_variant_unref(var);
+        return ;
+    } else if (!value->name.compare(RightTemperatureCID)) {
+        nvalue = findPropertyType(RightTemperatureRightKnob, Zone::None);
+        if (!nvalue) {
+            LOG_ERROR("Fail to find RightTemperatureRightKnob" << endl);
+            return ;
+        }
+
+        if (nvalue->value<double>() == value->value<double>()) {
+            LOG_INFO("No update since same value" << endl);
+            return ;
+        }
+        var = g_variant_new_double(value->value<double>());
+        nvalue->internalUpdate = true;
+        nvalue->fromVariant(var);
+        routingEngine->updateProperty(nvalue, uuid());
+        g_variant_unref(var);
+        return ;
+    } else {
+            LOG_ERROR("Fail to find " << value->name << endl);
+            return ;
     }
 
     nvalue->fromVariant(var);

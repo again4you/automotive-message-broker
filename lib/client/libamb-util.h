@@ -68,7 +68,7 @@ extern "C" {
 		gdouble Time; \
 		value_type Value; \
 	}; \
-	int amb_get_ ## obj_name ## _with_zone(struct obj_name ## Type **retobj, int zone) \
+	EXPORT int amb_get_ ## obj_name ## _with_zone(struct obj_name ## Type **retobj, int zone) \
 	{ \
 		GVariant *variant; \
 		GVariantIter *iter; \
@@ -114,7 +114,7 @@ extern "C" {
 		return 0; \
 	} \
 	\
-	int amb_convert_ ## obj_name ## Type (gpointer data, struct obj_name ## Type *retdata) \
+	EXPORT int amb_convert_ ## obj_name ## Type (gpointer data, struct obj_name ## Type *retdata) \
 	{ \
 		GVariantIter *iter; \
 		gchar *key; \
@@ -136,7 +136,36 @@ extern "C" {
 		} \
 		g_variant_iter_free(iter); \
 		return 0; \
-	}
+	} \
+    \
+    EXPORT int amb_get_ ## obj_name ## _by_value(int *zone, int *valuesequence, double *time, value_type *value) \
+    { \
+        struct obj_name ## Type *p; \
+        int ret = amb_get_ ## obj_name ## _with_zone(&p, 0); \
+        if (ret != 0) \
+            return ret; \
+        \
+        *zone = p->Zone; \
+        *valuesequence = p->ValueSequence; \
+        *time = p->Time; \
+        *value = p->Value; \
+        \
+        amb_release_data(p); \
+        return 0; \
+    } \
+    \
+    EXPORT int amb_convert_ ## obj_name ##_by_value(void *data, int *zone, int *valuesequence, double *time, value_type *value) \
+    { \
+        struct obj_name ## Type retdata; \
+        amb_convert_## obj_name ## Type(data, &retdata); \
+        \
+        *zone = retdata.Zone; \
+        *valuesequence = retdata.ValueSequence; \
+        *time = retdata.Time; \
+        *value = retdata.Value; \
+        return 0; \
+    }
+
 
 /**
  * Generate utility function for writable CAN object
@@ -149,7 +178,7 @@ extern "C" {
  * @see CAN_OBJECT()
  */
 #define CAN_OBJECT_WRITABLE(obj_name, value_type, alias_name) \
-	int amb_set_ ## obj_name ## _with_zone(value_type value, int zone) \
+	EXPORT int amb_set_ ## obj_name ## _with_zone(value_type value, int zone) \
 	{ \
 		GVariant *variant; \
 		int ret; \

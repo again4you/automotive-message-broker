@@ -23,6 +23,7 @@
 
 #include "libamb-common.h"
 #include "libamb-client.h"
+#include "libamb-objects.h"
 
 #define AMB_BUS_NAME        "org.automotive.message.broker"
 #define AMB_INTERFACE_NAME  "org.automotive.Manager"

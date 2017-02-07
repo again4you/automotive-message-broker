@@ -588,7 +588,6 @@ static void show_AirDistributionCID()
     return ;
 }
 
-
 void test_amb_test_sturct()
 {
     int zone;
@@ -596,7 +595,7 @@ void test_amb_test_sturct()
     double time;
     int value;
 
-    int rc = amb_test_struct(&zone, &valuesequence, &time, &value);
+    int rc = amb_get_LeftTurnSignal_by_value(&zone, &valuesequence, &time, &value);
     if (rc != 0) {
         fprintf(stderr, "Fail to amb_get_AirDistributionCID_with_zone(): %d\n", rc);
         return ;
@@ -623,7 +622,7 @@ static void LeftTurnSignal_handler(const gchar *objname, gpointer data, void *us
 	if (!data)
 		return ;
 
-    amb_convert_LeftTurnSignal(data, &zone, &valuesequence, &time, &value);
+    amb_convert_LeftTurnSignal_by_value(data, &zone, &valuesequence, &time, &value);
     fprintf(stderr, " == AirDistributionCID ==\n");
     fprintf(stderr, "    Value: %d\n", value);
     fprintf(stderr, "    Time: %f\n", time);
@@ -656,9 +655,9 @@ static void test_LeftTurnSignal_test()
 	g_main_loop_unref(loop);
 }
 
-
 int main()
 {
+    // test_amb_test_sturct();
     test_LeftTurnSignal_test();
     // test_amb_test_sturct();
 	// test_set_CheckSeatHeaterL(1);

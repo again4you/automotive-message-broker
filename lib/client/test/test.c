@@ -589,9 +589,80 @@ static void show_AirDistributionCID()
 }
 
 
+void test_amb_test_sturct()
+{
+    int zone;
+    int valuesequence;
+    double time;
+    int value;
+
+    int rc = amb_test_struct(&zone, &valuesequence, &time, &value);
+    if (rc != 0) {
+        fprintf(stderr, "Fail to amb_get_AirDistributionCID_with_zone(): %d\n", rc);
+        return ;
+    }
+    fprintf(stderr, "Value: %d\n", value);
+	fprintf(stderr, "Time: %f\n", time);
+
+    return ;
+}
+
+static void LeftTurnSignal_handler(const gchar *objname, gpointer data, void *user_data)
+{
+    int zone;
+    int valuesequence;
+    double time;
+    int value;
+
+	struct user_data_test *udata = (struct user_data_test *)user_data;
+
+	fprintf(stderr, "== User Data ==\n");
+	fprintf(stderr, "  value: %d\n", udata->value);
+	fprintf(stderr, "  name: %s\n", udata->name);
+
+	if (!data)
+		return ;
+
+    amb_convert_LeftTurnSignal(data, &zone, &valuesequence, &time, &value);
+    fprintf(stderr, " == AirDistributionCID ==\n");
+    fprintf(stderr, "    Value: %d\n", value);
+    fprintf(stderr, "    Time: %f\n", time);
+
+}
+
+
+static void test_LeftTurnSignal_test()
+{
+	GMainLoop *loop;
+	guint32 id1;
+	int rc;
+
+	udata = g_new0(struct user_data_test, 1);
+	udata->value = 20;
+	udata->name = strdup("Test Name");
+
+	rc = amb_register_property_changed_handler("LeftTurnSignal",
+					0,
+					(AMB_PROPERTY_CHANGED_CALLBACK)LeftTurnSignal_handler,
+					(void *)udata, &id1);
+	if (rc != 0) {
+                fprintf(stderr, "Fail to amb_register_property_changed_handler(): %s\n", "VehicleOdometer");
+                return ;
+	}
+
+	loop = g_main_loop_new(NULL, FALSE);
+	g_main_loop_run(loop);
+
+	g_main_loop_unref(loop);
+}
+
+
 int main()
 {
-    test_get_AirDistributionRightKnob();
+    test_LeftTurnSignal_test();
+    // test_amb_test_sturct();
+	// test_set_CheckSeatHeaterL(1);
+    // test_get_AirDistributionRightKnob();
     // test_get_AirDistributionCID();
 	// test_VehicleOdometer_listen();
     // test_AirDistributionCID_listen();

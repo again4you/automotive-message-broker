@@ -183,6 +183,10 @@ private:
     void registerMessages();
     void make_empty_file(const char *path);
 
+    int initUDS();
+    static gboolean socketEventHandler(GIOChannel *channel,
+                                    GIOCondition condition,
+                                    gpointer data);
     static void timerDestroyNotify(gpointer data);
     static gboolean timeoutCallback(gpointer data);
 #ifdef GATEWAYBOX
@@ -191,6 +195,7 @@ private:
     void subscribeProperty();
     void setInitPropertyValue();
 #endif /* GATEWAYBOX */
+
 //
 // data:
 //
@@ -219,6 +224,10 @@ private:
     amb::Queue<can_frame *> timeoutQueue;
     amb::AsyncQueueWatcher<can_frame *>* watcherMsgQueue;
     amb::AsyncQueueWatcher<can_frame *>* watcherToQueue;
+
+    GSocket *socket;
+    GSocketAddress *sock_addr;
+    GIOChannel *channel;
 };
 
 #endif /* SAMSUNGCAN_PLUGIN_H_ */

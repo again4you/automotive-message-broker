@@ -1,8 +1,15 @@
 
+#include <glib.h>
+#include <gio/gio.h>
+#include <gio/gunixsocketaddress.h>
+
 #include <logger.h>
 
 #include "samsungcan_plugin.h"
 #include "samsungcan_cansignals.h"
+
+#define SOCK_PATH   "/tmp/socket_file"
+#define BUFSIZE     1024
 
 const int MAX_VOLUMN = 15;
 const int MIN_VOLUMN = 0;
@@ -289,4 +296,96 @@ void SamsungCANPlugin::propertyChanged(AbstractPropertyType *value)
 
     g_variant_unref(var);
     return ;
+}
+
+gboolean
+SamsungCANPlugin::socketEventHandler(GIOChannel *channel,
+                                    GIOCondition condition,
+                                    gpointer data)
+{
+    GError *error;
+    GSocket *sock_client;
+
+    gssize nread;
+    gchar buf[BUFSIZE] = {0, };
+    gchar bufout[BUFSIZE] = {0, };
+    SamsungCANPlugin *scan = (SamsungCANPlugin *)data;
+
+    sock_client = g_socket_accept(scan->socket, NULL, &error);
+    if (!sock_client) {
+        LOG_ERROR("Fail to g_socket_accept(): " << error->message << endl);
+        return FALSE;
+    }
+
+    nread = g_socket_receive(sock_client, buf, sizeof(buf), NULL, &error);
+    if (error) {
+        LOG_ERROR("Fail to g_socket_receive(): " << error->message << endl);
+        return FALSE;
+    }
+    if (nread > 0) {
+        LOG_INFO("Msg: " << buf << endl);
+
+        snprintf(bufout, sizeof(bufout), "Len: %lu Msg: %s", strlen(buf), buf);
+
+        g_socket_send(sock_client, bufout, strlen(bufout), NULL, &error);
+        if (error != NULL) {
+            LOG_ERROR("Fail to g_socket_send(): " << error->message << endl);
+            return FALSE;
+        }
+    }
+
+#if 0
+    g_socket_close(sock_client, &error);
+    if (error != NULL) {
+        LOG_ERROR("Fail to g_socket_close(): " << error->message << endl);
+        return FALSE;
+    }
+#endif
+    return TRUE;
+}
+
+int SamsungCANPlugin::initUDS()
+{
+    GError *error;
+    int sock_fd;
+
+    // cleanup
+    if (!access(SOCK_PATH, F_OK))
+        unlink(SOCK_PATH);
+
+    // socket create
+    error = NULL;
+    this->socket = g_socket_new(G_SOCKET_FAMILY_UNIX,
+                            G_SOCKET_TYPE_STREAM,
+                            G_SOCKET_PROTOCOL_DEFAULT,
+                            &error);
+    if (error != NULL) {
+        LOG_ERROR("Fail to g_socket_new(): " << error->message << endl);
+        return -1;
+    }
+
+    // server address setting
+    this->sock_addr = g_unix_socket_address_new(SOCK_PATH);
+
+    // bind
+    if (!g_socket_bind(this->socket, this->sock_addr, TRUE, &error)) {
+        LOG_ERROR("Fail to g_socket_bind(): " << error->message << endl);
+        return -1;
+    }
+
+    // listen
+    if (!g_socket_listen(this->socket, &error)) {
+        LOG_ERROR("Fail to g_socket_listen(): " << error->message << endl);
+        return -1;
+    }
+
+    sock_fd = g_socket_get_fd(this->socket);
+    this->channel = g_io_channel_unix_new(sock_fd);
+    g_io_add_watch(this->channel,
+                (GIOCondition)(G_IO_IN | G_IO_OUT | G_IO_HUP),
+                (GIOFunc)socketEventHandler,
+                this);
+
+    LOG_INFO("Complete to initUDS()");
+    return 0;
 }

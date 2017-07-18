@@ -159,6 +159,8 @@ SamsungCANPlugin::SamsungCANPlugin(AbstractRoutingEngine* re, const map<string, 
     };
     watcherToQueue = new amb::AsyncQueueWatcher<can_frame *>(&timeoutQueue, timeoutCb);
 
+    initUDS();
+
     // registration is completed
     // make_empty_file(AMB_READY_MARK);
 }

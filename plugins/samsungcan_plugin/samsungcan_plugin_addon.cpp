@@ -311,6 +311,7 @@ SamsungCANPlugin::socketEventHandler(GIOChannel *channel,
     gchar bufout[BUFSIZE] = {0, };
     SamsungCANPlugin *scan = (SamsungCANPlugin *)data;
 
+    error = NULL;
     sock_client = g_socket_accept(scan->socket, NULL, &error);
     if (!sock_client) {
         LOG_ERROR("Fail to g_socket_accept(): " << error->message << endl);
@@ -325,8 +326,16 @@ SamsungCANPlugin::socketEventHandler(GIOChannel *channel,
     if (nread > 0) {
         LOG_INFO("Msg: " << buf << endl);
 
-        snprintf(bufout, sizeof(bufout), "Len: %lu Msg: %s", strlen(buf), buf);
+        // VehicleOdometer get test
+        AbstractPropertyType *nvalue = scan->findPropertyType(VehicleOdometer, Zone::None);
+        if (!nvalue) {
+            LOG_ERROR("Fail to find findPropertyType()" << endl);
+            return FALSE;
+        }
+        LOG_INFO("Object: " << nvalue->name << " value: " << nvalue->value<uint32_t>() << endl);
+        snprintf(bufout, sizeof(bufout), "Object: %s Value: %u", nvalue->name.c_str(), nvalue->value<uint32_t>());
 
+        // snprintf(bufout, sizeof(bufout), "Len: %lu Msg: %s", strlen(buf), buf);
         g_socket_send(sock_client, bufout, strlen(bufout), NULL, &error);
         if (error != NULL) {
             LOG_ERROR("Fail to g_socket_send(): " << error->message << endl);
@@ -385,6 +394,14 @@ int SamsungCANPlugin::initUDS()
                 (GIOCondition)(G_IO_IN | G_IO_OUT | G_IO_HUP),
                 (GIOFunc)socketEventHandler,
                 this);
+
+    GVariant *var;
+    AbstractPropertyType *nvalue = findPropertyType(VehicleOdometer, Zone::None);
+    if (!nvalue) {
+        LOG_ERROR("Fail to find findPropertyType()" << endl);
+        return FALSE;
+    }
+    LOG_INFO("SJ Object: " << nvalue->name << " value: " << nvalue->value<uint32_t>() << endl);
 
     LOG_INFO("Complete to initUDS()");
     return 0;

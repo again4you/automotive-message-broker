@@ -184,7 +184,10 @@ private:
     void make_empty_file(const char *path);
 
     int initUDS();
-    static gboolean socketEventHandler(GIOChannel *channel,
+    static gboolean socketAcceptHandler(GIOChannel *channel,
+                                    GIOCondition condition,
+                                    gpointer data);
+    static gboolean socketSessionHandler(GIOChannel *channel,
                                     GIOCondition condition,
                                     gpointer data);
     static void timerDestroyNotify(gpointer data);

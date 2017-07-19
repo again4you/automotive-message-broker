@@ -14,6 +14,24 @@
 const int MAX_VOLUMN = 15;
 const int MIN_VOLUMN = 0;
 
+typedef struct {
+    unsigned int op;
+    unsigned int object;
+    unsigned int size;
+} msg_hdr_t;
+
+typedef struct {
+    msg_hdr_t msg_head;
+    guint32 value;
+} msg_req_t;
+
+enum op
+{
+    GET = 0,
+    SET,
+    RET = 100,
+};
+
 VehicleProperty::Property notiItems[] = {
     CidWatchHour,
     AirDistributionCID
@@ -299,18 +317,115 @@ void SamsungCANPlugin::propertyChanged(AbstractPropertyType *value)
 }
 
 gboolean
-SamsungCANPlugin::socketEventHandler(GIOChannel *channel,
+SamsungCANPlugin::socketSessionHandler(GIOChannel *channel,
                                     GIOCondition condition,
                                     gpointer data)
 {
     GError *error;
     GSocket *sock_client;
-
+    int fd;
     gssize nread;
-    gchar buf[BUFSIZE] = {0, };
-    gchar bufout[BUFSIZE] = {0, };
+    msg_req_t msg_req;
+    msg_req_t msg_ret;
+
+    SamsungCANPlugin *scan = (SamsungCANPlugin *)data;
+    memset(&msg_ret, 0x00, sizeof(msg_req_t));
+
+    if (condition & (G_IO_HUP | G_IO_ERR | G_IO_NVAL))
+        return FALSE;
+
+    fd = g_io_channel_unix_get_fd(channel);
+    error = NULL;
+    sock_client = g_socket_new_from_fd(fd, &error);
+    if (error) {
+        LOG_ERROR("Fail to g_socket_new_from_fd(): " << error->message << endl);
+        g_error_free(error);
+        return FALSE;
+    }
+
+    nread = g_socket_receive(sock_client, (gchar *)&msg_req, sizeof(msg_req_t), NULL, &error);
+    if (error) {
+        LOG_ERROR("Fail to g_socket_receive(): " << error->message << endl);
+        g_error_free(error);
+        return FALSE;
+    }
+
+    if (nread > 0) {
+        msg_hdr_t *msg_hdr = (msg_hdr_t *)&msg_req;
+        AbstractPropertyType *nvalue;
+
+        // for testing, data is fixed as VehicleOdometer.
+        switch(msg_hdr->op) {
+            case GET:
+                nvalue = scan->findPropertyType(VehicleOdometer, Zone::None);
+                if (!nvalue) {
+                    LOG_ERROR("Fail to find findPropertyType()" << endl);
+                    break;
+                }
+
+                LOG_INFO("Object: " << nvalue->name << " value: " << nvalue->value<uint32_t>() << endl);
+                msg_ret.msg_head.op = RET;
+                msg_ret.value = nvalue->value<uint32_t>();
+                msg_ret.msg_head.size = sizeof(msg_req_t);
+                break;
+
+            case SET:
+                break;
+            default:
+                break;
+        }
+
+        g_socket_send(sock_client, (gchar *)&msg_ret, sizeof(msg_req_t), NULL, &error);
+        if (error) {
+            LOG_ERROR("Fail to g_socket_receive(): " << error->message << endl);
+            g_error_free(error);
+            return FALSE;
+        }
+    }
+
+    g_object_unref(sock_client);
+    return TRUE;
+}
+
+gboolean
+SamsungCANPlugin::socketAcceptHandler(GIOChannel *channel,
+                                    GIOCondition condition,
+                                    gpointer data)
+{
+    GError *error;
+    GIOChannel *io_client;
+    GSocket *sock_client;
+    int fd;
+
     SamsungCANPlugin *scan = (SamsungCANPlugin *)data;
 
+    if (condition & (G_IO_HUP | G_IO_ERR | G_IO_NVAL))
+        return FALSE;
+
+    error = NULL;
+    sock_client = g_socket_accept(scan->socket, NULL, &error);
+    if (!sock_client) {
+        LOG_ERROR("Fail to g_socket_accept(): " << error->message << endl);
+        g_error_free(error);
+        return FALSE;
+    }
+
+    fd = g_socket_get_fd(sock_client);
+    io_client = g_io_channel_unix_new(fd);
+    g_io_add_watch(io_client,
+                (GIOCondition)(G_IO_IN | G_IO_HUP | G_IO_ERR | G_IO_NVAL),
+                (GIOFunc)socketSessionHandler,
+                data);
+
+    g_io_channel_unref(io_client);
+    return TRUE;
+
+    // gssize nread;
+    // gchar buf[BUFSIZE] = {0, };
+    // gchar bufout[BUFSIZE] = {0, };
+    // SamsungCANPlugin *scan = (SamsungCANPlugin *)data;
+
+#if 0
     error = NULL;
     sock_client = g_socket_accept(scan->socket, NULL, &error);
     if (!sock_client) {
@@ -342,6 +457,7 @@ SamsungCANPlugin::socketEventHandler(GIOChannel *channel,
             return FALSE;
         }
     }
+#endif
 
 #if 0
     g_socket_close(sock_client, &error);
@@ -391,11 +507,10 @@ int SamsungCANPlugin::initUDS()
     sock_fd = g_socket_get_fd(this->socket);
     this->channel = g_io_channel_unix_new(sock_fd);
     g_io_add_watch(this->channel,
-                (GIOCondition)(G_IO_IN | G_IO_OUT | G_IO_HUP),
-                (GIOFunc)socketEventHandler,
+                (GIOCondition)(G_IO_IN | G_IO_ERR | G_IO_HUP | G_IO_NVAL),
+                (GIOFunc)socketAcceptHandler,
                 this);
 
-    GVariant *var;
     AbstractPropertyType *nvalue = findPropertyType(VehicleOdometer, Zone::None);
     if (!nvalue) {
         LOG_ERROR("Fail to find findPropertyType()" << endl);

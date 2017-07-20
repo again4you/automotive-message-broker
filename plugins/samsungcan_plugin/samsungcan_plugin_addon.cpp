@@ -14,26 +14,6 @@
 const int MAX_VOLUMN = 15;
 const int MIN_VOLUMN = 0;
 
-#if 1
-typedef struct {
-    unsigned int op;
-    unsigned int object;
-    unsigned int size;
-} msg_hdr_t;
-
-typedef struct {
-    msg_hdr_t msg_head;
-    guint32 value;
-} msg_req_t;
-
-enum op
-{
-    GET = 0,
-    SET,
-    RET = 100,
-};
-#endif
-
 struct udsmsg_prop {
     int32_t zone;
     uint32_t len;
@@ -361,8 +341,7 @@ static int udsmsg_fill_res(uint8_t *buf, uint32_t size,
         return -1;
 
     // uv = (void *)buf + sizeof(*uh) + sizeof(*up) + len;
-    // uv = (struct udsmsg_val *)buf + sizeof(*uh) + sizeof(*up) + len;
-    uv = (struct udsmsg_val *)buf + sizeof(struct udsmsg_head) + sizeof(udsmsg_prop) + len;
+    uv = (struct udsmsg_val *)((uint8_t *)buf + sizeof(*uh) + sizeof(*up) + len);
     uv->res = res;
     if (res == 0) {
         uv->type = vtype;
@@ -372,8 +351,7 @@ static int udsmsg_fill_res(uint8_t *buf, uint32_t size,
     }
 
     // up = (void *)buf + sizeof(*uh);
-    // up = (struct udsmsg_prop *)buf + sizeof(*uh);
-    up = (struct udsmsg_prop *)buf + sizeof(struct udsmsg_head);
+    up = (struct udsmsg_prop *)((uint8_t *)buf + sizeof(*uh));
     up->zone = zone;
     up->len = len;
     memcpy(up->name, name, len);
@@ -412,8 +390,6 @@ SamsungCANPlugin::socketSessionHandler(GIOChannel *channel,
     int fd;
     gssize nread;
 
-    // msg_req_t msg_req;
-    //msg_req_t msg_ret;
     struct udsmsg_head uh;
     struct udsmsg_prop *up;
     struct udsmsg_val *uv;
@@ -422,7 +398,6 @@ SamsungCANPlugin::socketSessionHandler(GIOChannel *channel,
     gchar out[BUFSIZE];
 
     SamsungCANPlugin *scan = (SamsungCANPlugin *)data;
-    // memset(&msg_ret, 0x00, sizeof(msg_req_t));
 
     if (condition & (G_IO_HUP | G_IO_ERR | G_IO_NVAL))
         return FALSE;
@@ -452,27 +427,30 @@ SamsungCANPlugin::socketSessionHandler(GIOChannel *channel,
 
     if (uh.type == UT_GET_REQ) {
         // TODO
-        int i = 100;
-
-        struct udsmsg_head *test_uh;
-        struct udsmsg_prop *test_up;
-        struct udsmsg_val *test_uv;
+        // int i = 100;
 
         up = (struct udsmsg_prop *)buf;
         LOG_INFO("Get " << up->zone << " " << up->len << " " << "[" << up->name << "]" << endl);
 
+        // VehicleOdometer get test
+        AbstractPropertyType *nvalue = scan->findPropertyType(VehicleOdometer, Zone::None);
+        if (!nvalue) {
+            LOG_ERROR("Fail to find findPropertyType()" << endl);
+            return FALSE;
+        }
+        LOG_INFO("Object: " << nvalue->name << " value: " << nvalue->value<uint32_t>() << endl);
+
+        uint32_t v = nvalue->value<uint32_t>();
+
+
+        nread = udsmsg_fill_get_res((uint8_t *)out, sizeof(out),
+                    up->zone, (const char *)nvalue->name.c_str(),
+                    0, 'i', sizeof(v), &v);
+#if 0
         nread = udsmsg_fill_get_res((uint8_t *)out, sizeof(out),
                     up->zone, (const char *)up->name,
                     0, 'i', sizeof(i), &i);
-
-        // Check
-        test_uh = (struct udsmsg_head *)out;
-        LOG_INFO("SJ: " << test_uh->type << " " << test_uh->len << endl);
-        test_up = (struct udsmsg_prop *)out + sizeof(struct udsmsg_head);
-        LOG_INFO("SJ: " << test_up->zone << " " << test_up->len << " " << test_up->name << endl);
-        test_uv = (struct udsmsg_val *)out + sizeof(struct udsmsg_head) + test_up->len;
-        LOG_INFO("SJ: " << test_uv->type << " len: " << test_uv->len << endl);
-
+#endif
     } else if (uh.type == UT_SET_REQ) {
         // TODO
         up = (struct udsmsg_prop *)buf;
@@ -496,50 +474,6 @@ SamsungCANPlugin::socketSessionHandler(GIOChannel *channel,
         g_error_free(error);
         return FALSE;
     }
-
-
-
-#if 0
-    nread = g_socket_receive(sock_client, (gchar *)&msg_req, sizeof(msg_req_t), NULL, &error);
-    if (error) {
-        LOG_ERROR("Fail to g_socket_receive(): " << error->message << endl);
-        g_error_free(error);
-        return FALSE;
-    }
-
-    if (nread > 0) {
-        msg_hdr_t *msg_hdr = (msg_hdr_t *)&msg_req;
-        AbstractPropertyType *nvalue;
-
-        // for testing, data is fixed as VehicleOdometer.
-        switch(msg_hdr->op) {
-            case GET:
-                nvalue = scan->findPropertyType(VehicleOdometer, Zone::None);
-                if (!nvalue) {
-                    LOG_ERROR("Fail to find findPropertyType()" << endl);
-                    break;
-                }
-
-                LOG_INFO("Object: " << nvalue->name << " value: " << nvalue->value<uint32_t>() << endl);
-                msg_ret.msg_head.op = RET;
-                msg_ret.value = nvalue->value<uint32_t>();
-                msg_ret.msg_head.size = sizeof(msg_req_t);
-                break;
-
-            case SET:
-                break;
-            default:
-                break;
-        }
-
-        g_socket_send(sock_client, (gchar *)&msg_ret, sizeof(msg_req_t), NULL, &error);
-        if (error) {
-            LOG_ERROR("Fail to g_socket_receive(): " << error->message << endl);
-            g_error_free(error);
-            return FALSE;
-        }
-    }
-#endif
 
     g_object_unref(sock_client);
     return TRUE;

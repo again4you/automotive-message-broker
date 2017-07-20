@@ -8,12 +8,13 @@
 #include "samsungcan_plugin.h"
 #include "samsungcan_cansignals.h"
 
-#define SOCK_PATH   "/tmp/socket_file"
+#define SOCK_PATH   "/tmp/amb_socket"
 #define BUFSIZE     1024
 
 const int MAX_VOLUMN = 15;
 const int MIN_VOLUMN = 0;
 
+#if 1
 typedef struct {
     unsigned int op;
     unsigned int object;
@@ -30,6 +31,33 @@ enum op
     GET = 0,
     SET,
     RET = 100,
+};
+#endif
+
+struct udsmsg_prop {
+    int32_t zone;
+    uint32_t len;
+    uint8_t name[0];
+};
+
+struct udsmsg_val {
+    int32_t res;
+    uint16_t type; /* gvariant type char */
+    uint16_t len;
+    uint8_t val[0];
+};
+
+enum udsmsg_type {
+    UT_GET_REQ,
+    UT_GET_RES,
+    UT_SET_REQ,
+    UT_SET_RES,
+    UT_END,
+};
+
+struct udsmsg_head {
+    uint32_t type; /* enum UDSMSG_TYPE */
+    uint32_t len;
 };
 
 VehicleProperty::Property notiItems[] = {
@@ -316,6 +344,64 @@ void SamsungCANPlugin::propertyChanged(AbstractPropertyType *value)
     return ;
 }
 
+static int udsmsg_fill_res(uint8_t *buf, uint32_t size,
+        enum udsmsg_type type, int zone, const char *name,
+        int res, uint8_t vtype, uint16_t vsz, void *value)
+{
+    int len;
+    struct udsmsg_head *uh;
+    struct udsmsg_prop *up;
+    struct udsmsg_val *uv;
+
+    if (!buf || size == 0 || !name)
+        return -1;
+
+    len = strlen(name) + 1;
+    if (len + vsz + sizeof(*uh) + sizeof(*up) + sizeof(*uv) > size)
+        return -1;
+
+    // uv = (void *)buf + sizeof(*uh) + sizeof(*up) + len;
+    // uv = (struct udsmsg_val *)buf + sizeof(*uh) + sizeof(*up) + len;
+    uv = (struct udsmsg_val *)buf + sizeof(struct udsmsg_head) + sizeof(udsmsg_prop) + len;
+    uv->res = res;
+    if (res == 0) {
+        uv->type = vtype;
+        uv->len = vsz;
+        if (value && vsz > 0)
+            memcpy(uv->val, value, vsz);
+    }
+
+    // up = (void *)buf + sizeof(*uh);
+    // up = (struct udsmsg_prop *)buf + sizeof(*uh);
+    up = (struct udsmsg_prop *)buf + sizeof(struct udsmsg_head);
+    up->zone = zone;
+    up->len = len;
+    memcpy(up->name, name, len);
+
+    // uh = (void *)buf;
+    uh = (struct udsmsg_head *)buf;
+    uh->type = type;
+    uh->len = sizeof(*uh) + sizeof(*up) + len + sizeof(*uv) + vsz;
+
+    return uh->len;
+}
+
+static int udsmsg_fill_get_res(uint8_t *buf, uint32_t size,
+        int zone, const char *name,
+        int res, uint8_t vtype, uint16_t vsz, void *value)
+{
+    return udsmsg_fill_res(buf, size, UT_GET_RES, zone, name,
+            res, vtype, vsz, value);
+}
+
+static int udsmsg_fill_set_res(uint8_t *buf, uint32_t size,
+        int zone, const char *name,
+        int res, uint8_t vtype, uint16_t vsz, void *value)
+{
+    return udsmsg_fill_res(buf, size, UT_SET_RES, zone, name,
+            res, vtype, vsz, value);
+}
+
 gboolean
 SamsungCANPlugin::socketSessionHandler(GIOChannel *channel,
                                     GIOCondition condition,
@@ -325,11 +411,18 @@ SamsungCANPlugin::socketSessionHandler(GIOChannel *channel,
     GSocket *sock_client;
     int fd;
     gssize nread;
-    msg_req_t msg_req;
-    msg_req_t msg_ret;
+
+    // msg_req_t msg_req;
+    //msg_req_t msg_ret;
+    struct udsmsg_head uh;
+    struct udsmsg_prop *up;
+    struct udsmsg_val *uv;
+
+    gchar buf[BUFSIZE];
+    gchar out[BUFSIZE];
 
     SamsungCANPlugin *scan = (SamsungCANPlugin *)data;
-    memset(&msg_ret, 0x00, sizeof(msg_req_t));
+    // memset(&msg_ret, 0x00, sizeof(msg_req_t));
 
     if (condition & (G_IO_HUP | G_IO_ERR | G_IO_NVAL))
         return FALSE;
@@ -343,6 +436,70 @@ SamsungCANPlugin::socketSessionHandler(GIOChannel *channel,
         return FALSE;
     }
 
+    nread = g_socket_receive(sock_client, (gchar *)&uh, sizeof(uh), NULL, &error);
+    if (error) {
+        LOG_ERROR("Fail to g_socket_receive(): " << error->message << endl);
+        g_error_free(error);
+        return FALSE;
+    }
+
+    nread = g_socket_receive(sock_client, (gchar *)buf, uh.len - sizeof(uh), NULL, &error);
+    if (error) {
+        LOG_ERROR("Fail to g_socket_receive(): " << error->message << endl);
+        g_error_free(error);
+        return FALSE;
+    }
+
+    if (uh.type == UT_GET_REQ) {
+        // TODO
+        int i = 100;
+
+        struct udsmsg_head *test_uh;
+        struct udsmsg_prop *test_up;
+        struct udsmsg_val *test_uv;
+
+        up = (struct udsmsg_prop *)buf;
+        LOG_INFO("Get " << up->zone << " " << up->len << " " << "[" << up->name << "]" << endl);
+
+        nread = udsmsg_fill_get_res((uint8_t *)out, sizeof(out),
+                    up->zone, (const char *)up->name,
+                    0, 'i', sizeof(i), &i);
+
+        // Check
+        test_uh = (struct udsmsg_head *)out;
+        LOG_INFO("SJ: " << test_uh->type << " " << test_uh->len << endl);
+        test_up = (struct udsmsg_prop *)out + sizeof(struct udsmsg_head);
+        LOG_INFO("SJ: " << test_up->zone << " " << test_up->len << " " << test_up->name << endl);
+        test_uv = (struct udsmsg_val *)out + sizeof(struct udsmsg_head) + test_up->len;
+        LOG_INFO("SJ: " << test_uv->type << " len: " << test_uv->len << endl);
+
+    } else if (uh.type == UT_SET_REQ) {
+        // TODO
+        up = (struct udsmsg_prop *)buf;
+        uv = (struct udsmsg_val *)buf + sizeof(*up) + up->len;
+
+        LOG_INFO("Set " << up->zone << " " << up->len << " " << "[" << up->name << "] "
+                << uv->type << " " << uv->len << endl);
+
+        nread = udsmsg_fill_set_res((uint8_t *)out, sizeof(out),
+                    up->zone, (const char *)up->name,
+                    0, uv->type, uv->len, uv->val);
+
+    } else {
+        LOG_ERROR("Unknown Req type: " << uh.type);
+        return FALSE;
+    }
+
+    g_socket_send(sock_client, (gchar *)out, nread, NULL, &error);
+    if (error) {
+        LOG_ERROR("Fail to g_socket_receive(): " << error->message << endl);
+        g_error_free(error);
+        return FALSE;
+    }
+
+
+
+#if 0
     nread = g_socket_receive(sock_client, (gchar *)&msg_req, sizeof(msg_req_t), NULL, &error);
     if (error) {
         LOG_ERROR("Fail to g_socket_receive(): " << error->message << endl);
@@ -382,6 +539,7 @@ SamsungCANPlugin::socketSessionHandler(GIOChannel *channel,
             return FALSE;
         }
     }
+#endif
 
     g_object_unref(sock_client);
     return TRUE;
@@ -418,54 +576,6 @@ SamsungCANPlugin::socketAcceptHandler(GIOChannel *channel,
                 data);
 
     g_io_channel_unref(io_client);
-    return TRUE;
-
-    // gssize nread;
-    // gchar buf[BUFSIZE] = {0, };
-    // gchar bufout[BUFSIZE] = {0, };
-    // SamsungCANPlugin *scan = (SamsungCANPlugin *)data;
-
-#if 0
-    error = NULL;
-    sock_client = g_socket_accept(scan->socket, NULL, &error);
-    if (!sock_client) {
-        LOG_ERROR("Fail to g_socket_accept(): " << error->message << endl);
-        return FALSE;
-    }
-
-    nread = g_socket_receive(sock_client, buf, sizeof(buf), NULL, &error);
-    if (error) {
-        LOG_ERROR("Fail to g_socket_receive(): " << error->message << endl);
-        return FALSE;
-    }
-    if (nread > 0) {
-        LOG_INFO("Msg: " << buf << endl);
-
-        // VehicleOdometer get test
-        AbstractPropertyType *nvalue = scan->findPropertyType(VehicleOdometer, Zone::None);
-        if (!nvalue) {
-            LOG_ERROR("Fail to find findPropertyType()" << endl);
-            return FALSE;
-        }
-        LOG_INFO("Object: " << nvalue->name << " value: " << nvalue->value<uint32_t>() << endl);
-        snprintf(bufout, sizeof(bufout), "Object: %s Value: %u", nvalue->name.c_str(), nvalue->value<uint32_t>());
-
-        // snprintf(bufout, sizeof(bufout), "Len: %lu Msg: %s", strlen(buf), buf);
-        g_socket_send(sock_client, bufout, strlen(bufout), NULL, &error);
-        if (error != NULL) {
-            LOG_ERROR("Fail to g_socket_send(): " << error->message << endl);
-            return FALSE;
-        }
-    }
-#endif
-
-#if 0
-    g_socket_close(sock_client, &error);
-    if (error != NULL) {
-        LOG_ERROR("Fail to g_socket_close(): " << error->message << endl);
-        return FALSE;
-    }
-#endif
     return TRUE;
 }
 

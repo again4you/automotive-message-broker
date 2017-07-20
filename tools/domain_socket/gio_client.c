@@ -9,7 +9,7 @@
 #include <gio/gio.h>
 #include <gio/gunixsocketaddress.h>
 
-#define SOCK_PATH "/run/amb_socket"
+#define SOCK_PATH "/tmp/amb_socket"
 #define BUFSIZE 1024
 
 struct udsmsg_prop {
@@ -106,7 +106,7 @@ int main(int argc, char *argv[])
 
     gssize nread;
     char buf[BUFSIZE] = {0, };
-    char bufread[BUFSIZE] = {0, };
+    gchar bufread[BUFSIZE] = {0, };
 
     int zone;
 
@@ -210,7 +210,8 @@ int main(int argc, char *argv[])
 			return -1;
 		}
 
-		up = (void *)bufread;
+		// up = (void *)bufread;
+		up = (struct udsmsg_prop *)bufread;
 		printf(" zone %d len %u [%s]\n", up->zone, up->len, up->name);
 
 		uv = (void *)bufread + sizeof(*up) + up->len;

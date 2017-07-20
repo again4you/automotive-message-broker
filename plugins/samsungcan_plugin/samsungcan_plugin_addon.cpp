@@ -454,10 +454,21 @@ SamsungCANPlugin::socketSessionHandler(GIOChannel *channel,
     } else if (uh.type == UT_SET_REQ) {
         // TODO
         up = (struct udsmsg_prop *)buf;
-        uv = (struct udsmsg_val *)buf + sizeof(*up) + up->len;
+        uv = (struct udsmsg_val *)((uint8_t *)buf + sizeof(*up) + up->len);
 
         LOG_INFO("Set " << up->zone << " " << up->len << " " << "[" << up->name << "] "
-                << uv->type << " " << uv->len << endl);
+                << (char)uv->type << " " << uv->len << endl);
+
+        AbstractPropertyType *nvalue = scan->findPropertyType(VehicleOdometer, Zone::None);
+        if (!nvalue) {
+            LOG_ERROR("Fail to find findPropertyType()" << endl);
+            return FALSE;
+        }
+
+        GVariant *var = g_variant_new_uint32(*(int *)uv->val);
+        nvalue->fromVariant(var);
+        scan->routingEngine->updateProperty(nvalue, scan->uuid());
+        g_variant_unref(var);
 
         nread = udsmsg_fill_set_res((uint8_t *)out, sizeof(out),
                     up->zone, (const char *)up->name,

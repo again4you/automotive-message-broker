@@ -2,6 +2,7 @@
 #include <glib.h>
 #include <gio/gio.h>
 #include <gio/gunixsocketaddress.h>
+#include <map>
 
 #include <logger.h>
 
@@ -27,6 +28,11 @@ struct udsmsg_val {
     uint8_t val[0];
 };
 
+struct udsmsg_head {
+    uint32_t type; /* enum UDSMSG_TYPE */
+    uint32_t len;
+};
+
 enum udsmsg_type {
     UT_GET_REQ,
     UT_GET_RES,
@@ -35,10 +41,12 @@ enum udsmsg_type {
     UT_END,
 };
 
-struct udsmsg_head {
-    uint32_t type; /* enum UDSMSG_TYPE */
-    uint32_t len;
+enum data_type {
+    UINT32,
+    INT32,
 };
+
+static std::map<string, int> obj_map;
 
 VehicleProperty::Property notiItems[] = {
     CidWatchHour,
@@ -426,12 +434,36 @@ SamsungCANPlugin::socketSessionHandler(GIOChannel *channel,
     }
 
     if (uh.type == UT_GET_REQ) {
+        // http://oojjrs.tistory.com/25
         // TODO
         // int i = 100;
 
         up = (struct udsmsg_prop *)buf;
         LOG_INFO("Get " << up->zone << " " << up->len << " " << "[" << up->name << "]" << endl);
 
+        string s ((const char *)up->name, up->len - 1);
+        AbstractPropertyType *nvalue;
+        uint32_t v_uint32;
+        switch(obj_map[(char *)up->name]) {
+            case UINT32:
+                nvalue = scan->findPropertyType(s, Zone::None);
+                if (!nvalue) {
+                    LOG_ERROR("Fail to find findPropertyType()" << endl);
+                    return FALSE;
+                }
+
+                v_uint32 = nvalue->value<uint32_t>();
+                nread = udsmsg_fill_get_res((uint8_t *)out, sizeof(out),
+                        up->zone, (const char *)nvalue->name.c_str(),
+                        0, 'i', sizeof(v_uint32), &v_uint32);
+                break;
+
+            default:
+                    LOG_ERROR("obj_map failed" << endl);
+                break;
+        }
+
+#if 0
         if (strncmp((const char*)up->name, VehicleOdometer.c_str(), up->len) == 0) {
             // VehicleOdometer get test
             AbstractPropertyType *nvalue = scan->findPropertyType(VehicleOdometer, Zone::None);
@@ -447,6 +479,7 @@ SamsungCANPlugin::socketSessionHandler(GIOChannel *channel,
                     up->zone, (const char *)nvalue->name.c_str(),
                     0, 'i', sizeof(v), &v);
         }
+#endif
     } else if (uh.type == UT_SET_REQ) {
         // TODO
         up = (struct udsmsg_prop *)buf;
@@ -562,12 +595,7 @@ int SamsungCANPlugin::initUDS()
                 (GIOFunc)socketAcceptHandler,
                 this);
 
-    AbstractPropertyType *nvalue = findPropertyType(VehicleOdometer, Zone::None);
-    if (!nvalue) {
-        LOG_ERROR("Fail to find findPropertyType()" << endl);
-        return FALSE;
-    }
-    LOG_INFO("SJ Object: " << nvalue->name << " value: " << nvalue->value<uint32_t>() << endl);
+    obj_map["VehicleOdometer"] = UINT32;
 
     LOG_INFO("Complete to initUDS()");
     return 0;
